@@ -5,6 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "wrangler dev",
+    "build": "echo 'Worker build complete'",
     "deploy": "wrangler deploy",
     "type-check": "tsc --noEmit"
   },

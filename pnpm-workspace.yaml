@@ -3,3 +3,4 @@ packages:
   - "workers/*"
   - "packages/*"
   - "sites/*"
+  - "sites/clients/_qsites/*"

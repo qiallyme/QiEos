@@ -1,0 +1,58 @@
+name: Deploy Client Sites to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sites/clients/**'
+  workflow_dispatch:
+    inputs:
+      site_name:
+        description: 'Site name to deploy (leave empty for all)'
+        required: false
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy Client Sites
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Deploy Sites
+        run: |
+          if [ -n "${{ github.event.inputs.site_name }}" ]; then
+            # Deploy specific site
+            SITE_NAME="${{ github.event.inputs.site_name }}"
+            if [ -d "sites/clients/$SITE_NAME" ]; then
+              echo "Deploying site: $SITE_NAME"
+              npx wrangler pages deploy "sites/clients/$SITE_NAME" --project-name="qieos-$SITE_NAME"
+            else
+              echo "Site $SITE_NAME not found"
+              exit 1
+            fi
+          else
+            # Deploy all sites
+            for site_dir in sites/clients/*/; do
+              if [ -d "$site_dir" ]; then
+                SITE_NAME=$(basename "$site_dir")
+                echo "Deploying site: $SITE_NAME"
+                npx wrangler pages deploy "$site_dir" --project-name="qieos-$SITE_NAME"
+              fi
+            done
+          fi
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

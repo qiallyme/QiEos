@@ -1,27 +1,37 @@
-# Q Says It
+# Qsaysit · Empower Q Now — Blog/Podcast Starter
 
-**Site Slug:** qsaysit  
-**URL:** https://qsaysit.qially.com  
-**Generated:** 2025-09-10
+A minimal, beautiful blog fed by Markdown. Write in Obsidian, deploy on Cloudflare.
 
-## What Changed
-- Stamped from template with Q Says It branding
-- Applied #111827 primary color theme
-- Updated all content tokens and metadata
-- Configured for Cloudflare Pages deployment
+## Commands
+- Dev: `pnpm dev`
+- Build: `pnpm build`
+- Preview: `pnpm preview`
 
-## Next Steps
-1. Review and customize content in `index.html`
-2. Add custom favicon if needed
-3. Deploy to Cloudflare Pages with root directory: `sites/clients/_qsites/qsaysit`
-4. Configure custom domain: https://qsaysit.qially.com
+## Content
+Add Markdown files under `content/qsaysit` or `content/empowerq`. Include YAML front matter:
 
-## Files Generated
-- `index.html` - Main site content
-- `_headers` - Security and caching headers
-- `_redirects` - URL redirects
-- `sitemap.xml` - SEO sitemap
-- `robots.txt` - Search engine directives
-- `wrangler.toml` - Cloudflare Pages configuration
-- `favicon.ico` - Site icon
-- `setup-client.sh` / `setup-client.bat` - Deployment scripts
+```yaml
+---
+date: 2025-09-10
+title: Post Title
+category: Qsaysit  # or Empower Q
+tags: [tag1, tag2]
+summary: One sentence hook.
+audio: /audio/episode-1.mp3 # optional
+---
+```
+
+## Deploy to Cloudflare Pages
+
+* Build command: `pnpm build`
+* Output dir: `dist`
+
+## Customize
+
+* Edit colors/spacing in Tailwind.
+* Swap the header copy.
+* Add analytics or a tip jar (Buy Me a Coffee/Ko-fi) in the footer.
+
+## Notes
+- This starter intentionally avoids heavy frameworks (no routing needed for a simple feed). If you want multiple pages or SEO-friendly routes later, we can add file-based routing (React Router or switch to Astro/Eleventy) while keeping your content.
+- Drop audio files under `public/audio/*` and reference with `audio:` in front matter.
