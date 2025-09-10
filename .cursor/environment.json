@@ -1,11 +1,6 @@
 {
-  "snapshot": "snapshot-20250910-a20cafe1-a41b-4fdf-90bf-84cfc40a84da",
-  "install": "pnpm install\npnpm dev",
-  "start": "cd Q:\\qieos\npnpm install\npnpm dev",
-  "terminals": [
-    {
-      "name": "qieosterminal",
-      "command": "powershell"
-    }
-  ]
+  "snapshot": "snapshot-20250910-c6f98921-ea9d-4bc6-aea4-4c9a66de5ef2",
+  "install": "pnpm install\npnpm dev\n",
+  "start": "pnpm install\npnpm dev\n",
+  "terminals": []
 }
