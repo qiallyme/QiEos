@@ -137,3 +137,28 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# QiEOS specific exclusions
+# CRM export files (contain sensitive data)
+qiallycrmexport/
+**/qiallycrmexport/
+
+# Secret files and exports
+**/*.csv
+**/*.eml
+**/*.xlsx
+**/*.docx
+**/*.pdf
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.zdoc
+
+# Additional sensitive file patterns
+**/ZohoVault_export_*
+**/export_*
+**/vault_*
+
+# Cursor agent configuration
+.cursor/agents/
+.cursor/keys/
