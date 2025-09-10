@@ -1,0 +1,47 @@
+# Build artifacts and caches
+dist/
+build/
+.out/
+.next/
+.vercel/
+.cache/
+coverage/
+
+# Dependencies
+node_modules/
+
+# Env & secrets
+.env
+.env.*
+**/*.pem
+**/*.key
+
+# Generated assets / binaries
+**/*.pdf
+**/*.docx
+**/*.png
+**/*.jpg
+**/*.zip
+
+# LAW: AI must not edit these authoritative paths
+infra/supabase/migrations/
+blueprints/
+templates/
+apps/web/public/
+workers/api/wrangler.toml
+
+# QiEOS specific exclusions
+# CRM export files (contain sensitive data)
+qiallycrmexport/
+**/qiallycrmexport/
+
+# Secret files and exports
+**/*.csv
+**/*.eml
+**/*.xlsx
+**/*.zdoc
+
+# Additional sensitive file patterns
+**/ZohoVault_export_*
+**/export_*
+**/vault_*

@@ -1,0 +1,23 @@
+{
+  "name": "qieos",
+  "version": "1.0.0",
+  "description": "QiEOS monorepo - unified client portal, admin control, APIs, AI, billing, and per-client public websites",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "sites/*"
+  ],
+  "scripts": {
+    "dev": "echo 'Use workspace-specific dev scripts'",
+    "build": "echo 'Use workspace-specific build scripts'",
+    "test": "echo 'Use workspace-specific test scripts'"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

@@ -1,0 +1,33 @@
+# QiEOS Global Rules (authoritative)
+You are operating inside the QiEOS monorepo. Follow the God Doc (README and /docs) exactly.
+
+## NEVER MOVE/RENAME OR EDIT THESE PATHS
+- /infra/supabase/migrations/**
+- /blueprints/**
+- /templates/**
+- /apps/web/public/**
+- /workers/api/wrangler.toml
+- /workers/api/src/middleware/**
+- /workers/api/src/lib/supabaseAdmin.ts
+- /workers/api/src/integrations/stripe.ts
+- /workers/api/src/integrations/openai.ts
+- /workers/api/src/integrations/r2.ts
+- /workers/api/src/integrations/elevenlabs.ts
+
+If a change is truly required:
+1) Propose a diff in chat prefixed with "RFC:" explaining rationale and impact.
+2) Wait for human approval before touching files.
+
+## STRUCTURE LAW
+- One domain = one worker route file and one web module folder.
+- Public KB stays in /apps/web/public/kb; private KB stays in DB (+ vectors).
+- All service-role ops live in Worker only.
+
+## CODE STYLE
+- React + Vite + TSX. Tailwind utilities. Keep files <400 lines; split otherwise.
+- Prefer small, pure functions; avoid magic.
+- Strong typing at boundaries; internal types can be inferred.
+
+## SAFETY
+- Never write secrets to client code.
+- Before AI edit, run "Understand" on related files and God Doc excerpts.
