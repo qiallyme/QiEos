@@ -1,8 +1,9 @@
 import { Hono } from "hono";
 import { z } from "zod";
 import { getUserClaims } from "../lib/supabaseAdmin";
+import type { Env } from "../index";
 
-const authRoutes = new Hono();
+const authRoutes = new Hono<{ Bindings: Env }>();
 
 // Schema for session request
 const sessionSchema = z.object({
@@ -18,7 +19,7 @@ authRoutes.post("/session", async (c) => {
     const validated = sessionSchema.parse({ token });
 
     // Get user claims from token
-    const claims = await getUserClaims(validated.token);
+    const claims = await getUserClaims(validated.token, c.env);
 
     if (!claims) {
       return c.json({ error: "Invalid or expired token" }, 401);

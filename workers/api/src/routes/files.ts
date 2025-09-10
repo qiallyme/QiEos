@@ -1,8 +1,9 @@
 import { Hono } from "hono";
 import { z } from "zod";
-import { supabaseAdmin } from "../lib/supabaseAdmin";
+import { getSupabaseAdmin } from "../lib/supabaseAdmin";
+import type { Env } from "../index";
 
-const fileRoutes = new Hono();
+const fileRoutes = new Hono<{ Bindings: Env }>();
 
 // File schemas
 const signUploadSchema = z.object({
@@ -90,7 +91,7 @@ fileRoutes.post("/complete", async (c) => {
     }
 
     // Save file metadata to database
-    const { data: file, error } = await supabaseAdmin
+    const { data: file, error } = await getSupabaseAdmin(c.env)
       .from("files")
       .insert({
         key: validated.key,
@@ -147,7 +148,7 @@ fileRoutes.get("/", async (c) => {
     const { company_id } = c.req.query();
 
     // Build query based on role and company access
-    let query = supabaseAdmin
+    let query = getSupabaseAdmin(c.env)
       .from("files")
       .select(
         `
@@ -208,7 +209,7 @@ fileRoutes.get("/download/:id", async (c) => {
     const fileId = c.req.param("id");
 
     // Get file metadata
-    const { data: file, error } = await supabaseAdmin
+    const { data: file, error } = await getSupabaseAdmin(c.env)
       .from("files")
       .select("*")
       .eq("id", fileId)
@@ -251,7 +252,7 @@ fileRoutes.delete("/:id", async (c) => {
     const fileId = c.req.param("id");
 
     // Get file metadata
-    const { data: file, error } = await supabaseAdmin
+    const { data: file, error } = await getSupabaseAdmin(c.env)
       .from("files")
       .select("*")
       .eq("id", fileId)
@@ -271,7 +272,7 @@ fileRoutes.delete("/:id", async (c) => {
     // await r2.delete(file.key)
 
     // Delete metadata from database
-    const { error: deleteError } = await supabaseAdmin
+    const { error: deleteError } = await getSupabaseAdmin(c.env)
       .from("files")
       .delete()
       .eq("id", fileId);

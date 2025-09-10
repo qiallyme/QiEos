@@ -1,21 +1,27 @@
 import { createClient } from "@supabase/supabase-js";
+import type { Env } from '../index';
 
 // Service-role client for server-side operations
 // This bypasses RLS and should only be used in Workers
-export const supabaseAdmin = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
+export const getSupabaseAdmin = (env: Env) => {
+  const { SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY } = env;
+
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('Missing required Supabase environment variables: SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY');
+  }
+
+  return createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,
     },
-  }
-);
+  });
+};
 
 // Helper to get user claims from JWT
-export async function getUserClaims(token: string) {
+export async function getUserClaims(token: string, env: Env) {
   try {
+    const supabaseAdmin = getSupabaseAdmin(env);
     const {
       data: { user },
       error,

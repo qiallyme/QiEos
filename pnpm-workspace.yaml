@@ -3,5 +3,3 @@ packages:
   - "workers/*"
   - "packages/*"
   - "sites/*"
-  - "scripts"
-  - "docs"

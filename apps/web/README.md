@@ -21,8 +21,8 @@ The main web application for QiEOS, built with React + Vite + TypeScript.
 2. **Configure environment**
    Create a `.env` file with:
    ```env
-   VITE_SUPABASE_URL=your_supabase_url_here
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+   VITE_SUPABASE_URL=https://vwqkhjnkummwtvfxgqml.supabase.co
+   VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ3cWtoam5rdW1td3R2ZnhncW1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYwMDMwNDksImV4cCI6MjA3MTU3OTA0OX0.Q1_W-sq8iKVPfJ2HfTS2hGNmK5jjzsy50cHszhB_6VQ
    VITE_API_URL=http://localhost:8787
    ```
 

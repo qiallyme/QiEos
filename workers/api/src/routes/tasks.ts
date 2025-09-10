@@ -1,8 +1,9 @@
 import { Hono } from "hono";
 import { z } from "zod";
-import { supabaseAdmin } from "../lib/supabaseAdmin";
+import { getSupabaseAdmin } from "../lib/supabaseAdmin";
+import type { Env } from "../index";
 
-const taskRoutes = new Hono();
+const taskRoutes = new Hono<{ Bindings: Env }>();
 
 // Task schemas
 const createTaskSchema = z.object({
@@ -33,6 +34,7 @@ taskRoutes.get("/", async (c) => {
     const { company_id } = c.req.query();
 
     // Build query based on role and company access
+    const supabaseAdmin = getSupabaseAdmin(c.env);
     let query = supabaseAdmin
       .from("tasks")
       .select(
@@ -103,6 +105,7 @@ taskRoutes.post("/", async (c) => {
 
     // Check project access if specified
     if (validated.project_id) {
+      const supabaseAdmin = getSupabaseAdmin(c.env);
       const { data: project } = await supabaseAdmin
         .from("projects")
         .select("id, company_id")

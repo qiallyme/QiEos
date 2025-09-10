@@ -7,13 +7,80 @@ import { kbRoutes } from './routes/kb'
 import { profileRoutes } from './routes/profile'
 import { authMiddleware } from './middleware/auth'
 
-const app = new Hono()
+// Cloudflare Workers types
+declare global {
+  interface R2Bucket {
+    get(key: string): Promise<R2Object | null>
+    put(key: string, value: ReadableStream | ArrayBuffer | ArrayBufferView | string | null | undefined, options?: R2PutOptions): Promise<R2Object | null>
+    delete(keys: string | string[]): Promise<void>
+    list(options?: R2ListOptions): Promise<R2Objects>
+  }
+  
+  interface R2Object {
+    key: string
+    size: number
+    etag: string
+    uploaded: Date
+    httpEtag: string
+    httpMetadata?: R2HTTPMetadata
+    customMetadata?: Record<string, string>
+    body?: ReadableStream
+  }
+  
+  interface R2PutOptions {
+    httpMetadata?: R2HTTPMetadata
+    customMetadata?: Record<string, string>
+  }
+  
+  interface R2ListOptions {
+    limit?: number
+    prefix?: string
+    cursor?: string
+    delimiter?: string
+    startAfter?: string
+  }
+  
+  interface R2Objects {
+    objects: R2Object[]
+    truncated: boolean
+    cursor?: string
+    delimitedPrefixes: string[]
+  }
+  
+  interface R2HTTPMetadata {
+    contentType?: string
+    contentLanguage?: string
+    contentDisposition?: string
+    contentEncoding?: string
+    cacheControl?: string
+    expires?: Date
+  }
+}
+
+// Define the bindings we expect from wrangler.toml
+export interface Env {
+  SUPABASE_URL: string
+  SUPABASE_SERVICE_ROLE_KEY: string
+  OPENAI_API_KEY?: string
+  STRIPE_SECRET_KEY?: string
+  JWT_ISSUER?: string
+  EMBEDDING_DIM?: string
+  CORS_ORIGINS?: string
+  R2: R2Bucket
+  [key: string]: any
+}
+
+const app = new Hono<{ Bindings: Env }>()
 
 // CORS middleware
-app.use('*', cors({
-  origin: ['http://localhost:5173', 'https://qieos.pages.dev'],
-  credentials: true
-}))
+app.use('*', async (c, next) => {
+  const corsOrigins = c.env?.CORS_ORIGINS?.split(',') || ['http://localhost:5173', 'https://qieos.pages.dev']
+  
+  return cors({
+    origin: corsOrigins,
+    credentials: true
+  })(c, next)
+})
 
 // Health check
 app.get('/health', (c) => {

@@ -1,8 +1,9 @@
 import { Hono } from "hono";
 import { z } from "zod";
-import { supabaseAdmin } from "../lib/supabaseAdmin";
+import { getSupabaseAdmin } from "../lib/supabaseAdmin";
+import type { Env } from "../index";
 
-const profileRoutes = new Hono();
+const profileRoutes = new Hono<{ Bindings: Env }>();
 
 // Profile update schema
 const updateProfileSchema = z.object({
@@ -24,7 +25,7 @@ profileRoutes.patch("/profile", async (c) => {
     const validated = updateProfileSchema.parse(body);
 
     // Update the contact record
-    const { data: contact, error } = await supabaseAdmin
+    const { data: contact, error } = await getSupabaseAdmin(c.env)
       .from("contacts")
       .update({
         ...validated,
@@ -78,7 +79,7 @@ profileRoutes.get("/profile", async (c) => {
     }
 
     // Get the contact record
-    const { data: contact, error } = await supabaseAdmin
+    const { data: contact, error } = await getSupabaseAdmin(c.env)
       .from("contacts")
       .select(
         `

@@ -22,7 +22,7 @@ The main API worker for QiEOS, built with Cloudflare Workers and Hono.
    Update `wrangler.toml` with your environment variables:
    ```toml
    [vars]
-   SUPABASE_URL = "your_supabase_url"
+   SUPABASE_URL = "https://vwqkhjnkummwtvfxgqml.supabase.co"
    SUPABASE_SERVICE_ROLE_KEY = "your_service_role_key"
    OPENAI_API_KEY = "your_openai_key"
    STRIPE_SECRET_KEY = "your_stripe_key"

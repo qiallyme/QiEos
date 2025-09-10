@@ -176,6 +176,8 @@ export function TaskList() {
                         e.target.value as Task["status"]
                       )
                     }
+                    title="Update task status"
+                    aria-label="Update task status"
                     className={`px-2 py-1 rounded-full text-xs font-medium border-0 ${getStatusColor(
                       task.status
                     )}`}

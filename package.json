@@ -9,12 +9,16 @@
     "sites/*"
   ],
   "scripts": {
-    "dev": "echo 'Use workspace-specific dev scripts'",
-    "build": "echo 'Use workspace-specific build scripts'",
-    "test": "echo 'Use workspace-specific test scripts'"
+    "dev": "concurrently -n WORKER,WEB -c magenta,cyan \"pnpm --filter workers/api dev\" \"pnpm --filter apps/web dev\"",
+    "build": "pnpm --filter @qieos/types build && pnpm --filter @qieos/utils build"
   },
   "devDependencies": {
-    "typescript": "^5.0.0"
+    "concurrently": "^9.0.0",
+    "typescript": "^5.0.0",
+    "wrangler": "4.35.0"
+  },
+  "dependencies": {
+    "rimraf": "^5.0.0"
   },
   "engines": {
     "node": ">=18.0.0",

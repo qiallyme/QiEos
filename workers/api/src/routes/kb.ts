@@ -1,7 +1,8 @@
 import { Hono } from "hono";
-import { supabaseAdmin } from "../lib/supabaseAdmin";
+import { getSupabaseAdmin } from "../lib/supabaseAdmin";
+import type { Env } from "../index";
 
-const kbRoutes = new Hono();
+const kbRoutes = new Hono<{ Bindings: Env }>();
 
 // GET /kb/public - Get public knowledge base articles
 kbRoutes.get("/public", async (c) => {
@@ -40,7 +41,7 @@ kbRoutes.get("/private", async (c) => {
     }
 
     // Build query based on role and company access
-    let query = supabaseAdmin
+    let query = getSupabaseAdmin(c.env)
       .from("kb_docs")
       .select(
         `
@@ -94,7 +95,7 @@ kbRoutes.get("/collections", async (c) => {
     }
 
     // Build query based on role and company access
-    let query = supabaseAdmin
+    let query = getSupabaseAdmin(c.env)
       .from("kb_collections")
       .select(
         `
@@ -142,7 +143,7 @@ kbRoutes.get("/article/:id", async (c) => {
 
     // First try to get from private KB
     if (claims) {
-      let query = supabaseAdmin
+      let query = getSupabaseAdmin(c.env)
         .from("kb_docs")
         .select(
           `
