@@ -9,7 +9,7 @@ export function SampleAbout() {
           <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             About QiPortals
           </h1>
-          
+
           {/* TODO: Replace with QiEOS Card components */}
           <div className="glass-card p-6 rounded-lg mb-8">
             <div className="mb-4">
@@ -20,9 +20,10 @@ export function SampleAbout() {
             </div>
             <div>
               <p className="text-gray-600 dark:text-gray-300">
-                QiPortals is designed to be a comprehensive suite of portal applications 
-                built with modern web technologies and optimized for Cloudflare's edge network. 
-                Our focus is on performance, developer experience, and beautiful user interfaces.
+                QiPortals is designed to be a comprehensive suite of portal
+                applications built with modern web technologies and optimized
+                for Cloudflare's edge network. Our focus is on performance,
+                developer experience, and beautiful user interfaces.
               </p>
             </div>
           </div>
@@ -63,5 +64,5 @@ export function SampleAbout() {
         </div>
       </div>
     </div>
-  )
+  );
 }

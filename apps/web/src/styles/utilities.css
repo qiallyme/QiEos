@@ -3,15 +3,15 @@
   .glass {
     @apply bg-white/10 backdrop-blur-md border border-white/20;
   }
-  
+
   .glass-dark {
     @apply bg-black/10 backdrop-blur-md border border-white/10;
   }
-  
+
   .glass-card {
     @apply bg-white/5 backdrop-blur-lg border border-white/10 shadow-xl;
   }
-  
+
   .glass-button {
     @apply bg-white/20 backdrop-blur-sm border border-white/30 hover:bg-white/30 transition-all duration-200;
   }

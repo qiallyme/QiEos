@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
+import { Card, CardHeader, CardTitle, CardContent } from '@qieos/ui'
 
 export function ClientDashboard() {
   const { claims } = useAuth()
@@ -13,6 +14,88 @@ export function ClientDashboard() {
           <p className="text-gray-600 mt-2">
             Welcome back, {claims?.email}
           </p>
+        </div>
+
+        {/* Dashboard Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow p-6 relative overflow-hidden">
+            <div className="absolute w-56 h-48 bg-blue-500 blur-[200px] -left-1/2 -bottom-1/2 opacity-20"></div>
+            <div className="relative">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Active Tasks</h3>
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-400 font-bold text-3xl text-transparent bg-clip-text">12</span>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow p-6 relative overflow-hidden">
+            <div className="absolute w-56 h-48 bg-green-500 blur-[200px] -left-1/2 -bottom-1/2 opacity-20"></div>
+            <div className="relative">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Projects</h3>
+              <span className="bg-gradient-to-r from-green-600 to-emerald-400 font-bold text-3xl text-transparent bg-clip-text">3</span>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow p-6 relative overflow-hidden">
+            <div className="absolute w-56 h-48 bg-yellow-500 blur-[200px] -left-1/2 -bottom-1/2 opacity-20"></div>
+            <div className="relative">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Files</h3>
+              <span className="bg-gradient-to-r from-yellow-600 to-orange-400 font-bold text-3xl text-transparent bg-clip-text">24</span>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow p-6 relative overflow-hidden">
+            <div className="absolute w-56 h-48 bg-purple-500 blur-[200px] -left-1/2 -bottom-1/2 opacity-20"></div>
+            <div className="relative">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">KB Articles</h3>
+              <span className="bg-gradient-to-r from-purple-600 to-pink-400 font-bold text-3xl text-transparent bg-clip-text">8</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Activity and Quick Actions */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Activity</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span className="text-sm text-gray-600">Task "Review documents" completed</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-sm text-gray-600">New file uploaded</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                  <span className="text-sm text-gray-600">Project milestone reached</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Quick Actions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <Link to="/client/tasks/new" className="block w-full text-left p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                  <div className="font-medium">Create New Task</div>
+                  <div className="text-sm text-gray-500">Add a new task to your project</div>
+                </Link>
+                <Link to="/client/files" className="block w-full text-left p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                  <div className="font-medium">Upload File</div>
+                  <div className="text-sm text-gray-500">Share documents with your team</div>
+                </Link>
+                <Link to="/client/kb" className="block w-full text-left p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                  <div className="font-medium">View Knowledge Base</div>
+                  <div className="text-sm text-gray-500">Browse helpful resources</div>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -1,7 +1,7 @@
 import { useAuth as useAuthContext } from '../context/AuthContext'
 
 // Re-export the auth hook for convenience
-export { useAuth }
+export { useAuthContext as useAuth }
 
 // Helper hook to check if user has specific feature
 export function useFeature(feature: string): boolean {
