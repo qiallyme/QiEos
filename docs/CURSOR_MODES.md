@@ -9,6 +9,7 @@ This document contains the Cursor AI agent presets for different domains. Copy e
 **NEVER** touch paths listed in `.cursorrules` "NEVER MOVE/RENAME OR EDIT".
 
 **RESPONSIBILITIES**:
+
 - Hono endpoints with proper error handling
 - Zod validation for all inputs
 - Enforce claims + feature flags server-side
@@ -17,24 +18,24 @@ This document contains the Cursor AI agent presets for different domains. Copy e
 - Implement proper RLS bypass for privileged operations
 
 **PATTERNS**:
+
 ```typescript
 // Route structure
-export const authRoutes = new Hono()
-  .post('/session', async (c) => {
-    const { token } = await c.req.json()
-    // Validate token, enrich claims, return
-  })
+export const authRoutes = new Hono().post("/session", async (c) => {
+  const { token } = await c.req.json();
+  // Validate token, enrich claims, return
+});
 
 // Always validate inputs
 const schema = z.object({
   title: z.string().min(1),
-  org_id: z.string().uuid()
-})
-const { title, org_id } = schema.parse(await c.req.json())
+  org_id: z.string().uuid(),
+});
+const { title, org_id } = schema.parse(await c.req.json());
 
 // Enforce feature flags
 if (!claims.features?.tasks) {
-  return c.json({ error: 'Feature not enabled' }, 403)
+  return c.json({ error: "Feature not enabled" }, 403);
 }
 ```
 
@@ -45,6 +46,7 @@ if (!claims.features?.tasks) {
 **DO NOT** touch `public/` or `migrations/`.
 
 **RESPONSIBILITIES**:
+
 - React + TSX + Tailwind CSS components
 - Keep files under 400 lines; split into smaller components
 - Use `lib/api.ts` for API calls; avoid ad-hoc fetch
@@ -52,29 +54,30 @@ if (!claims.features?.tasks) {
 - Follow the established route structure (`/public`, `/auth`, `/client`, `/internal`, `/admin`)
 
 **PATTERNS**:
+
 ```tsx
 // Component structure
 export function TaskList() {
   const { data: tasks, isLoading } = useQuery({
-    queryKey: ['tasks'],
-    queryFn: () => api.get('/tasks')
-  })
+    queryKey: ["tasks"],
+    queryFn: () => api.get("/tasks"),
+  });
 
-  if (isLoading) return <LoadingSpinner />
-  if (!tasks) return <ErrorMessage />
+  if (isLoading) return <LoadingSpinner />;
+  if (!tasks) return <ErrorMessage />;
 
   return (
     <div className="space-y-4">
-      {tasks.map(task => (
+      {tasks.map((task) => (
         <TaskCard key={task.id} task={task} />
       ))}
     </div>
-  )
+  );
 }
 
 // Always use the API wrapper
-import { api } from '@/lib/api'
-const response = await api.post('/tasks', { title, description })
+import { api } from "@/lib/api";
+const response = await api.post("/tasks", { title, description });
 ```
 
 ## KB/RAG Agent
@@ -82,6 +85,7 @@ const response = await api.post('/tasks', { title, description })
 **SCOPE**: `workers/api/src/routes/kb.ts`, `rag.ts`, and `apps/web/src/modules/kb|ai/rag/**`
 
 **RESPONSIBILITIES**:
+
 - Implement hierarchical collections + document rendering
 - Provide citations for RAG responses
 - Respect `org_id` + `company_ids` scoping
@@ -89,33 +93,34 @@ const response = await api.post('/tasks', { title, description })
 - Handle both public (static files) and private (DB) knowledge bases
 
 **PATTERNS**:
+
 ```typescript
 // KB route structure
 export const kbRoutes = new Hono()
-  .get('/public', async (c) => {
+  .get("/public", async (c) => {
     // Serve from apps/web/public/kb/
   })
-  .get('/private', async (c) => {
+  .get("/private", async (c) => {
     // Query kb_docs with org_id filter
     const docs = await supabaseAdmin
-      .from('kb_docs')
-      .select('*')
-      .eq('org_id', claims.org_id)
-  })
+      .from("kb_docs")
+      .select("*")
+      .eq("org_id", claims.org_id);
+  });
 
 // RAG with citations
 const results = await vectorSearch(query, {
   org_id: claims.org_id,
-  company_ids: claims.company_ids
-})
+  company_ids: claims.company_ids,
+});
 return {
   answer: generatedAnswer,
-  citations: results.map(r => ({
+  citations: results.map((r) => ({
     title: r.title,
     url: r.url,
-    snippet: r.snippet
-  }))
-}
+    snippet: r.snippet,
+  })),
+};
 ```
 
 ## Migrations Agent (SQL)
@@ -123,6 +128,7 @@ return {
 **SCOPE**: `infra/supabase/migrations/**` but **DO NOT EDIT** existing files.
 
 **RESPONSIBILITIES**:
+
 - Create new numbered migration files only
 - Add RLS policies with proper `USING` + `WITH CHECK` clauses
 - Include rollback notes in comments
@@ -130,6 +136,7 @@ return {
 - Never modify existing migration files
 
 **PATTERNS**:
+
 ```sql
 -- Migration: 050_new_feature.sql
 -- Description: Add new feature table with RLS
@@ -148,7 +155,7 @@ ALTER TABLE new_feature ENABLE ROW LEVEL SECURITY;
 -- RLS Policy
 CREATE POLICY "Users can view their org's features" ON new_feature
   FOR SELECT USING (
-    org_id = qieos_org() OR 
+    org_id = qieos_org() OR
     qieos_role() = 'admin'
   );
 
