@@ -1,3 +1,11 @@
 {
-  "agentCanUpdateSnapshot": true
+  "snapshot": "snapshot-20250910-a20cafe1-a41b-4fdf-90bf-84cfc40a84da",
+  "install": "pnpm install\npnpm dev",
+  "start": "cd Q:\\qieos\npnpm install\npnpm dev",
+  "terminals": [
+    {
+      "name": "qieosterminal",
+      "command": "powershell"
+    }
+  ]
 }
