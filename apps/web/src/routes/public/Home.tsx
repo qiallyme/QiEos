@@ -1,179 +1,167 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { useAuth } from '../../hooks/useAuth'
+import React from "react";
+import { Link } from "react-router-dom";
 
-export function Home() {
-  const { user, claims } = useAuth()
-
+const Home = () => {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <h1 className="text-2xl font-bold text-indigo-600">QiEOS</h1>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              {user ? (
-                <div className="flex items-center space-x-4">
-                  <span className="text-gray-700">Welcome, {claims?.email}</span>
-                  <Link
-                    to="/client"
-                    className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
-                  >
-                    Dashboard
-                  </Link>
-                </div>
-              ) : (
-                <Link
-                  to="/auth/login"
-                  className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
-                >
-                  Sign In
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
-
+    <div className="space-y-16 container mx-auto px-4">
       {/* Hero Section */}
-      <div className="relative bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto">
-          <div className="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
-            <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-              <div className="sm:text-center lg:text-left">
-                <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                  <span className="block xl:inline">Unified Client Portal</span>{' '}
-                  <span className="block text-indigo-600 xl:inline">for Modern Business</span>
-                </h1>
-                <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                  QiEOS brings together client portals, admin control, APIs, AI, billing, and public websites in one comprehensive platform.
-                </p>
-                <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
-                  <div className="rounded-md shadow">
-                    {user ? (
-                      <Link
-                        to="/client"
-                        className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
-                      >
-                        Go to Dashboard
-                      </Link>
-                    ) : (
-                      <Link
-                        to="/auth/login"
-                        className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
-                      >
-                        Get Started
-                      </Link>
-                    )}
-                  </div>
-                  <div className="mt-3 sm:mt-0 sm:ml-3">
-                    <Link
-                      to="/kb"
-                      className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10"
-                    >
-                      View Documentation
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </main>
-          </div>
+      <section className="text-center py-20">
+        <h1 className="text-5xl font-bold mb-4">Empower. Innovate. Grow.</h1>
+        <p className="text-xl text-muted-foreground mb-8">
+          I help entrepreneurs simplify the chaos — tax, HR, tech, automation
+          for small business life.
+        </p>
+        <div className="space-x-4">
+          <Link
+            to="/about"
+            className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3 rounded-md"
+          >
+            Learn more
+          </Link>
+          <Link
+            to="/contact"
+            className="bg-secondary text-secondary-foreground hover:bg-secondary/90 px-8 py-3 rounded-md"
+          >
+            Contact
+          </Link>
         </div>
-        <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-          <div className="h-56 w-full bg-indigo-600 sm:h-72 md:h-96 lg:w-full lg:h-full flex items-center justify-center">
-            <div className="text-white text-center">
-              <svg className="mx-auto h-24 w-24 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
-              <h3 className="text-xl font-semibold">QiEOS Platform</h3>
-              <p className="text-indigo-200">Built with Cloudflare + Supabase</p>
+      </section>
+
+      {/* About Teaser */}
+      <section className="py-16 bg-card/60 dark:bg-card/40 backdrop-blur-lg rounded-2xl border border-border/50 shadow-sm">
+        <div className="container mx-auto text-center max-w-3xl">
+          <h2 className="text-3xl font-bold mb-4">
+            Hi, I’m Cody – your ally in all things business.
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            With over 20 years of experience juggling everything from Fortune
+            500 tech to Main Street startups, I provide solo operator, personal
+            service to get you real results.
+          </p>
+        </div>
+      </section>
+
+      {/* Service Pillars */}
+      <section className="py-16">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-10">What I Can Help You With</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Service Card 1 */}
+            <div className="bg-card/60 dark:bg-card/40 backdrop-blur-lg rounded-2xl p-8 shadow-sm border border-border/50">
+              <h3 className="text-2xl font-bold mb-3">Taxes & Bookkeeping</h3>
+              <p className="mb-4 text-muted-foreground">
+                Stress-free tax preparation and meticulous bookkeeping to keep
+                your financials in order.
+              </p>
+              <Link to="/contact" className="text-primary hover:underline">
+                Get in touch
+              </Link>
+            </div>
+            {/* Service Card 2 */}
+            <div className="bg-card/60 dark:bg-card/40 backdrop-blur-lg rounded-2xl p-8 shadow-sm border border-border/50">
+              <h3 className="text-2xl font-bold mb-3">HR & Compliance</h3>
+              <p className="mb-4 text-muted-foreground">
+                Navigating the complexities of HR and ensuring your business
+                stays compliant.
+              </p>
+              <Link to="/contact" className="text-primary hover:underline">
+                Get in touch
+              </Link>
+            </div>
+            {/* Service Card 3 */}
+            <div className="bg-card/60 dark:bg-card/40 backdrop-blur-lg rounded-2xl p-8 shadow-sm border border-border/50">
+              <h3 className="text-2xl font-bold mb-3">Automation & Tools</h3>
+              <p className="mb-4 text-muted-foreground">
+                Implementing smart automation and the right tools to boost your
+                productivity.
+              </p>
+              <Link to="/contact" className="text-primary hover:underline">
+                Get in touch
+              </Link>
+            </div>
+            {/* Service Card 4 */}
+            <div className="bg-card/60 dark:bg-card/40 backdrop-blur-lg rounded-2xl p-8 shadow-sm border border-border/50">
+              <h3 className="text-2xl font-bold mb-3">IT & Strategy</h3>
+              <p className="mb-4 text-muted-foreground">
+                From tech support to long-term IT strategy, I've got your back.
+              </p>
+              <Link to="/contact" className="text-primary hover:underline">
+                Get in touch
+              </Link>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Features Section */}
-      <div className="py-12 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="lg:text-center">
-            <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">Features</h2>
-            <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-              Everything you need in one platform
-            </p>
-            <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-              QiEOS provides a comprehensive solution for modern business operations.
-            </p>
-          </div>
+      {/* Why work with me */}
+      <section className="py-16 bg-card/60 dark:bg-card/40 backdrop-blur-lg rounded-2xl border border-border/50 shadow-sm">
+        <div className="container mx-auto max-w-3xl">
+          <h2 className="text-3xl font-bold mb-4 text-center">
+            Plain-language, ADHD-friendly, async-ready.
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            I believe in clear, direct communication. No jargon, no run-around.
+            I know you're busy, so I'm built for asynchronous work. Send me a
+            message, and I'll get back to you with what you need. It's that
+            simple.
+          </p>
+        </div>
+      </section>
 
-          <div className="mt-10">
-            <div className="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
-              <div className="relative">
-                <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                  </svg>
-                </div>
-                <p className="ml-16 text-lg leading-6 font-medium text-gray-900">Task Management</p>
-                <p className="mt-2 ml-16 text-base text-gray-500">
-                  Organize and track tasks with tenant-scoped access control and project integration.
-                </p>
-              </div>
-
-              <div className="relative">
-                <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <p className="ml-16 text-lg leading-6 font-medium text-gray-900">File Storage</p>
-                <p className="mt-2 ml-16 text-base text-gray-500">
-                  Secure file upload and management with R2 storage and signed URLs.
-                </p>
-              </div>
-
-              <div className="relative">
-                <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                </div>
-                <p className="ml-16 text-lg leading-6 font-medium text-gray-900">Knowledge Base</p>
-                <p className="mt-2 ml-16 text-base text-gray-500">
-                  Public and private documentation with hierarchical organization and search.
-                </p>
-              </div>
-
-              <div className="relative">
-                <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <p className="ml-16 text-lg leading-6 font-medium text-gray-900">User Management</p>
-                <p className="mt-2 ml-16 text-base text-gray-500">
-                  Role-based access control with multi-tenant organization structure.
-                </p>
-              </div>
+      {/* What we do / features */}
+      <section className="py-16">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-10">Features</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="p-8">
+              <h3 className="text-2xl font-bold mb-3">Expert insights</h3>
+              <p className="text-muted-foreground">
+                Get advice from someone who's seen it all.
+              </p>
+            </div>
+            <div className="p-8">
+              <h3 className="text-2xl font-bold mb-3">Networking</h3>
+              <p className="text-muted-foreground">
+                Connect with a curated network of professionals.
+              </p>
+            </div>
+            <div className="p-8">
+              <h3 className="text-2xl font-bold mb-3">Interactive Portal</h3>
+              <p className="text-muted-foreground">
+                A secure, easy-to-use portal for all our work together.
+              </p>
+            </div>
+            <div className="p-8">
+              <h3 className="text-2xl font-bold mb-3">Stay updated</h3>
+              <p className="text-muted-foreground">
+                Regular updates on the things that matter to your business.
+              </p>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Footer */}
-      <footer className="bg-white">
-        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <p className="text-base text-gray-400">
-              &copy; 2025 QiEOS. Built with ❤️ by the QiEOS team.
-            </p>
+      {/* Contact Strip */}
+      <section className="py-16 bg-primary text-primary-foreground rounded-2xl">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-4">
+            Ready to simplify your business?
+          </h2>
+          <p className="text-lg mb-6 opacity-90">
+            No sales pressure, just a conversation.
+          </p>
+          <div className="flex justify-center items-center space-x-8">
+            <a href="tel:+1-555-555-5555" className="text-lg">
+              📞 (555) 555-5555
+            </a>
+            <a href="mailto:cody@qially.me" className="text-lg">
+              ✉️ cody@qially.me
+            </a>
           </div>
         </div>
-      </footer>
+      </section>
     </div>
-  )
-}
+  );
+};
+
+export { Home };

@@ -3,357 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Muerte Verde | Luis Palacios de la Rosa</title>
+    <title>Luis Palacios | Personal Knowledge Base</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #121212;
-            color: #E0E0E0;
-        }
-        .creepster {
-            font-family: 'Creepster', cursive;
-        }
-        .bg-pattern {
-            background-image: linear-gradient(rgba(18, 18, 18, 0.95), rgba(18, 18, 18, 0.95)), url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M 0 50 L 50 100 L 100 50 L 50 0 L 0 50 Z" stroke="%2322C55E" stroke-width="1" fill="none" opacity="0.1" /%3E%3C/svg%3E');
-            background-size: 50px 50px;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            -webkit-backdrop-filter: blur(8px);
-            backdrop-filter: blur(8px);
-            justify-content: center;
-            align-items: center;
-        }
-        .loading-spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #22C55E;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-pattern text-white antialiased">
+<body class="bg-gray-100 text-gray-900">
 
-    <!-- Modal for messages (no alerts) -->
-    <div id="message-modal" class="modal">
-        <div class="bg-emerald-600 p-8 rounded-xl shadow-lg border-2 border-emerald-400 text-center max-w-sm w-full">
-            <h3 id="modal-title" class="text-2xl font-bold mb-4"></h3>
-            <p id="modal-text" class="text-sm"></p>
-            <button onclick="closeModal()" class="mt-6 px-6 py-2 bg-white text-emerald-600 rounded-full font-bold hover:bg-gray-100 transition duration-300">Close</button>
-        </div>
-    </div>
-
-    <!-- Hero Section -->
-    <header class="h-screen flex items-center justify-center text-center p-4 relative overflow-hidden">
-        <div class="z-10 max-w-4xl mx-auto">
-            <!-- Custom Logo SVG -->
-            <div class="flex flex-col items-center justify-center mb-6">
-                <svg class="w-24 h-24 sm:w-32 sm:h-32 mb-4 animate-pulse-slow" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Grim Reaper/Scythe Blade -->
-                    <path d="M 20 80 Q 30 70, 50 75 Q 70 80, 80 70 A 10 10 0 0 1 75 60 L 65 50 C 60 55, 50 60, 45 55 Q 40 50, 45 45 Q 50 40, 55 45 C 60 50, 65 55, 70 50 C 75 45, 80 40, 85 40 Q 90 40, 95 45" fill="none" stroke="#22C55E" stroke-width="2" stroke-linejoin="round" />
-                    <!-- Scythe handle is the grass trimmer -->
-                    <rect x="55" y="40" width="5" height="45" fill="#22C55E" transform="rotate(-30 60 60)" />
-                    <!-- Skull/Head -->
-                    <circle cx="48" cy="38" r="10" fill="#E0E0E0" />
-                    <rect x="42" y="35" width="12" height="18" fill="#E0E0E0" rx="3" />
-                    <circle cx="45" cy="40" r="2" fill="#121212" />
-                    <circle cx="51" cy="40" r="2" fill="#121212" />
-                    <!-- Grim Reaper's Robe -->
-                    <path d="M 45 53 C 40 65, 30 75, 20 75 C 10 75, 5 70, 5 60 C 5 50, 15 45, 20 40 L 45 53 Z" fill="#E0E0E0" stroke="#121212" stroke-width="1" />
-                    <path d="M 50 53 C 55 65, 65 75, 75 75 C 85 75, 90 70, 90 60 C 90 50, 80 45, 75 40 L 50 53 Z" fill="#E0E0E0" stroke="#121212" stroke-width="1" />
-                </svg>
-            </div>
-            
-            <h1 class="text-4xl sm:text-6xl md:text-8xl font-black creepster mb-2 animate-fade-in-down">
-                LA MUERTE VERDE
-            </h1>
-            <h2 class="text-lg sm:text-xl md:text-2xl font-bold mb-4 text-emerald-400 animate-fade-in-up">
-                Landscaping by Luis Palacios de la Rosa
-            </h2>
-            <p class="text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-8 opacity-0 animate-fade-in" style="animation-delay: 0.5s;">
-                We kill weeds, we save grass. A beautiful yard isn't just a dream, it's a promise. Let's make it a reality, one blade at a time.
-            </p>
-            <a href="#contact" class="px-8 py-3 bg-emerald-600 text-white rounded-full font-bold shadow-lg hover:bg-emerald-700 transition transform hover:scale-105 duration-300 ease-in-out opacity-0 animate-fade-in" style="animation-delay: 1s;">
-                Get a Quote
-            </a>
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-6 py-4">
+            <h1 class="text-3xl font-bold">Luis Palacios's Knowledge Base</h1>
+            <p class="text-gray-600">Your personal wiki and quick reference links.</p>
         </div>
     </header>
 
-    <main class="container mx-auto p-4 sm:p-8">
-        <!-- Services Section -->
-        <section id="services" class="py-16">
-            <h2 class="text-4xl sm:text-5xl font-extrabold text-center mb-12 animate-fade-in-up">What We Exterminate & Nurture</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Service Card 1 -->
-                <div class="bg-neutral-800 p-8 rounded-3xl shadow-lg border border-neutral-700 hover:border-emerald-500 transition duration-300 transform hover:scale-105 animate-fade-in" style="animation-delay: 1.5s;">
-                    <h3 class="text-2xl font-bold mb-4 text-emerald-400">Weed Annihilation</h3>
-                    <p class="text-neutral-300">
-                        Our sworn duty is to purge your lawn of all unwanted botanical invaders. We identify, target, and permanently remove those pesky weeds without collateral damage to your prized grass.
-                    </p>
-                </div>
-                <!-- Service Card 2 -->
-                <div class="bg-neutral-800 p-8 rounded-3xl shadow-lg border border-neutral-700 hover:border-emerald-500 transition duration-300 transform hover:scale-105 animate-fade-in" style="animation-delay: 1.7s;">
-                    <h3 class="text-2xl font-bold mb-4 text-emerald-400">Lawn Revival</h3>
-                    <p class="text-neutral-300">
-                        From a barren wasteland to a luscious paradise. Our team specializes in aerating, seeding, and fertilizing your lawn to bring it back to a vibrant, verdant state.
-                    </p>
-                </div>
-                <!-- Service Card 3 -->
-                <div class="bg-neutral-800 p-8 rounded-3xl shadow-lg border border-neutral-700 hover:border-emerald-500 transition duration-300 transform hover:scale-105 animate-fade-in" style="animation-delay: 1.9s;">
-                    <h3 class="text-2xl font-bold mb-4 text-emerald-400">Tree & Shrub Care</h3>
-                    <p class="text-neutral-300">
-                        We don't just stop at the grass. Our skills extend to the lifeblood of your landscape, ensuring your trees and shrubs are healthy, well-maintained, and looking their best.
-                    </p>
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+            <!-- Links Section -->
+            <div class="md:col-span-1">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold mb-4">Quick Links</h2>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-blue-600 hover:underline">Link to a frequently used tool</a></li>
+                        <li><a href="#" class="text-blue-600 hover:underline">Documentation or project page</a></li>
+                        <li><a href="#" class="text-blue-600 hover:underline">Personal blog or portfolio</a></li>
+                        <li><a href="#" class="text-blue-600 hover:underline">Another important resource</a></li>
+                    </ul>
                 </div>
             </div>
-        </section>
 
-        <!-- About Section -->
-        <section id="about" class="py-16 animate-fade-in" style="animation-delay: 2.1s;">
-            <div class="md:flex items-center gap-12">
-                <div class="md:w-1/2 mb-8 md:mb-0">
-                    <img src="https://placehold.co/800x600/1C1C1C/E0E0E0?text=LUIS" alt="A genuine, happy person working on a lawn." class="w-full rounded-2xl shadow-xl border border-neutral-700 hover:border-emerald-500 transition duration-300" />
-                </div>
-                <div class="md:w-1/2">
-                    <h2 class="text-4xl sm:text-5xl font-extrabold mb-4 text-emerald-400">Meet Luis Palacios de la Rosa</h2>
-                    <p class="text-neutral-300 text-lg leading-relaxed">
-                        I'm not your typical landscaper. I'm an artist, a philosopher, and a certified plant whisperer. I've spent my life turning neglected patches of earth into breathing, thriving canvases. My work is my passion, and my name, Luis Palacios de la Rosa, is a symbol of my ambition. Every lawn, every garden, every client is a chance to show what genuine, honest work looks like. Let's build something beautiful together.
-                    </p>
-                </div>
-            </div>
-        </section>
+            <!-- Notes / KB Section -->
+            <div class="md:col-span-2">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold mb-4">Wiki / Notes</h2>
+                    <div class="prose max-w-none">
+                        <h3>Topic 1: Project Setup</h3>
+                        <p>A brief note about setting up a new project, including key commands and configuration steps.</p>
+                        <pre><code>npx create-react-app my-app
+cd my-app
+npm start</code></pre>
 
-        <!-- Gemini API Section -->
-        <section id="dream-yard" class="py-16">
-            <div class="bg-neutral-800 p-8 rounded-3xl shadow-lg border border-neutral-700 max-w-3xl mx-auto">
-                <h2 class="text-4xl sm:text-5xl font-extrabold text-center mb-4 text-emerald-400">✨ Dream Yard Architect ✨</h2>
-                <p class="text-center text-neutral-300 mb-8">
-                    Describe your ultimate outdoor space, and I'll sketch out a vision just for you. What do you dream of? A tranquil zen garden? A vibrant, colorful oasis? Tell me your vision!
-                </p>
-                <div class="space-y-6">
-                    <div>
-                        <textarea id="dream-description" rows="5" placeholder="e.g., A low-maintenance desert garden with cacti and succulents, or a vibrant lawn with hydrangeas and a cozy seating area." class="w-full px-4 py-2 rounded-lg bg-neutral-700 border border-neutral-600 focus:outline-none focus:ring-2 focus:ring-emerald-500" required></textarea>
-                    </div>
-                    <button id="generate-button" class="w-full px-6 py-3 bg-emerald-600 text-white font-bold rounded-full shadow-lg hover:bg-emerald-700 transition duration-300 transform hover:scale-105">
-                        <span id="button-text">Generate My Dream Yard ✨</span>
-                        <div id="loading-spinner" class="loading-spinner hidden mx-auto"></div>
-                    </button>
-                    <div id="dream-output" class="p-6 bg-neutral-900 rounded-lg hidden">
-                        <h3 class="text-xl font-bold mb-4 text-emerald-400">Your Vision, Unleashed:</h3>
-                        <p id="output-text" class="text-neutral-300 leading-relaxed whitespace-pre-wrap"></p>
+                        <h3>Topic 2: Important Contacts</h3>
+                        <p>A list of key contacts or team members.</p>
+                        <ul>
+                            <li><strong>Client A:</strong> email@example.com</li>
+                            <li><strong>Collaborator B:</strong> email@example.com</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Testimonials Section -->
-        <section id="testimonials" class="py-16 animate-fade-in" style="animation-delay: 2.3s;">
-            <h2 class="text-4xl sm:text-5xl font-extrabold text-center mb-12">Our Satisfied Survivors</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Testimonial 1 -->
-                <div class="bg-neutral-800 p-8 rounded-3xl shadow-lg border border-neutral-700">
-                    <p class="text-lg italic text-neutral-300 mb-4">"I thought my yard was beyond saving. Luis didn't just fix it, he resurrected it. It's lush, vibrant, and the weeds are a distant, horrifying memory."</p>
-                    <p class="font-bold text-emerald-400">- Samantha V.</p>
-                </div>
-                <!-- Testimonial 2 -->
-                <div class="bg-neutral-800 p-8 rounded-3xl shadow-lg border border-neutral-700">
-                    <p class="text-lg italic text-neutral-300 mb-4">"Working with Luis was a trip. He's super passionate and his work speaks for itself. My neighbors are seriously jealous."</p>
-                    <p class="font-bold text-emerald-400">- Mark C.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Form Section -->
-        <section id="contact" class="py-16 animate-fade-in" style="animation-delay: 2.5s;">
-            <div class="bg-neutral-800 p-8 rounded-3xl shadow-lg border border-neutral-700 max-w-3xl mx-auto">
-                <h2 class="text-4xl sm:text-5xl font-extrabold text-center mb-4 text-emerald-400">Ready to Get a Quote?</h2>
-                <p class="text-center text-neutral-300 mb-8">
-                    Let's talk about your dream lawn. No project is too big or too small for La Muerte Verde.
-                </p>
-                <form id="contact-form" class="space-y-6">
-                    <div>
-                        <label for="name" class="block text-sm font-bold mb-2">Name</label>
-                        <input type="text" id="name-contact" name="name" placeholder="Enter your name" class="w-full px-4 py-2 rounded-lg bg-neutral-700 border border-neutral-600 focus:outline-none focus:ring-2 focus:ring-emerald-500" required>
-                    </div>
-                    <div>
-                        <label for="email" class="block text-sm font-bold mb-2">Email</label>
-                        <input type="email" id="email-contact" name="email" placeholder="Enter your email" class="w-full px-4 py-2 rounded-lg bg-neutral-700 border border-neutral-600 focus:outline-none focus:ring-2 focus:ring-emerald-500" required>
-                    </div>
-                    <div>
-                        <label for="message" class="block text-sm font-bold mb-2">Tell Us About Your Lawn</label>
-                        <textarea id="message-contact" name="message" rows="4" placeholder="Tell us about your lawn care needs" class="w-full px-4 py-2 rounded-lg bg-neutral-700 border border-neutral-600 focus:outline-none focus:ring-2 focus:ring-emerald-500" required></textarea>
-                    </div>
-                    <button type="submit" class="w-full px-6 py-3 bg-emerald-600 text-white font-bold rounded-full shadow-lg hover:bg-emerald-700 transition duration-300 transform hover:scale-105">
-                        Send the Word
-                    </button>
-                </form>
-            </div>
-        </section>
-
+        </div>
     </main>
 
     <!-- Footer -->
-    <footer class="text-center py-8 text-neutral-500 text-xs">
-        <p>
-            © 2024 La Muerte Verde Landscaping. All rights reserved.
-            <br>
-            A passion project by Luis Palacios de la Rosa.
-        </p>
+    <footer class="bg-white text-gray-600 py-6 mt-12 shadow-inner">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 Luis Palacios. A personalized knowledge base.</p>
+        </div>
     </footer>
 
-    <script>
-        // Custom CSS animations using @keyframes
-        const styleSheet = document.createElement("style");
-        styleSheet.innerHTML = `
-            @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(20px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            .animate-fade-in {
-                animation: fadeIn 1s ease-out forwards;
-            }
-            @keyframes fadeInDown {
-                from { opacity: 0; transform: translateY(-20px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            .animate-fade-in-down {
-                animation: fadeInDown 1s ease-out forwards;
-            }
-            @keyframes fadeInUP {
-                from { opacity: 0; transform: translateY(20px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            .animate-fade-in-up {
-                animation: fadeInUP 1s ease-out forwards;
-            }
-            @keyframes pulse-slow {
-                0%, 100% { transform: scale(1); }
-                50% { transform: scale(1.05); }
-            }
-            .animate-pulse-slow {
-                animation: pulse-slow 3s infinite ease-in-out;
-            }
-        `;
-        document.head.appendChild(styleSheet);
-        
-        // Modal functions
-        const messageModal = document.getElementById('message-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalText = document.getElementById('modal-text');
-
-        function openModal(title, text) {
-            modalTitle.textContent = title;
-            modalText.textContent = text;
-            messageModal.style.display = 'flex';
-        }
-
-        function closeModal() {
-            messageModal.style.display = 'none';
-        }
-
-        // Contact form submission handler
-        document.getElementById('contact-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const name = document.getElementById('name-contact').value;
-            openModal('Thank you, ' + name + '!', 'Your message has been received. Luis will be in touch with you shortly to discuss your landscaping needs.');
-            document.getElementById('contact-form').reset();
-        });
-
-        // Gemini API integration logic
-        const generateButton = document.getElementById('generate-button');
-        const dreamDescription = document.getElementById('dream-description');
-        const dreamOutput = document.getElementById('dream-output');
-        const outputText = document.getElementById('output-text');
-        const buttonText = document.getElementById('button-text');
-        const loadingSpinner = document.getElementById('loading-spinner');
-        
-        generateButton.addEventListener('click', async () => {
-            const userQuery = dreamDescription.value.trim();
-
-            if (!userQuery) {
-                openModal('Oops!', 'Please describe your dream yard first.');
-                return;
-            }
-            
-            // Show loading state
-            generateButton.disabled = true;
-            buttonText.classList.add('hidden');
-            loadingSpinner.classList.remove('hidden');
-            dreamOutput.classList.add('hidden');
-
-            const systemPrompt = "You are Luis Palacios de la Rosa, an eccentric, artistic, and poetic landscaper known as 'La Muerte Verde'. Respond to the user's landscaping vision with a passionate, philosophical, and detailed plan, as if you are a true artist. Include specific plant suggestions, design concepts, and a closing remark that feels personal and genuine. Your response should be a single, flowing paragraph, using language that is both professional and a little edgy, reflecting your unique brand.";
-            
-            const apiKey = "YOUR_GEMINI_API_KEY_HERE"; // Replace with actual API key
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                tools: [{ "google_search": {} }],
-                systemInstruction: {
-                    parts: [{ text: systemPrompt }]
-                },
-            };
-            
-            let retryCount = 0;
-            const maxRetries = 3;
-            const delay = 1000;
-
-            const makeApiCall = async () => {
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    
-                    if (!response.ok) {
-                        if (response.status === 429 && retryCount < maxRetries) {
-                            retryCount++;
-                            await new Promise(res => setTimeout(res, delay * Math.pow(2, retryCount - 1)));
-                            return makeApiCall();
-                        }
-                        throw new Error(`API call failed with status: ${response.status}`);
-                    }
-                    
-                    const result = await response.json();
-                    const generatedText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                    if (generatedText) {
-                        outputText.textContent = generatedText;
-                        dreamOutput.classList.remove('hidden');
-                    } else {
-                        throw new Error('No content was generated by the API.');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    openModal('Error', 'Could not generate a plan at this time. Please try again later.');
-                } finally {
-                    // Hide loading state
-                    generateButton.disabled = false;
-                    buttonText.classList.remove('hidden');
-                    loadingSpinner.classList.add('hidden');
-                }
-            };
-            
-            makeApiCall();
-        });
-    </script>
 </body>
 </html>

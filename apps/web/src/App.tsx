@@ -16,14 +16,31 @@ import { KnowledgeBase } from "./routes/client/KnowledgeBase";
 import { Profile } from "./routes/client/Profile";
 import { Home } from "./routes/public/Home";
 import { PublicKBPage } from "./routes/public/PublicKB";
+import { About } from "./routes/public/About";
+import { Services } from "./routes/public/Services";
+import { Contact } from "./routes/public/Contact";
+import { LetterWizard } from "./routes/public/LetterWizard";
+import { Terms } from "./routes/public/Terms";
+import { Privacy } from "./routes/public/Privacy";
+import { MarketingLayout } from "./components/MarketingLayout";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<Home />} />
+          {/* Marketing routes */}
+          <Route element={<MarketingLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/letter-wizard" element={<LetterWizard />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
+          </Route>
+
+          {/* App routes */}
           <Route path="/kb" element={<PublicKBPage />} />
           <Route path="/auth/login" element={<Login />} />
 

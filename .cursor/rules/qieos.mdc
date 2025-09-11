@@ -1,0 +1,68 @@
+---
+description: >
+  Qieos project hard rules for safety, file operations, and documentation.
+  These rules MUST always be respected by AI and automation tools.
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+## SAFETY RULES (MANDATORY)
+
+- **Never expose secrets in client code.**
+  No API keys, tokens, passwords, environment variables, or private data may be written into public/client code.
+
+- **Context before code.**
+  Always run `Understand` (or equivalent) on:
+  - The file(s) being edited
+  - The entire `docs/` folder (including `docs/qieos.md` and all dev guides)
+
+- **Fail safe, not dangerous.**
+  Prefer reversible, non-destructive actions. Stop and surface questions if unsure.
+
+---
+
+## FILE & DIRECTORY DELETION POLICY (HARD STOP)
+
+- **No permanent deletion.**
+  Never delete files or directories outright.
+  Never run destructive commands (`rm -rf`, `git clean`, `del /s`, etc.) without explicit user confirmation.
+
+- **Safe Removal Workflow:**
+  1. **Move, do not delete.** Move files/folders into `.trash/` at repo root.
+  2. **Preserve full path.** Example:
+     ```
+     apps/web/src/foo.tsx → .trash/apps/web/src/foo.tsx
+     ```
+  3. **Report & pause.** List what was moved and wait for explicit approval before any permanent deletion.
+
+- **Only purge when user explicitly confirms.**
+
+---
+
+## PROJECT DOCUMENTATION STANDARD
+
+- **Single Source of Truth:**
+  `docs/qieos.md` is the canonical dev doc for architecture, database schema, and guidelines.
+
+- **Required Practice:**
+  - Always read `docs/qieos.md` before coding.
+  - After major features or milestones, update `docs/qieos.md`.
+  - Fully document the database schema in this file.
+  - Add all migrations here as they are created.
+
+---
+
+## AI / AUTOMATION INTENT
+
+- Always gather full context before changing code.
+- Prefer explicit, reproducible steps over “magic fixes.”
+- Never bypass `.trash/` workflow.
+- Treat `.trash/` as reversible storage until the user confirms purge.
+
+---
+
+## ONE-LINER FOR AGENTS
+
+> **Always read and update `docs/qieos.md` before coding. Never delete — always move to `.trash/` preserving full path, and confirm before purging.**
+

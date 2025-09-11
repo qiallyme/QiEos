@@ -1,44 +1,28 @@
-import React from 'react'
-import Header from './components/Header'
-import PostCard from './components/PostCard'
-import AudioPlayer from './components/AudioPlayer'
-import { loadPosts } from './lib/posts'
+import React from "react";
+import { loadPosts } from "./lib/posts";
+import Header from "./components/Header";
+import PostCard from "./components/PostCard";
 
-export default function App() {
-  const posts = loadPosts()
-  const qsaysit = posts.filter(p => (p.category || '').toLowerCase().includes('qsaysit'))
-  const empower = posts.filter(p => (p.category || '').toLowerCase().includes('empower'))
+function App() {
+  const posts = loadPosts();
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       <Header />
-      <main className="max-w-3xl mx-auto px-4 py-10">
-        <section id="qsaysit" className="mb-12">
-          <h1 className="text-3xl font-bold mb-4">Qsaysit</h1>
-          <p className="text-zinc-600 mb-6">Playful, real, timeline-bending dispatches.</p>
-          {(qsaysit.length ? qsaysit : posts).map(p => (
-            <div key={p.slug}>
-              <PostCard post={p} />
-              <AudioPlayer src={p.audio} />
-            </div>
+      <main className="container mx-auto px-6 py-12">
+        <div className="space-y-8">
+          {posts.map((post) => (
+            <PostCard key={post.slug} post={post} />
           ))}
-        </section>
-        <section id="empowerq" className="mb-12">
-          <h1 className="text-3xl font-bold mb-4">Empower Q Now</h1>
-          <p className="text-zinc-600 mb-6">Reflective, spiritual essays & insights.</p>
-          {empower.map(p => (
-            <div key={p.slug}>
-              <PostCard post={p} />
-              <AudioPlayer src={p.audio} />
-            </div>
-          ))}
-        </section>
-        <section id="about" className="mb-12">
-          <h2 className="text-2xl font-semibold mb-2">About</h2>
-          <p className="text-zinc-700">Stories at the edge of memory, identity, and quantum weirdness. Real? Fiction? You decide.</p>
-        </section>
+        </div>
       </main>
-      <footer className="border-t border-zinc-200 py-6 text-center text-sm text-zinc-600">© {new Date().getFullYear()} Q</footer>
+      <footer className="bg-white border-t mt-12">
+        <div className="container mx-auto px-6 py-4 text-center text-gray-500">
+          <p>&copy; {new Date().getFullYear()} QSaysIt. All Rights Reserved.</p>
+        </div>
+      </footer>
     </div>
-  )
+  );
 }
+
+export default App;

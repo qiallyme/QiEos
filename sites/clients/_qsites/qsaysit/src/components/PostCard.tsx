@@ -1,38 +1,37 @@
-import React from 'react'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import rehypeRaw from 'rehype-raw'
+import React from "react";
+import AudioPlayer from "./AudioPlayer";
 
-export type Post = {
-  slug: string
-  title: string
-  date: string
-  category: string
-  tags: string[]
-  mood?: string
-  summary?: string
-  audio?: string
-  body: string
+interface PostCardProps {
+  post: {
+    slug: string;
+    title: string;
+    date: string;
+    category: string;
+    summary?: string;
+    audio?: string;
+  };
 }
 
-export default function PostCard({ post }: { post: Post }) {
+const PostCard = ({ post }: PostCardProps) => {
   return (
-    <article id={post.slug} className="bg-white rounded-2xl shadow-sm border border-zinc-200 p-6 mb-6">
-      <header className="mb-3">
-        <h2 className="text-2xl font-semibold leading-tight">{post.title}</h2>
-        <p className="text-sm text-zinc-500">{new Date(post.date).toLocaleDateString()} · {post.category}</p>
+    <article className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+      <header className="mb-4">
+        <p className="text-sm text-gray-500">
+          {new Date(post.date).toLocaleDateString()}
+        </p>
+        <h2 className="text-2xl font-bold mt-1">
+          <a href={`/${post.slug}`} className="hover:text-blue-600">
+            {post.title}
+          </a>
+        </h2>
       </header>
-      {post.summary && <p className="text-zinc-700 mb-4">{post.summary}</p>}
-      <ReactMarkdown className="prose prose-zinc max-w-none" remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
-        {post.body}
-      </ReactMarkdown>
-      {post.tags?.length ? (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {post.tags.map(t => (
-            <span key={t} className="text-xs bg-zinc-100 text-zinc-700 px-2 py-1 rounded-full">#{t}</span>
-          ))}
-        </div>
-      ) : null}
+      {post.summary && <p className="text-gray-700 mb-4">{post.summary}</p>}
+      {post.audio && <AudioPlayer src={post.audio} />}
+      <a href={`/${post.slug}`} className="text-blue-600 font-semibold">
+        {post.audio ? "Listen / Read More" : "Read More"} &rarr;
+      </a>
     </article>
-  )
-}
+  );
+};
+
+export default PostCard;

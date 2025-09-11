@@ -65,97 +65,49 @@ QiEOS is a comprehensive platform that unifies client portals, admin control, AP
 
 2. **Configure environment**
 
-   - Set up Supabase project
-   - Configure Cloudflare Workers
-   - Add environment variables to `workers/api/wrangler.toml`
+   - Set up a new Supabase project.
+   - In `infra/cloudflare/wrangler.toml`, fill in your Supabase project URL and service role key. You will also need to add API keys for OpenAI and Stripe if you use those features.
+   - Create a file `workers/api/.dev.vars` and add your development secrets there. You can copy the keys from `infra/cloudflare/env.example` but note that `wrangler` does not load `.env` files. The format is `KEY="VALUE"`.
+
+     ```
+     # workers/api/.dev.vars
+
+     SUPABASE_URL="YOUR_SUPABASE_URL"
+     SUPABASE_SERVICE_ROLE_KEY="YOUR_SUPABASE_SERVICE_ROLE_KEY"
+     OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
+     STRIPE_SECRET_KEY="YOUR_STRIPE_SECRET_KEY"
+     JWT_SECRET="YOUR_JWT_SECRET"
+     ```
+
+   - Create a file `apps/web/.env` for the web app's environment variables:
+
+     ```
+     # apps/web/.env
+
+     VITE_SUPABASE_URL="YOUR_SUPABASE_URL"
+     VITE_SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
+     VITE_API_URL="http://localhost:8787"
+     ```
 
 3. **Run migrations**
 
-   ```bash
-   pnpm -C infra/supabase migrate
-   ```
+   - Go to your Supabase project's SQL Editor.
+   - Copy the content of `scripts/create-migrations.sql` and run it.
 
 4. **Start development servers**
 
+   - In the `workers/api/package.json` file, update the `dev` script to:
+     `"dev": "wrangler dev --config ../../infra/cloudflare/wrangler.toml --persist"`
+
+   - In the root directory, run:
+
    ```bash
-   # Web application
-   pnpm -C apps/web dev
-
-   # API worker
-   pnpm -C workers/api dev
-
-   # Admin Electron app
-   pnpm -C apps/admin-electron dev
+   # Start both the web app and the API worker
+   pnpm dev
    ```
 
 ## 📁 Project Structure
 
 ```
-qieos/
-├── apps/
-│   ├── web/                    # React web application
-│   └── admin-electron/         # Electron admin desktop app
-├── workers/
-│   └── api/                    # Cloudflare Worker API
-├── sites/                      # Client public websites
-├── infra/
-│   ├── supabase/              # Database migrations & seeds
-│   └── cloudflare/            # Cloudflare configuration
-├── templates/                  # Reusable content templates
-├── blueprints/                 # Directory scaffolds per client
-├── packages/                   # Shared packages (ui, types, utils)
-└── docs/                      # Documentation
+
 ```
-
-## 🔒 Security & Guardrails
-
-- **RLS (Row Level Security)**: All user-facing tables have org_id and RLS enabled
-- **JWT Claims**: Server-side claims enrichment with role, org_id, company_ids, features
-- **Sacred Paths**: Protected directories that require RFC for changes
-- **Service Role**: All privileged operations run in Workers only
-
-## 🎛️ Cursor AI Integration
-
-This project includes specialized Cursor AI agents for different domains:
-
-- **API Agent**: Server-side Worker development
-- **UI Agent**: React web application development
-- **KB/RAG Agent**: Knowledge base and AI features
-- **Migrations Agent**: Database schema management
-
-## 📚 Documentation
-
-- [Architecture Overview](docs/ARCHITECTURE.md)
-- [Setup Guide](docs/SETUP.md)
-- [Module Documentation](docs/MODULES.md)
-- [AI & RAG Guide](docs/AI_RAG.md)
-- [Billing System](docs/BILLING.md)
-- [Feature Flags](docs/FEATURE_FLAGS.md)
-- [Website Management](docs/WEBSITES.md)
-
-## 🚧 MVP Status
-
-Current MVP includes:
-
-- ✅ Authentication + RBAC
-- ✅ Tasks (tenant-scoped)
-- ✅ File storage (R2 signed URLs)
-- ✅ Knowledge Base (public + private read)
-- ✅ Profile updates
-- ✅ Public website visibility
-
-## 🤝 Contributing
-
-1. Follow the God Doc structure exactly
-2. Use appropriate Cursor AI agents for your domain
-3. Keep files under 400 lines; split if needed
-4. Never expose secrets to client code
-5. All service-role operations in Workers only
-
-## 📄 License
-
-Proprietary - QiAlly LLC (QiEOS)
-
----
-
-**Built with ❤️ by the QiEOS team**

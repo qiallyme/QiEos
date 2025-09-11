@@ -1,5 +1,9 @@
 /* Any custom CSS rules you want can go here. */
 
+html, body {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: 'Inter', sans-serif;
 }

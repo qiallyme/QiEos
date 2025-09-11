@@ -1,16 +1,14 @@
-import React from 'react'
+import React from "react";
 
-export default function Header() {
+const Header = () => {
   return (
-    <header className="sticky top-0 z-50 backdrop-blur bg-white/70 border-b border-zinc-200">
-      <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
-        <a href="/" className="text-xl font-semibold">Qsaysit · Empower Q Now</a>
-        <nav className="flex gap-4 text-sm">
-          <a href="#qsaysit" className="hover:underline">Qsaysit</a>
-          <a href="#empowerq" className="hover:underline">Empower Q</a>
-          <a href="#about" className="hover:underline">About</a>
-        </nav>
+    <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b">
+      <div className="container mx-auto px-6 py-4">
+        <h1 className="text-3xl font-bold">QSaysIt</h1>
+        <p className="text-gray-600">A Podcast & Blog by Cody Rice Velasquez</p>
       </div>
     </header>
-  )
-}
+  );
+};
+
+export default Header;

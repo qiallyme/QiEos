@@ -3,268 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuiltByRays™</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Built By Rays | Professional Contracting Services</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="style.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Inter:wght@400;700&display=swap');
-    </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-100 text-gray-800">
 
-    <!-- Header Section -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <a href="mailto:info@builtbyrays.com" class="text-sm flex items-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-10 1a2 2 0 01-2-2V4a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H9a2 2 0 01-2-2z" />
-                    </svg>
-                    <span>info@builtbyrays.com</span>
-                </a>
-                <a href="tel:3177896362" class="text-sm flex items-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.203 1.102a11.002 11.002 0 0010.51 10.511l1.102-2.203a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-2C7.22 21 3 16.78 3 12V5z" />
-                    </svg>
-                    <span>(317) 789-6362</span>
-                </a>
-            </div>
-            <div class="hidden md:flex items-center space-x-6">
-                <a href="#" class="text-sm font-medium hover:text-emerald-600 transition">Home</a>
-                <a href="#services" class="text-sm font-medium hover:text-emerald-600 transition">Services</a>
-                <a href="#about" class="text-sm font-medium hover:text-emerald-600 transition">About Us</a>
-                <a href="#contact" class="text-sm font-medium hover:text-emerald-600 transition">Contact</a>
-                <a href="#privacy" class="text-sm font-medium hover:text-emerald-600 transition">Privacy</a>
-                <a href="#terms" class="text-sm font-medium hover:text-emerald-600 transition">Terms</a>
-            </div>
-            <!-- Mobile Menu Toggle -->
-            <button id="mobile-menu-button" class="md:hidden" aria-label="Toggle mobile menu" title="Toggle mobile menu">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                </svg>
-            </button>
-        </div>
-        <!-- Mobile Menu (initially hidden) -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg py-2">
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">Home</a>
-            <a href="#services" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">Services</a>
-            <a href="#about" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">About Us</a>
-            <a href="#contact" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">Contact</a>
-            <a href="#privacy" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">Privacy</a>
-            <a href="#terms" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition">Terms</a>
-        </div>
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-900">Built By Rays</h1>
+            <ul class="flex space-x-6">
+                <li><a href="#home" class="hover:text-blue-600">Home</a></li>
+                <li><a href="#about" class="hover:text-blue-600">About</a></li>
+                <li><a href="#services" class="hover:text-blue-600">Services</a></li>
+                <li><a href="#contact" class="hover:text-blue-600">Contact</a></li>
+            </ul>
+        </nav>
     </header>
 
     <!-- Hero Section -->
-    <main>
-        <div class="relative bg-black text-white py-24 md:py-48 px-4 hero-background">
-            <div class="container mx-auto max-w-7xl">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                    <div>
-                        <h5 class="font-libre italic text-4xl md:text-5xl font-light">BuiltByRays™</h5>
-                        <p class="font-libre italic text-xl md:text-2xl mt-2">Home Sweet Home Since 2019</p>
-                        <h2 class="font-libre text-3xl md:text-4xl mt-6">Over 15 Years of Trusted Residential Construction in Indiana</h2>
-                        <h4 class="mt-4 font-bold">Family-Owned. Quality-Driven.</h4>
-                        <a href="#about" class="mt-8 inline-block px-6 py-3 bg-emerald-600 text-white rounded-full hover:bg-emerald-700 transition">Learn More About Us</a>
-                    </div>
-                    <div class="bg-gray-900 bg-opacity-70 border-2 border-white p-6 rounded-lg text-center">
-                        <h4 class="font-libre text-2xl">Call Now</h4>
-                        <p class="text-lg mt-2">Let’s Build Something Beautiful Together</p>
-                        <a href="tel:3177896362" class="mt-4 inline-block px-6 py-3 bg-white text-gray-900 rounded-full font-bold text-lg hover:bg-gray-200 transition">
-                            317-789-6362
-                        </a>
-                    </div>
+    <section id="home" class="py-20 bg-gray-200 text-center">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold mb-4">Quality Craftsmanship, Built to Last</h2>
+            <p class="text-lg text-gray-700 mb-8">Professional contracting services for your home and business.</p>
+            <a href="#contact" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700">Get a Free Quote</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-6">About Us</h2>
+            <p class="max-w-3xl mx-auto text-gray-700">
+                Welcome to Built By Rays, where our passion for building and commitment to quality come together. We are a dedicated team of professionals with years of experience in the contracting industry. Our mission is to deliver exceptional results and create lasting relationships with our clients by exceeding their expectations on every project.
+            </p>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12">Our Services</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-lg shadow-md text-center">
+                    <h3 class="text-2xl font-bold mb-4">Renovations</h3>
+                    <p>Complete home and office renovations, tailored to your vision and needs.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-md text-center">
+                    <h3 class="text-2xl font-bold mb-4">Custom Builds</h3>
+                    <p>From custom furniture to new constructions, we bring your ideas to life.</p>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-md text-center">
+                    <h3 class="text-2xl font-bold mb-4">Repairs & Maintenance</h3>
+                    <p>Reliable and efficient repair services to keep your property in top condition.</p>
                 </div>
             </div>
         </div>
-        
-        <!-- Our Services Section -->
-        <section id="services" class="py-16 md:py-24 px-4 bg-white">
-            <div class="container mx-auto text-center">
-                <h2 class="font-libre text-4xl font-bold">Our Services</h2>
-                <p class="max-w-3xl mx-auto mt-4 text-lg">
-                    <strong class="font-bold">BuiltByRays™ specializes in residential remodels, repairs, and home improvement projects—big or small.</strong> With over 15 years of hands-on experience, Ray is a true jack-of-all-trades who treats every home like it's his own. Whether you're dealing with a leaky ceiling, a kitchen that needs updating, or a full room remodel, he’s got you covered. If it’s outside his wheelhouse, no worries—Ray works with a tight-knit crew of trusted professionals to make sure the job gets done right.
-                </p>
-                <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <!-- Service 1: Home Repairs & Handyman Work -->
-                    <div class="bg-white p-6 rounded-lg shadow-md transition-shadow hover:shadow-xl">
-                        <img src="https://placehold.co/64x64/047857/ffffff?text=🛠️" alt="Handyman Icon" class="mx-auto h-16 w-16 mb-4">
-                        <h4 class="font-libre text-xl font-bold">Home Repairs & Handyman Work</h4>
-                        <p class="mt-2 text-sm">From squeaky doors to drywall damage, Ray fixes the everyday wear and tear that chips away at comfort.</p>
-                        <p class="mt-4 font-bold text-emerald-600">📍 Fast Fixes. Real Results.</p>
-                        <a href="#contact" class="mt-6 inline-block px-4 py-2 text-emerald-600 border border-emerald-600 rounded-full hover:bg-emerald-600 hover:text-white transition">Request Repair</a>
-                    </div>
-                    <!-- Service 2: Custom Carpentry & Builds -->
-                    <div class="bg-white p-6 rounded-lg shadow-md transition-shadow hover:shadow-xl">
-                        <img src="https://placehold.co/64x64/047857/ffffff?text=🔨" alt="Carpentry Icon" class="mx-auto h-16 w-16 mb-4">
-                        <h4 class="font-libre text-xl font-bold">Custom Carpentry & Builds</h4>
-                        <p class="mt-2 text-sm">Dreaming of new shelving, a pergola, or a deck to entertain on? Ray builds to last, with clean lines and care in every cut.</p>
-                        <p class="mt-4 font-bold text-emerald-600">📍 Crafted With Purpose. Built for Life.</p>
-                        <a href="#contact" class="mt-6 inline-block px-4 py-2 text-emerald-600 border border-emerald-600 rounded-full hover:bg-emerald-600 hover:text-white transition">Get Quote</a>
-                    </div>
-                    <!-- Service 3: Remodels & Renovations -->
-                    <div class="bg-white p-6 rounded-lg shadow-md transition-shadow hover:shadow-xl">
-                        <img src="https://placehold.co/64x64/047857/ffffff?text=🏡" alt="Renovation Icon" class="mx-auto h-16 w-16 mb-4">
-                        <h4 class="font-libre text-xl font-bold">Remodels & Renovations</h4>
-                        <p class="mt-2 text-sm">Kitchens, bathrooms, basements—you name it. We modernize outdated spaces into stunning, functional rooms.</p>
-                        <p class="mt-4 font-bold text-emerald-600">📍 Design It Bold. Ray Makes It Real.</p>
-                        <a href="#contact" class="mt-6 inline-block px-4 py-2 text-emerald-600 border border-emerald-600 rounded-full hover:bg-emerald-600 hover:text-white transition">Start a Remodel</a>
-                    </div>
-                    <!-- Service 4: Electrical, Fixtures & Installs -->
-                    <div class="bg-white p-6 rounded-lg shadow-md transition-shadow hover:shadow-xl">
-                        <img src="https://placehold.co/64x64/047857/ffffff?text=💡" alt="Electrical Icon" class="mx-auto h-16 w-16 mb-4">
-                        <h4 class="font-libre text-xl font-bold">Electrical, Fixtures & Installs</h4>
-                        <p class="mt-2 text-sm">Need a ceiling fan installed? Light fixtures swapped? We handle minor electrical or partner with pros for bigger jobs.</p>
-                        <p class="mt-4 font-bold text-emerald-600">📍 We Handle the Sparks—Safely.</p>
-                        <a href="#contact" class="mt-6 inline-block px-4 py-2 text-emerald-600 border border-emerald-600 rounded-full hover:bg-emerald-600 hover:text-white transition">Book Tech Visit</a>
-                    </div>
-                </div>
-            </div>
-        </section>
+    </section>
 
-        <!-- About Us Section -->
-        <section id="about" class="py-16 md:py-24 px-4 bg-gray-100">
-            <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <div class="order-2 md:order-1">
-                    <img src="https://placehold.co/600x400/047857/ffffff?text=About+Us+Image" alt="Ray and Blanca working" class="rounded-lg shadow-lg">
-                </div>
-                <div class="order-1 md:order-2">
-                    <p class="text-sm font-bold text-gray-500">Who We Are?</p>
-                    <h2 class="font-libre text-4xl font-bold mt-2">About BuiltByRays™</h2>
-                    <p class="mt-4 text-lg">
-                        BuiltByRays™ is more than a name—it’s a promise. Ray brings over 15 years of boots-on-the-ground construction experience to homes across Indiana. Specializing in remodels, repairs, and custom builds, Ray and his wife Blanca run their family-owned company with pride, precision, and people-first values.
-                    </p>
-                    <p class="mt-4">
-                        No gimmicks. No cutting corners. Just honest work, fair prices, and results that last. Whether it’s a small fix or a full renovation, you’ll know exactly who’s showing up, what’s being done, and how it’s going to get finished—because <strong class="italic">Ray’s reputation is built into every job.</strong>
-                    </p>
-                    <div class="grid grid-cols-3 gap-8 mt-8">
-                        <div class="text-center">
-                            <h2 class="text-4xl font-bold text-emerald-600">100+</h2>
-                            <p class="text-sm text-gray-500">Handyman</p>
-                        </div>
-                        <div class="text-center">
-                            <h2 class="text-4xl font-bold text-emerald-600">1000+</h2>
-                            <p class="text-sm text-gray-500">Happy Customers</p>
-                        </div>
-                        <div class="text-center">
-                            <h2 class="text-4xl font-bold text-emerald-600">15+</h2>
-                            <p class="text-sm text-gray-500">Years Experience</p>
-                        </div>
-                    </div>
-                    <a href="#contact" class="mt-8 inline-block px-6 py-3 bg-emerald-600 text-white rounded-full hover:bg-emerald-700 transition">Contact Us</a>
-                </div>
-            </div>
-        </section>
+    <!-- Contact Section -->
+    <section id="contact" class="py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-6">Contact Us</h2>
+            <p class="text-lg mb-8">Ready to start your next project? Get in touch with us today!</p>
+            <p class="text-xl font-semibold">Email: <a href="mailto:contact@builtbyrays.com" class="text-blue-600">contact@builtbyrays.com</a></p>
+            <p class="text-xl font-semibold">Phone: <a href="tel:+1234567890" class="text-blue-600">(123) 456-7890</a></p>
+        </div>
+    </section>
 
-        <!-- Main Call to Action -->
-        <section class="bg-gray-800 text-white py-20 px-4 cta-background">
-            <div class="container mx-auto text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 100 4m0 4a2 2 0 100 4m0 4a2 2 0 100 4m-2 2h4" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l.01.01M7 12l.01.01M11 12l.01.01M15 12l.01.01M19 12l.01.01M23 12l.01.01" />
-                </svg>
-                <h4 class="text-2xl font-light">From drywall to dream kitchens—we make home feel like home again.</h4>
-                <h2 class="font-libre text-5xl md:text-6xl font-bold mt-4">Ray’s Construction, Built on Trust.</h2>
-                <p class="mt-4 italic">📍 Need a quote? Let’s talk today.</p>
-                <a href="#contact" class="mt-8 inline-block px-8 py-4 bg-emerald-600 text-white rounded-full font-bold hover:bg-emerald-700 transition">Get Your Free Estimate ➜</a>
-            </div>
-        </section>
-
-        <!-- Testimonial Section -->
-        <section class="py-16 md:py-24 px-4 bg-white">
-            <div class="container mx-auto max-w-2xl text-center">
-                <h5 class="text-xl text-gray-500">What our happiest clients have to say</h5>
-                <h2 class="font-libre text-3xl md:text-4xl font-bold mt-2">Velasquez, Indianapolis, IN</h2>
-                <div class="mt-8 p-8 bg-gray-100 rounded-lg shadow-inner">
-                    <p class="text-lg italic leading-relaxed">
-                        “Ray and his crew worked on our home and turned an unused addition into the perfect in-law suite—in just a few days! They were courteous, kind, and incredibly professional. The end result was beautiful—clean lines, smart design, and a cozy feel that made it feel like part of the original home. I still get compliments every time someone visits!”
-                    </p>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Contact Section -->
-        <section id="contact" class="py-16 md:py-24 px-4 bg-gray-100">
-            <div class="container mx-auto max-w-3xl bg-white p-8 md:p-12 rounded-lg shadow-lg">
-                <h2 class="font-libre text-4xl font-bold text-center">Get in Touch</h2>
-                <p class="text-center mt-4 text-lg text-gray-600">Whether it's a quick question or you're ready to build something big—we're here for it.</p>
-                
-                <form id="contact-form" class="mt-8 space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="firstName" class="block text-sm font-medium text-gray-700">First Name <span class="text-red-500">*</span></label>
-                            <input type="text" id="firstName" name="firstName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" required>
-                        </div>
-                        <div>
-                            <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name <span class="text-red-500">*</span></label>
-                            <input type="text" id="lastName" name="lastName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" required>
-                        </div>
-                    </div>
-                    <div>
-                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone <span class="text-red-500">*</span></label>
-                        <input type="tel" id="phone" name="phone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" required>
-                    </div>
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="email" name="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
-                    </div>
-                    <div>
-                        <label for="projectType" class="block text-sm font-medium text-gray-700">Project Type <span class="text-red-500">*</span></label>
-                        <select id="projectType" name="projectType" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" required>
-                            <option value="">Select</option>
-                            <option value="Home Repairs">Home Repairs & Handyman Work</option>
-                            <option value="Custom Carpentry">Custom Carpentry & Builds</option>
-                            <option value="Remodels">Remodels & Renovations</option>
-                            <option value="Electrical">Electrical, Fixtures & Installs</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
-                        <textarea id="message" name="message" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"></textarea>
-                    </div>
-                    <div class="flex items-start">
-                        <input id="consent" name="consent" type="checkbox" class="h-4 w-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500" required>
-                        <label for="consent" class="ml-2 block text-sm text-gray-900">
-                            I confirm info provided is accurate and agree to follow up communications.
-                        </label>
-                    </div>
-                    <div>
-                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 transition">
-                            Submit Inquiry
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </section>
-    </main>
-    
-    <!-- Footer Section -->
-    <footer class="bg-gray-900 text-gray-300 py-12 px-4 text-center">
-        <div class="container mx-auto">
-            <h3 class="font-libre text-2xl font-bold">BuiltByRays™ – Family-Owned & Indiana Proud</h3>
-            <p class="text-sm mt-2">Serving Central Indiana with over 15 years of trusted experience in residential construction, remodeling, and repairs.</p>
-            <div class="mt-4 text-sm space-y-2 md:space-y-0 md:space-x-6 md:flex justify-center">
-                <span>📍 Quality You Can Trust!</span>
-                <span>|</span>
-                <span>📅 Mon–Fri: 8AM–6PM | Sat–Sun: 10AM–5PM</span>
-                <span>|</span>
-                <span>📞 <a href="tel:3177896362" class="hover:text-white transition">+1 317-789-6362</a></span>
-                <span>|</span>
-                <span>📧 <a href="mailto:info@builtbyrays.com" class="hover:text-white transition">info@builtbyrays.com</a></span>
-            </div>
-            <p class="mt-8 text-xs text-gray-500">
-                <strong class="font-bold">Disclaimer:</strong> BuiltByRays™ is an independently owned and operated business Rays Construction LLC. All information on this site is provided for general reference only and does not constitute a binding agreement. Final project estimates, timelines, and scope are determined upon consultation. Images and testimonials may reflect past work and client experiences but are not guarantees of future results.
-            </p>
-            <p class="mt-2 text-xs text-gray-500">
-                © <strong class="font-bold">BuiltByRays™</strong>. All rights reserved.
-            </p>
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 Built By Rays. All Rights Reserved.</p>
         </div>
     </footer>
 
-    <!-- JavaScript to control the mobile menu -->
-    <script src="main.js" defer></script>
 </body>
 </html>

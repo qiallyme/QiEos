@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZJK Resource Hub | Knowledge Base</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="container mx-auto px-6 py-4">
+            <h1 class="text-3xl font-bold text-gray-800">ZJK Resource Hub</h1>
+            <p class="text-gray-600">A central knowledge base for project resources and documentation.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+
+            <!-- Sidebar / Navigation -->
+            <aside class="md:col-span-1">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-bold mb-4">Categories</h2>
+                    <ul class="space-y-2">
+                        <li><a href="#section1" class="text-blue-700 hover:underline">Project Guidelines</a></li>
+                        <li><a href="#section2" class="text-blue-700 hover:underline">Technical Docs</a></li>
+                        <li><a href="#section3" class="text-blue-700 hover:underline">Team Contacts</a></li>
+                        <li><a href="#section4" class="text-blue-700 hover:underline">Useful Links</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- KB Articles -->
+            <div class="md:col-span-3">
+                <div class="bg-white p-8 rounded-lg shadow-md space-y-12">
+
+                    <article id="section1">
+                        <h2 class="text-2xl font-bold mb-3">Project Guidelines</h2>
+                        <div class="prose max-w-none">
+                            <p>This section contains all the essential guidelines for starting and managing projects. Please review the style guide and asset library before beginning new work.</p>
+                            <ul>
+                                <li>Style Guide</li>
+                                <li>Asset Library</li>
+                                <li>Code Conventions</li>
+                            </ul>
+                        </div>
+                    </article>
+
+                    <article id="section2">
+                        <h2 class="text-2xl font-bold mb-3">Technical Docs</h2>
+                         <div class="prose max-w-none">
+                            <p>Links to important technical documentation for our technology stack.</p>
+                             <ul>
+                                 <li><a href="#">React Documentation</a></li>
+                                 <li><a href="#">Tailwind CSS Docs</a></li>
+                                 <li><a href="#">Cloudflare Workers API</a></li>
+                             </ul>
+                        </div>
+                    </article>
+
+                    <article id="section3">
+                        <h2 class="text-2xl font-bold mb-3">Team Contacts</h2>
+                         <div class="prose max-w-none">
+                            <p>Contact information for key team members.</p>
+                             <ul>
+                                 <li><strong>Project Manager:</strong> pm@example.com</li>
+                                 <li><strong>Lead Developer:</strong> dev@example.com</li>
+                             </ul>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white text-gray-600 py-6 mt-12 border-t">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 ZJK Resource. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
