@@ -3,7 +3,7 @@ import { z } from "zod";
 import { getSupabaseAdmin } from "../lib/supabaseAdmin";
 import type { Env } from "../index";
 
-const taskRoutes = new Hono<{ Bindings: Env }>();
+const taskRoutes = new Hono<{ Bindings: Env; Variables: { claims: any } }>();
 
 // Task schemas
 const createTaskSchema = z.object({
@@ -125,6 +125,7 @@ taskRoutes.post("/", async (c) => {
       }
     }
 
+    const supabaseAdmin = getSupabaseAdmin(c.env);
     const { data: task, error } = await supabaseAdmin
       .from("tasks")
       .insert({
@@ -171,6 +172,7 @@ taskRoutes.patch("/:id", async (c) => {
     const validated = updateTaskSchema.parse(body);
 
     // First, check if task exists and user has access
+    const supabaseAdmin = getSupabaseAdmin(c.env);
     const { data: existingTask } = await supabaseAdmin
       .from("tasks")
       .select("id, company_id, org_id")
@@ -231,6 +233,7 @@ taskRoutes.delete("/:id", async (c) => {
     const taskId = c.req.param("id");
 
     // Check if task exists and user has access
+    const supabaseAdmin = getSupabaseAdmin(c.env);
     const { data: existingTask } = await supabaseAdmin
       .from("tasks")
       .select("id, company_id, org_id")

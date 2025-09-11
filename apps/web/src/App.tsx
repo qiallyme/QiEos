@@ -24,6 +24,16 @@ import { Terms } from "./routes/public/Terms";
 import { Privacy } from "./routes/public/Privacy";
 import { MarketingLayout } from "./components/MarketingLayout";
 
+// Admin pages
+import { DashboardPage } from "./routes/admin/dashboard";
+import { ProjectsPage } from "./routes/admin/projects";
+import { ProjectDetailsPage } from "./routes/admin/projects/details";
+import { TasksPage } from "./routes/admin/tasks";
+import { TenantsPage } from "./routes/admin/tenants";
+import { CrmPage } from "./routes/admin/crm";
+import { BillingPage } from "./routes/admin/billing-desk";
+import { AuditorPage } from "./routes/admin/auditor";
+
 function App() {
   return (
     <AuthProvider>
@@ -115,7 +125,20 @@ function App() {
             path="/admin/*"
             element={
               <ProtectedRoute requiredRole="admin">
-                <div>Admin Portal - Coming Soon</div>
+                <Routes>
+                  <Route path="dashboard" element={<DashboardPage />} />
+                  <Route path="projects" element={<ProjectsPage />} />
+                  <Route path="projects/:id" element={<ProjectDetailsPage />} />
+                  <Route path="tasks" element={<TasksPage />} />
+                  <Route path="tenants" element={<TenantsPage />} />
+                  <Route path="crm" element={<CrmPage />} />
+                  <Route path="billing" element={<BillingPage />} />
+                  <Route path="auditor" element={<AuditorPage />} />
+                  <Route
+                    path="/"
+                    element={<Navigate to="dashboard" replace />}
+                  />
+                </Routes>
               </ProtectedRoute>
             }
           />

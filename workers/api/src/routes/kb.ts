@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { getSupabaseAdmin } from "../lib/supabaseAdmin";
 import type { Env } from "../index";
 
-const kbRoutes = new Hono<{ Bindings: Env }>();
+const kbRoutes = new Hono<{ Bindings: Env; Variables: { claims: any } }>();
 
 // GET /kb/public - Get public knowledge base articles
 kbRoutes.get("/public", async (c) => {

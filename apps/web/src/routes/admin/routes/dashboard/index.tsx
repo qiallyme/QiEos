@@ -1,6 +1,6 @@
 import React from "react";
-import { MainLayout } from "../../components/layout/MainLayout";
-import { Card } from "../../components/ui/card";
+import { MainLayout } from "../../../../components/admin/layout/MainLayout";
+import { Card } from "@qieos/ui";
 
 export const DashboardPage: React.FC = () => {
   return (

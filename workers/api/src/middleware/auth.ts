@@ -38,10 +38,10 @@ export async function optionalAuthMiddleware(c: Context, next: Next) {
 
     if (authHeader && authHeader.startsWith("Bearer ")) {
       const token = authHeader.substring(7);
-      const claims = await getUserClaims(token);
+      const claims = await getUserClaims(token, (c as any).env);
 
       if (claims) {
-        c.set("claims", claims);
+        c.set("claims", claims as any);
       }
     }
 

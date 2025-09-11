@@ -9,66 +9,6 @@ import { authMiddleware } from "./middleware/auth";
 import { contactRoutes } from "./routes/contact";
 import { waitlistRoutes } from "./routes/waitlist";
 
-// Cloudflare Workers types
-declare global {
-  interface R2Bucket {
-    get(key: string): Promise<R2Object | null>;
-    put(
-      key: string,
-      value:
-        | ReadableStream
-        | ArrayBuffer
-        | ArrayBufferView
-        | string
-        | null
-        | undefined,
-      options?: R2PutOptions
-    ): Promise<R2Object | null>;
-    delete(keys: string | string[]): Promise<void>;
-    list(options?: R2ListOptions): Promise<R2Objects>;
-  }
-
-  interface R2Object {
-    key: string;
-    size: number;
-    etag: string;
-    uploaded: Date;
-    httpEtag: string;
-    httpMetadata?: R2HTTPMetadata;
-    customMetadata?: Record<string, string>;
-    body?: ReadableStream;
-  }
-
-  interface R2PutOptions {
-    httpMetadata?: R2HTTPMetadata;
-    customMetadata?: Record<string, string>;
-  }
-
-  interface R2ListOptions {
-    limit?: number;
-    prefix?: string;
-    cursor?: string;
-    delimiter?: string;
-    startAfter?: string;
-  }
-
-  interface R2Objects {
-    objects: R2Object[];
-    truncated: boolean;
-    cursor?: string;
-    delimitedPrefixes: string[];
-  }
-
-  interface R2HTTPMetadata {
-    contentType?: string;
-    contentLanguage?: string;
-    contentDisposition?: string;
-    contentEncoding?: string;
-    cacheControl?: string;
-    expires?: Date;
-  }
-}
-
 // Define the bindings we expect from wrangler.toml
 export interface Env {
   SUPABASE_URL: string;
@@ -83,7 +23,7 @@ export interface Env {
   [key: string]: any;
 }
 
-const app = new Hono<{ Bindings: Env }>();
+const app = new Hono<{ Bindings: Env; Variables: { claims: any } }>();
 
 // CORS middleware
 app.use("*", async (c, next) => {

@@ -1,7 +1,7 @@
 import React from "react";
-import { MainLayout } from "../../components/layout/MainLayout";
-import { Card } from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
+import { MainLayout } from "../../../../components/admin/layout/MainLayout";
+import { Card } from "@qieos/ui";
+import { Button } from "@qieos/ui";
 import { FiEdit, FiPlus } from "react-icons/fi";
 
 const project = {
@@ -81,4 +81,13 @@ export const ProjectDetailsPage: React.FC = () => {
                     {item.user}{" "}
                     <span className="text-gray-600">{item.action}</span>
                   </p>
-               
+                  <p className="text-sm text-gray-500">{item.time}</p>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        </div>
+      </div>
+    </MainLayout>
+  );
+};

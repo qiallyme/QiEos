@@ -3,7 +3,7 @@ import { z } from "zod";
 import { getUserClaims } from "../lib/supabaseAdmin";
 import type { Env } from "../index";
 
-const authRoutes = new Hono<{ Bindings: Env }>();
+const authRoutes = new Hono<{ Bindings: Env; Variables: { claims: any } }>();
 
 // Schema for session request
 const sessionSchema = z.object({

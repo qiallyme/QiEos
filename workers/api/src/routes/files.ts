@@ -3,7 +3,7 @@ import { z } from "zod";
 import { getSupabaseAdmin } from "../lib/supabaseAdmin";
 import type { Env } from "../index";
 
-const fileRoutes = new Hono<{ Bindings: Env }>();
+const fileRoutes = new Hono<{ Bindings: Env; Variables: { claims: any } }>();
 
 // File schemas
 const signUploadSchema = z.object({
