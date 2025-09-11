@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { MainLayout } from "../../../../components/admin/layout/MainLayout";
-import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "react-beautiful-dnd";
 import { Card } from "@qieos/ui";
 import { Button } from "@qieos/ui";
 import { FiPlus } from "react-icons/fi";
@@ -57,7 +62,9 @@ export const CrmPage: React.FC = () => {
         <div className="grid grid-cols-4 gap-6">
           {data.columnOrder.map((columnId) => {
             const column = data.columns[columnId];
-            const deals = column.dealIds.map((dealId: string) => data.deals[dealId]);
+            const deals = column.dealIds.map(
+              (dealId: string) => data.deals[dealId]
+            );
 
             return (
               <div key={column.id} className="bg-gray-100 rounded-lg p-4">

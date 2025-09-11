@@ -3,7 +3,10 @@ import { getUserClaims } from "../lib/supabaseAdmin";
 import type { Env } from "../index";
 
 // Auth middleware to verify JWT and enrich context with claims
-export async function authMiddleware(c: Context<{ Bindings: Env }>, next: Next) {
+export async function authMiddleware(
+  c: Context<{ Bindings: Env }>,
+  next: Next
+) {
   try {
     // Get token from Authorization header
     const authHeader = c.req.header("Authorization");

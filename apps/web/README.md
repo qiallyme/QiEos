@@ -14,12 +14,14 @@ The main web application for QiEOS, built with React + Vite + TypeScript.
 ## Development Setup
 
 1. **Install dependencies**
+
    ```bash
    pnpm install
    ```
 
 2. **Configure environment**
    Create a `.env` file with:
+
    ```env
    VITE_SUPABASE_URL=<your_supabase_url>
    VITE_SUPABASE_ANON_KEY=<your_supabase_anon_key>
@@ -27,6 +29,7 @@ The main web application for QiEOS, built with React + Vite + TypeScript.
    ```
 
 3. **Start development server**
+
    ```bash
    pnpm dev
    ```

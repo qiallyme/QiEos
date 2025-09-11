@@ -1,7 +1,7 @@
-import React from 'react';
-import { MainLayout } from '../../../components/admin/layout/MainLayout';
-import { Card, Button } from '@qieos/ui';
-import { FiPlus } from 'react-icons/fi';
+import React from "react";
+import { MainLayout } from "../../../components/admin/layout/MainLayout";
+import { Card, Button } from "@qieos/ui";
+import { FiPlus } from "react-icons/fi";
 
 export const CrmPage: React.FC = () => {
   return (
@@ -17,4 +17,4 @@ export const CrmPage: React.FC = () => {
       </Card>
     </MainLayout>
   );
-}
+};

@@ -17,16 +17,28 @@ export function Header({ isSidebarOpen, onMenuToggle }: HeaderProps) {
             onClick={onMenuToggle}
             className="text-white hover:bg-white/10"
           >
-            {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {isSidebarOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
           </Button>
           <h1 className="text-xl font-semibold text-white">QiPortals</h1>
         </div>
-        
+
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-white hover:bg-white/10"
+          >
             Dashboard
           </Button>
-          <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-white hover:bg-white/10"
+          >
             Settings
           </Button>
         </div>

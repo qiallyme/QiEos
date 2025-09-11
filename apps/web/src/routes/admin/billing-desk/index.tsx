@@ -1,7 +1,7 @@
-import React from 'react';
-import { MainLayout } from '../../../components/admin/layout/MainLayout';
-import { Card, Button } from '@qieos/ui';
-import { FiPlus, FiDownload } from 'react-icons/fi';
+import React from "react";
+import { MainLayout } from "../../../components/admin/layout/MainLayout";
+import { Card, Button } from "@qieos/ui";
+import { FiPlus, FiDownload } from "react-icons/fi";
 
 export const BillingPage: React.FC = () => {
   return (
@@ -22,4 +22,4 @@ export const BillingPage: React.FC = () => {
       </Card>
     </MainLayout>
   );
-}
+};
