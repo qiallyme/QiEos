@@ -18,6 +18,7 @@ interface AuthContextType {
   claims: Claims | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
+  signInWithMagicLink: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
   refreshClaims: () => Promise<void>;
 }
@@ -65,6 +66,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // Send magic link to email
+  const signInWithMagicLink = async (email: string) => {
+    const redirectBase = import.meta.env.VITE_SITE_URL || window.location.origin;
+    const emailRedirectTo = `${redirectBase}/auth/login`;
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo },
+    });
+    if (error) throw error;
+  };
+
   // Sign out
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -109,6 +121,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     claims,
     loading,
     signIn,
+    signInWithMagicLink,
     signOut,
     refreshClaims,
   };

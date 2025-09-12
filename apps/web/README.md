@@ -26,6 +26,7 @@ The main web application for QiEOS, built with React + Vite + TypeScript.
    VITE_SUPABASE_URL=<your_supabase_url>
    VITE_SUPABASE_ANON_KEY=<your_supabase_anon_key>
    VITE_API_URL=http://localhost:8787
+   VITE_SITE_URL=http://localhost:5173
    ```
 
 3. **Start development server**

@@ -154,7 +154,7 @@ async function run() {
       <ul>
         ${items
           .sort((a, b) => a.title.localeCompare(b.title))
-          .map((i) => `<li><a href="./${i.link}">${i.title}</a></li>`) 
+          .map((i) => `<li><a href="./${i.link}">${i.title}</a></li>`)
           .join('\n')}
       </ul>
     </main>

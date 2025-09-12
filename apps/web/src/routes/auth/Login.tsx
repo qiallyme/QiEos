@@ -8,7 +8,7 @@ export function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { signIn } = useAuth();
+  const { signIn, signInWithMagicLink } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,6 +21,21 @@ export function Login() {
       navigate("/client");
     } catch (err: any) {
       setError(err.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMagicLink = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      await signInWithMagicLink(email);
+      setError("If the email exists, a sign-in link was sent.");
+    } catch (err: any) {
+      setError(err.message || "Failed to send magic link");
     } finally {
       setLoading(false);
     }
@@ -74,13 +89,20 @@ export function Login() {
             <div className="text-red-600 text-sm text-center">{error}</div>
           )}
 
-          <div>
+          <div className="grid grid-cols-1 gap-3">
             <button
               type="submit"
               disabled={loading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
             >
               {loading ? "Signing in..." : "Sign in"}
+            </button>
+            <button
+              onClick={handleMagicLink}
+              disabled={loading || !email}
+              className="group relative w-full flex justify-center py-2 px-4 border text-sm font-medium rounded-md text-indigo-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            >
+              Send magic link
             </button>
           </div>
         </form>
