@@ -12,6 +12,9 @@
   "scripts": {
     "dev": "concurrently -n WORKER,WEB -c magenta,cyan \"pnpm --filter workers/api dev\" \"pnpm --filter apps/web dev\"",
     "build": "pnpm --filter @qieos/types build && pnpm --filter @qieos/utils build",
+    "build:kb": "node scripts/build-neurite-kb.mjs",
+    "build:neurite": "pnpm --filter neurite build",
+    "postbuild": "pnpm build:kb && echo 'KB pages synced to Neurite'",
     "setup": "node scripts/setup-dev.mjs",
     "migrate": "echo 'Run scripts/create-migrations.sql in your Supabase SQL editor'",
     "deploy:web": "pnpm --filter qieos-web build && wrangler pages deploy apps/web/dist --project-name=qieos-web",
