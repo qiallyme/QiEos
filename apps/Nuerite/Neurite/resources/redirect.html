@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirect</title>
+    <script>
+        window.onload = function () {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const email = params.get('email');
+                const error = params.get('error');
+                const paymentStatus = params.get('status');
+                const origin = params.get('origin') || 'https://neurite.network';
+
+                if (window.opener && !window.opener.closed) {
+                    if (email) {
+                        window.opener.postMessage({ type: 'auth', email }, origin);
+                        console.log('Auth message sent:', email);
+                    }
+
+                    if (paymentStatus) {
+                        window.opener.postMessage({ type: 'stripe', status: paymentStatus }, origin);
+                        console.log('Stripe message sent:', paymentStatus);
+                    }
+
+                    if (error) {
+                        window.opener.postMessage({ type: 'auth_error', error }, origin);
+                        console.error('Auth error message sent:', error);
+                    }
+
+                    window.close();
+                } else {
+                    console.warn('No window.opener found. Cannot send messages.');
+                    document.body.innerHTML = "<p>Authentication complete. Please close this window.</p>";
+                }
+            } catch (e) {
+                console.error('Redirect error:', e);
+                document.body.innerHTML = "<p>An error occurred during authentication. Please close this window.</p>";
+            }
+        };
+    </script>
+</head>
+<body>
+    <p>Processing...</p>
+</body>
+</html>
