@@ -32,7 +32,8 @@ export async function getUserClaims(token: string, env: Env) {
     }
 
     // Get user's org and company associations
-    const { data: contact } = await supabaseAdmin
+    // Try supabase_user_id first, fallback to user_id for legacy data
+    let { data: contact } = await supabaseAdmin
       .from("contacts")
       .select(
         `
@@ -45,8 +46,29 @@ export async function getUserClaims(token: string, env: Env) {
         )
       `
       )
-      .eq("user_id", user.id)
+      .eq("supabase_user_id", user.id)
       .single();
+
+    // Fallback to user_id if no contact found (legacy data support)
+    if (!contact) {
+      const { data: legacyContact } = await supabaseAdmin
+        .from("contacts")
+        .select(
+          `
+          id,
+          org_id,
+          department,
+          companies (
+            id,
+            name
+          )
+        `
+        )
+        .eq("user_id", user.id)
+        .single();
+      
+      contact = legacyContact;
+    }
 
     if (!contact) {
       return null;

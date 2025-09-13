@@ -1,68 +1,172 @@
 ---
 description: >
-  Qieos project hard rules for safety, file operations, and documentation.
-  These rules MUST always be respected by AI and automation tools.
+  QiEOS hard rules for Cursor/agents: safety, styling, locks, file ops, and docs.
+  These rules are mandatory and always-on across the repo.
 globs:
   - "**/*"
 alwaysApply: true
 ---
 
-## SAFETY RULES (MANDATORY)
-
-- **Never expose secrets in client code.**
-  No API keys, tokens, passwords, environment variables, or private data may be written into public/client code.
-
-- **Context before code.**
-  Always run `Understand` (or equivalent) on:
-  - The file(s) being edited
-  - The entire `docs/` folder (including `docs/qieos.md` and all dev guides)
-
-- **Fail safe, not dangerous.**
-  Prefer reversible, non-destructive actions. Stop and surface questions if unsure.
-
----
-
-## FILE & DIRECTORY DELETION POLICY (HARD STOP)
-
-- **No permanent deletion.**
-  Never delete files or directories outright.
-  Never run destructive commands (`rm -rf`, `git clean`, `del /s`, etc.) without explicit user confirmation.
-
-- **Safe Removal Workflow:**
-  1. **Move, do not delete.** Move files/folders into `.trash/` at repo root.
-  2. **Preserve full path.** Example:
-     ```
-     apps/web/src/foo.tsx → .trash/apps/web/src/foo.tsx
-     ```
-  3. **Report & pause.** List what was moved and wait for explicit approval before any permanent deletion.
-
-- **Only purge when user explicitly confirms.**
-
----
-
-## PROJECT DOCUMENTATION STANDARD
-
-- **Single Source of Truth:**
-  `docs/qieos.md` is the canonical dev doc for architecture, database schema, and guidelines.
-
-- **Required Practice:**
-  - Always read `docs/qieos.md` before coding.
-  - After major features or milestones, update `docs/qieos.md`.
-  - Fully document the database schema in this file.
-  - Add all migrations here as they are created.
-
----
-
-## AI / AUTOMATION INTENT
-
-- Always gather full context before changing code.
-- Prefer explicit, reproducible steps over “magic fixes.”
-- Never bypass `.trash/` workflow.
-- Treat `.trash/` as reversible storage until the user confirms purge.
-
----
-
 ## ONE-LINER FOR AGENTS
 
-> **Always read and update `docs/qieos.md` before coding. Never delete — always move to `.trash/` preserving full path, and confirm before purging.**
+**Always read and (when applicable) update `docs/qieos.md` before coding. Never delete; move to `.trash/` preserving full path and wait for explicit "purge" to remove. Abide by folder/file/section locks. No inline styles. Always show diffs and wait for explicit approval before applying.**
 
+---
+
+## SAFETY RULES (MANDATORY)
+
+- **Never expose secrets in client code.**  
+  No API keys, tokens, passwords, env values, or private data in public/client bundles.
+- **Context before code.**  
+  Run an “Understand” pass on the files you’ll touch **and** the entire `docs/` folder (especially `docs/qieos.md`) before proposing changes.
+- **Fail safe, not dangerous.**  
+  Prefer reversible, non-destructive actions. When unsure, stop and ask.
+- **Explicit approval required (default).**  
+  Show a proposed diff for any edit (even non-locked). Wait for a clear **“yes, apply”** before writing.
+
+---
+
+## STYLING STANDARD (INLINE STYLES FORBIDDEN)
+
+**Goal:** No JSX `style={}`; use CSS files (CSS Modules or Tailwind utilities) only.
+
+**Rules**
+- Do **not** write or retain JSX `style={...}` or HTML `style="..."` anywhere.
+- Use `*.module.css` (preferred) adjoining the component, or Tailwind utility classes if present.
+- Dynamic values: use **class toggles** for finite states or **CSS variables** (set via data-attributes or class variants) for continuous values. Do **not** inject dynamic styles inline.
+
+**Enforcement**
+- If a proposed diff introduces `style={` in JSX or `style="` in markup, **abort** and request a CSS refactor plan.
+- When refactoring existing inline styles:
+  1. Create/extend a sibling `Component.module.css`.
+  2. Convert camelCase CSS-in-JS keys to kebab-case CSS.
+  3. Replace `style={...}` with `className={...}` (merge with existing classes).
+  4. For dynamic values, add a CSS var (e.g., `--progress`) and set via `data-*` attributes; never inline.
+
+---
+
+## LOCK MECHANISMS
+
+### A) Folder Locks
+- If `LOCKED.md` or `locked.md` exists in a folder, that folder is **locked**.
+- Any edits inside require explicit RFC approval (QiEOS God Doc §12.2).
+- Agents must **abort** without explicit approval.
+
+### B) File Locks
+- If the **first line** contains a lock marker, the entire file is locked:
+  - TypeScript/JS: `// 🚫 LOCKED — Do not edit without RFC approval (QiEOS God Doc §12.2)`
+  - SQL:           `-- 🚫 LOCKED — Do not edit without RFC approval (QiEOS God Doc §12.2)`
+  - TOML/YAML:     `# 🚫 LOCKED — Do not edit without RFC approval (QiEOS God Doc §12.2)`
+- Agents must **abort** edits to locked files unless explicitly approved.
+
+### C) Section Locks (Surgical)
+Lock only a region using **start/end** markers (use the file’s comment syntax).
+
+- **Start:** `🔒 LOCK-START: <reason|ticket|RFC>`  (also matches without emoji: `LOCK-START:`)
+- **End:**   `🔓 LOCK-END`                         (also matches without emoji: `LOCK-END`)
+
+**Example (TypeScript/JS)**
+```ts
+// 🔒 LOCK-START: RLS policy generator — RFC-2025-09-13
+export const rlsPolicy = `...`;
+// 🔓 LOCK-END
+Example (SQL)
+
+sql
+Copy code
+-- 🔒 LOCK-START: canonical tables — RFC-2025-09-13
+create table if not exists orgs (...);
+-- 🔓 LOCK-END
+Rules
+
+No nesting of lock sections.
+
+If LOCK-START has no matching LOCK-END, treat the lock as running to EOF.
+
+Any diff that touches a locked span must abort unless explicitly approved.
+
+FILE & DIRECTORY DELETION POLICY (HARD STOP)
+No permanent deletion.
+Never run destructive commands (rm -rf, git clean, del /s, etc.) without explicit user confirmation.
+
+Safe Removal Workflow
+
+Move, don’t delete. Relocate items to .trash/YYYY-MM-DD/....
+
+Preserve full path.
+apps/web/src/foo.tsx → .trash/apps/web/src/foo.tsx
+
+Report & pause. List exactly what moved. Wait for approval before any purge.
+
+Purge only after the user explicitly says “purge”.
+
+PROJECT DOCUMENTATION STANDARD
+Single Source of Truth: docs/qieos.md (architecture, schema, guidelines).
+
+Required Practice
+
+Read docs/qieos.md before coding/refactors.
+
+After major features/migrations, update docs/qieos.md.
+
+Keep the full database schema current. Reference or list new migration files.
+
+AI / AUTOMATION INTENT
+Gather full context before changing code.
+
+Prefer explicit, reproducible steps over “magic fixes.”
+
+Never bypass the .trash/ workflow.
+
+Treat .trash/ as reversible storage until “purge.”
+
+EDITING PRINCIPLES
+Smallest diffs — Prefer surgical changes; split big edits into steps.
+
+Traceability — Every applied change updates docs/DEV_LOG.md with:
+
+What changed, Why, How, Rollback instructions.
+
+Secrets management — No secrets in code; use .env* and CI variables.
+
+Reversibility — PRs/commits include rollback notes.
+
+Respect structure — Moves/renames require impact notes in docs/DEV_LOG.md; structural changes need an RFC.
+
+Open questions — If unsure, stop and log under “Open Questions” in docs/DEV_LOG.md.
+
+ABORT CONDITIONS (IN ORDER)
+Agents must abort and request guidance if any are true:
+
+Target path is under a folder with LOCKED.md/locked.md.
+
+File has a top-line “🚫 LOCKED” marker.
+
+Edit overlaps a LOCK-START … LOCK-END section.
+
+Diff introduces JSX/HTML inline styles (style={ or style=").
+
+Operation is destructive (delete/overwrite) without explicit confirmation.
+
+Secrets would be added to client code.
+
+Ambiguity: missing context or conflicting source of truth.
+
+Missing explicit approval for applying the proposed diff.
+
+REGEX/GREP HINTS (for enforcement)
+File lock (first line):
+^\s*(//|--|#)\s*🚫\s*LOCKED\b.*$
+
+Section start:
+^\s*(//|--|#)\s*(🔒\s*)?LOCK-START\b.*$
+
+Section end:
+^\s*(//|--|#)\s*(🔓\s*)?LOCK-END\b.*$
+
+Inline styles (JSX):
+JSXAttribute\[name\.name='style'\] (AST)
+or \<[A-Za-z0-9]+[^>]*\sstyle=\{ (text)
+
+Inline styles (HTML):
+\<[A-Za-z0-9]+[^>]*\sstyle="

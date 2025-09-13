@@ -10,7 +10,7 @@
     "sites/*"
   ],
   "scripts": {
-    "dev": "concurrently -n WORKER,WEB -c magenta,cyan \"pnpm --dir workers/api dev\" \"pnpm --dir apps/web dev\"",
+    "dev": "concurrently -n WORKER,WEB -c magenta,cyan \"pnpm --filter qieos-api dev\" \"pnpm --filter qieos-web dev\"",
     "build": "pnpm --filter @qieos/types build && pnpm --filter @qieos/utils build",
     "build:kb": "node scripts/build-neurite-kb.mjs",
     "kb:bible": "node scripts/merge-kb.mjs",
@@ -18,7 +18,7 @@
     "postbuild": "pnpm build:kb && echo 'KB pages synced to Neurite'",
     "dev:neurite": "pnpm --dir apps/Nuerite/Neurite start",
     "predev:stack": "pnpm build:kb",
-    "dev:stack": "concurrently -n WORKER,WEB,NEURITE -c magenta,cyan,green \"pnpm --dir workers/api dev\" \"pnpm --dir apps/web dev\" \"pnpm --dir apps/Nuerite/Neurite start\"",
+    "dev:stack": "concurrently -n WORKER,WEB,NEURITE -c magenta,cyan,green \"pnpm --filter qieos-api dev\" \"pnpm --filter qieos-web dev\" \"pnpm --dir apps/Nuerite/Neurite start\"",
     "setup": "node scripts/setup-dev.mjs",
     "migrate": "echo 'Run scripts/create-migrations.sql in your Supabase SQL editor'",
     "deploy:web": "pnpm --filter qieos-web build && wrangler pages deploy apps/web/dist --project-name=qieos-web",
