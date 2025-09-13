@@ -14,7 +14,10 @@
     "pack": "npm run build && electron-builder --dir"
   },
   "dependencies": {
-    "electron": "^27.0.0"
+    "electron": "^27.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -25,11 +28,5 @@
     "electron-builder": "^24.0.0",
     "typescript": "^5.0.0",
     "vite": "^4.0.0"
-  },
-  "dependencies": {
-    "electron": "^27.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-router-dom": "^6.0.0"
   }
 }

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { api } from "../../lib/supabaseClient";
 import { useAuth } from "../../hooks/useAuth";
+import styles from "./FileUpload.module.css";
 
 interface FileUploadProps {
   onUploadComplete?: (file: any) => void;
@@ -145,10 +146,10 @@ export function FileUpload({ onUploadComplete, companyId }: FileUploadProps) {
             <span>Uploading...</span>
             <span>{progress}%</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className={styles.progressBar}>
             <div
-              className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
+              className={styles.progressFill}
+              style={{ '--progress': `${progress}%` } as React.CSSProperties}
             />
           </div>
         </div>
