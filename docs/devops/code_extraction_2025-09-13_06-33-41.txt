@@ -1,0 +1,4446 @@
+CODE EXTRACTION REPORT
+Generated: 2025-09-13 06:33:41
+Root Directory: Q:\QiEos\docs\dev_specs
+Ignored Directories: dist, node_modules, venv, env, .venv, .env, .env.local, .env.development, .env.production
+Ignored Files: package-lock.json
+================================================================================
+
+DIRECTORY TREE STRUCTURE:
+----------------------------------------
+
+================================================================================
+STARTING FILE CONTENT EXTRACTION
+================================================================================
+
+
+================================================================================
+FILE: Q:\QiEos\docs\dev_specs\API_KEYS.md
+TYPE: .md
+================================================================================
+
+# API Keys Configuration Guide
+
+## 🔐 **Where to Store API Keys**
+
+### 1. **Environment Variables (Recommended)**
+Store all API keys in environment variables:
+
+**File: `.env.local`** (create this file, it's gitignored)
+```bash
+# Cursor Agent API Keys
+CURSOR_AGENT_API_KEY=your_cursor_agent_key_here
+CURSOR_BACKGROUND_AGENT_KEY=your_background_agent_key_here
+
+# Other API Keys
+OPENAI_API_KEY=your_openai_key_here
+SUPABASE_URL=your_supabase_url_here
+SUPABASE_ANON_KEY=your_supabase_anon_key_here
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key_here
+
+# Cloudflare
+CLOUDFLARE_API_TOKEN=your_cloudflare_token_here
+CLOUDFLARE_ACCOUNT_ID=your_account_id_here
+
+# Stripe
+STRIPE_SECRET_KEY=your_stripe_secret_key_here
+STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret_here
+```
+
+### 2. **Cursor Agent Configuration**
+For Cursor-specific agent keys, you can also store them in:
+
+**File: `.cursor/agents/config.json`** (create this file, it's gitignored)
+```json
+{
+  "background_agent": {
+    "api_key": "your_background_agent_key_here",
+    "endpoint": "https://api.cursor.sh/agents"
+  },
+  "custom_agents": {
+    "api_agent": "your_api_agent_key_here",
+    "ui_agent": "your_ui_agent_key_here"
+  }
+}
+```
+
+### 3. **Worker Environment Variables**
+For Cloudflare Workers, store secrets in:
+
+**File: `workers/api/wrangler.toml`** (this file is protected by .cursorrules)
+```toml
+[vars]
+ENVIRONMENT = "development"
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "your_kv_namespace_id"
+
+# Secrets are set via: wrangler secret put SECRET_NAME
+# wrangler secret put OPENAI_API_KEY
+# wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+```
+
+## 🚫 **NEVER Store API Keys In:**
+- ❌ Source code files
+- ❌ Committed configuration files
+- ❌ Public repositories
+- ❌ Client-side code
+- ❌ Documentation (except examples with placeholders)
+
+## ✅ **Security Best Practices:**
+1. **Use environment variables** for all API keys
+2. **Create `.env.local`** for local development
+3. **Use Cloudflare Workers secrets** for production
+4. **Never commit** `.env.local` or `.env` files
+5. **Use `.env.example`** as a template for other developers
+6. **Rotate keys regularly**
+7. **Use different keys** for development/staging/production
+
+## 🔧 **Setup Instructions:**
+
+1. **Copy the example file:**
+   ```bash
+   cp .env.example .env.local
+   ```
+
+2. **Fill in your actual API keys** in `.env.local`
+
+3. **For Cloudflare Workers, set secrets:**
+   ```bash
+   cd workers/api
+   wrangler secret put OPENAI_API_KEY
+   wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+   ```
+
+4. **For Cursor agents, configure in Cursor settings** or use the `.cursor/agents/config.json` file
+
+## 📝 **Environment File Template:**
+Use `.env.example` as a template - it's committed to git but contains no real secrets.
+
+
+================================================================================
+END OF FILE: Q:\QiEos\docs\dev_specs\API_KEYS.md
+================================================================================
+
+
+================================================================================
+FILE: Q:\QiEos\docs\dev_specs\code_extraction_2025-09-13_06-33-41.txt
+TYPE: .txt
+================================================================================
+
+
+
+================================================================================
+END OF FILE: Q:\QiEos\docs\dev_specs\code_extraction_2025-09-13_06-33-41.txt
+================================================================================
+
+
+================================================================================
+FILE: Q:\QiEos\docs\dev_specs\QiEOS • Official Development Specification (Amendment I).md
+TYPE: .md
+================================================================================
+
+perfect — I pulled your **current God Doc** from the repo PDF. now let’s lock in the **DB schema + Cloudflare setup** we drafted as the next constitutional amendment.
+
+---
+
+# QiEOS • Official Development Specification (Amendment I)
+
+```yaml
+amendment: I
+title: Supabase Schema + Cloudflare Setup
+status: ratified
+date: 2025-09-10
+```
+
+## 14) Supabase Schema (frozen baseline)
+
+All SQL migrations live under `/infra/supabase/migrations/`. The following files are now canonical:
+
+- **000_init_orgs_companies_contacts.sql** → orgs, departments, companies, contacts
+- **010_projects_tasks_tickets.sql** → projects, tasks (nullable project_id), tickets
+- **015_time_entries.sql** → polymorphic time entries
+- **020_kb_hierarchy_docs_vectors.sql** → hierarchical collections, docs, vectors (pgvector)
+- **025_sites_registry.sql** → client site registry (Pages project + domain)
+- **026_drops_meta.sql** → metadata for R2 public drops
+- **030_billing_ledger_invoices.sql** → invoices + ledger
+- **040_feature_flags.sql** → feature keys, org_features, module_access
+- **900_rls_policies.sql** → RLS templates using `qieos_org()`, `qieos_role()`, `qieos_company_ids()`
+
+**Principles:**
+
+- Every user-facing table has `org_id` and **RLS enabled**.
+- JWT claims (`org_id`, `role`, `company_ids`, `features`) control visibility.
+- Service-role (Worker) bypasses RLS for privileged operations.
+
+---
+
+## 15) Cloudflare Setup (frozen baseline)
+
+Cloudflare is the platform of record. All config lives in `/infra/cloudflare/`.
+
+### 15.1 Worker (`workers/api/wrangler.toml`)
+
+```toml
+name = "qieos-api"
+main = "src/index.ts"
+compatibility_date = "2025-09-10"
+
+[vars]
+SUPABASE_URL = ""
+SUPABASE_SERVICE_ROLE_KEY = ""
+OPENAI_API_KEY = ""
+STRIPE_SECRET_KEY = ""
+JWT_ISSUER = "qieos"
+EMBEDDING_DIM = "1536"
+
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "qieos-files"
+preview_bucket_name = "qieos-files-dev"
+```
+
+Secrets are stored via `wrangler secret put`.
+
+### 15.2 R2
+
+- Buckets: `qieos-files`, `qieos-files-dev`.
+- Worker endpoints handle signed uploads and metadata (`drops_meta`).
+
+### 15.3 Pages
+
+- `apps/web` builds to `dist/`.
+- Deployed as Cloudflare Pages project `qieos-web`.
+- `.github/workflows/web-pages-deploy.yml` builds with PNPM and deploys artifact.
+
+### 15.4 Worker CI
+
+- `.github/workflows/worker-deploy.yml` builds `workers/api` and deploys via Wrangler.
+
+---
+
+## 16) Validation Checklist
+
+- [ ] `pnpm -C infra/supabase migrate` applies schema to Supabase.
+- [ ] Worker boots with `pnpm -C workers/api dev` and responds on `/health`.
+- [ ] `/auth/session` returns enriched claims.
+- [ ] `/tasks` CRUD works with RLS.
+- [ ] `/files/sign-upload` issues signed URL → file lands in R2 → metadata row written.
+- [ ] `/kb/public` and `/kb/private` return articles.
+- [ ] `/me/profile` updates successfully.
+- [ ] Root website serves from Pages.
+
+---
+
+✅ what changed:
+
+- Added **Amendment I** to the God Doc covering Supabase schema and Cloudflare setup.
+- Keeps all prior structure intact; this extends, not rewrites.
+
+👉 next step: I can generate the **actual SQL files** under `/infra/supabase/migrations/` and the **starter wrangler.toml + GitHub workflows** so they’re physically in your repo. want me to?
+
+
+================================================================================
+END OF FILE: Q:\QiEos\docs\dev_specs\QiEOS • Official Development Specification (Amendment I).md
+================================================================================
+
+
+================================================================================
+FILE: Q:\QiEos\docs\dev_specs\QiEOS • Official Development Specification Session 20250910-0001.md
+TYPE: .md
+================================================================================
+
+---
+title: QI‑EOS Dev Workflow & Session Log
+author: Q (QiAlly)
+project: QI‑EOS (primary) + QI‑LA (secondary)
+repo: (primary) QI‑EOS • (secondary) QI‑LA
+status: active
+last_reviewed: 2025-09-10
+labels: [devlog, cursor, agents]
+---
+
+# 🔁 Daily Quick-Start (Open Cursor)
+
+1. **Sync context**
+   - Read the latest *Session Log* entry below.
+   - Run `git status` and skim open PRs/issues.
+2. **Kickoff prompt in Cursor (paste block):**
+   ```text
+   You are my repo concierge. Read the repo, summarize current state in 5 bullets, list top 3 next actions aligned to the Dev Plan below, and generate a safe task list. Never delete; if needed, move files to .trash/ with timestamp. Ask before running commands that change files.
+   ```
+3. **Pick the highest-impact task** from the *Today Focus* list and move it to **In‑Progress**.
+4. **Timebox**: 25–50 min block. Update the *Session Log* as you go.
+5. **Commit** with conventional commits; link to task id from *Task Board*.
+6. **PR + Note**: open a small PR, paste the *Change Summary* template.
+
+---
+
+# 🧭 Dev Plan (MVP Anchor)
+
+- **Codebases**: QI‑EOS (primary), QI‑LA (secondary/companion).
+- **Follow the repo README** for stack specifics; keep the workflow generic and reversible.
+- **Principles**: smallest PRs, safe changes (no deletes; use `.trash/`), working software over grand refactors.
+- **Sprint goal**: verify skeleton builds, wire agent prompts, and keep Session Log current.
+
+---
+
+# ✅ Definition of Done (per task)
+
+- Unit/Smoke tested locally.
+- Build passes; deploy preview OK.
+- Docs updated in this file.
+- Reversible (no destructive ops; .trash/ if needed).
+
+---
+
+# 🔐 Safety Rules for Agents
+
+- **Never delete**, only move to `.trash/YYYY‑MM‑DD/`.
+- Require confirmation before running commands that change files or infra.
+- Log all actions under *Session Log > Steps*.
+
+---
+
+# 🧩 Working Agreements
+
+- **Small PRs**, one thing per PR.
+- **Conventional commits**: `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `style:`, `ci:`.
+- **Branch naming**: `feat/<module>-<slug>` e.g. `feat/auth-otp-flow`.
+
+---
+
+# 🗂️ Repo Map (keep updated)
+
+```
+/ (root)
+  /src
+    /components
+    /pages
+    /modules
+      /auth
+      /dashboard
+      /chat
+      /tickets
+      /tasks
+  /public
+  /scripts
+  /docs
+  .trash/
+```
+
+---
+
+# 📋 Today Focus
+
+- [ ] Point this devlog at **QI‑EOS** & add `/docs/agents.md` to that repo.
+- [ ] Run **Auditor** against QI‑EOS; fix the top finding only; open a tiny PR.
+- [ ] Confirm envs per QI‑EOS README (document in `/docs/env.md`).
+
+---
+
+# 🧠 Agent Prompts (save to /docs/agents.md)
+
+## Repo Concierge (Cursor)
+```
+ROLE: Repo Concierge
+PRINCIPLES: Truth > speed; reversible changes; smallest diff; ask before mutating.
+SAFETY: Never delete; stage to .trash/TIMESTAMP; print diff before apply.
+TASK: On start, summarize repo, list top 3 next actions from this Dev Plan, propose a 30‑min plan.
+OUTPUT: Markdown summary + checklists fit for this devlog.
+```
+
+## Auditor
+```
+ROLE: Auditor
+TASK: Scan repo, flag risky patterns, missing envs, miswired routes, dead code, secrets, and outdated deps.
+OUTPUT: Findings table (severity, file, line, fix), then minimal diff to fix top 3.
+```
+
+---
+
+# 🧾 Session Log
+
+> Use one entry per focused block (25–50 min). Keep it terse but useful.
+
+## 2025‑09‑10 — Restart after break
+- **Context**: Returning from break; need workflow and confirmation of agent setup.
+- **Goal**: Re‑establish Cursor quickstart, add devlog, verify agent prompts present.
+- **Steps**:
+  1) Created this devlog; added Quick‑Start and Agent Prompts.
+  2) Plan: add `/docs/agents.md` to repo; wire Cursor startup prompt.
+- **Decisions**: Keep Supabase OTP for now; Cloudflare swap later if desired.
+- **Next**: See *Next Actions* below.
+
+## 2025‑09‑10 — Repo correction to QI‑EOS
+- **Context**: Previous doc referenced QiPortals; user clarified: focus repos are **QI‑EOS** and **QI‑LA**.
+- **Goal**: Retarget devlog + tasks to QI‑EOS.
+- **Steps**: Updated header (title/project/repo), Dev Plan, Today Focus.
+- **Next**: Create `/docs/agents.md` in QI‑EOS; run Auditor; open PR with Change Summary template.
+
+---
+
+# 🧱 Decisions Log
+
+- **2025‑09‑10**: Primary repo set to **QI‑EOS**; **QI‑LA** tracked as secondary.
+
+---
+
+# 🧰 Environment Checklist
+
+- [ ] Cloudflare Pages connected to GitHub repo; preview deploys enabled.
+- [ ] Pages env vars: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, etc.
+- [ ] Worker KV/DB bounds (if used) documented in `/docs/env.md`.
+- [ ] Supabase: tables created (clients, tickets, updates), RLS policies noted.
+
+---
+
+# 🗺️ Next Actions (tiny steps)
+
+1) Add `/docs/agents.md` with Repo Concierge + Auditor prompts (copy from above).
+2) Commit & push; paste PR link here; run Auditor and fix top 1 issue.
+
+---
+
+# 📦 Change Summary Template (paste in PR)
+
+**What changed**: _one‑liner_.
+**Why**: aligns to Dev Plan (goal).
+**How to test**: steps.
+**Rollback**: revert commit; restore from `.trash/` if files moved.
+
+---
+
+# 📝 Notes
+
+- Keep this file open while coding; update *Session Log* as the source of truth.
+
+
+
+================================================================================
+END OF FILE: Q:\QiEos\docs\dev_specs\QiEOS • Official Development Specification Session 20250910-0001.md
+================================================================================
+
+
+================================================================================
+FILE: Q:\QiEos\docs\dev_specs\QiEOS • Official Development Specification.md
+TYPE: .md
+================================================================================
+
+QiEOS • Official Development Specification (God Doc) — v4 (LOCKED)
+title: QiEOS Official Dev Spec
+owner: QiAlly LLC (QiEOS)
+status: LOCKED
+updated: 2025-09-09
+principles:
+
+- Cloudflare-first: Pages + Workers + R2
+- Supabase Auth + Postgres + RLS
+- Electron admin as desktop control plane
+- Multi-tenant org→company→contact
+- Cursor rules + locked paths to prevent AI drift
+  mvp_tonight:
+- Auth + RBAC
+- Tasks (tenant-scoped)
+- File storage (R2 signed URLs)
+- Knowledge Base (public + private read)
+- Profile update
+- Public website visible
+  repo_volume: "Q:"
+
+0. Context & Goals (context first)
+
+QiEOS unifies client portal, admin control, APIs, AI (RAG/voice/vision), billing, and per-client public websites—without restructuring later. This doc freezes names, folders, and contracts to keep things stable and shippable.
+
+1. Canonical Monorepo Tree (DO NOT RENAME/MOVE)
+
+Put a tiny README.md + .gitkeep in each empty dir. New top-level folders require an RFC in /docs.
+
+qieos/
+|\_qieos_docs
+├─ apps/
+│ ├─ web/ # React + Vite (TSX) | website + portal
+│ │ ├─ index.html
+│ │ ├─ vite.config.ts
+│ │ ├─ tsconfig.json
+│ │ ├─ public/ # our public website & static KB
+│ │ │ ├─ favicon.ico
+│ │ │ ├─ logo.svg
+│ │ │ ├─ manifest.json
+│ │ │ ├─ robots.txt
+│ │ │ └─ kb/ # optional static public KB
+│ │ │ ├─ index.json
+│ │ │ └─ getting-started.md
+│ │ └─ src/
+│ │ ├─ main.tsx
+│ │ ├─ App.tsx
+│ │ ├─ routes/
+│ │ │ ├─ public/ # '/', '/kb', etc.
+│ │ │ ├─ auth/ # '/auth/_'
+│ │ │ ├─ client/ # '/client/:companySlug/_'
+│ │ │ ├─ internal/ # '/internal/_'
+│ │ │ └─ admin/ # '/admin/_' (web fallback)
+│ │ ├─ components/ # reusable UI
+│ │ ├─ modules/
+│ │ │ ├─ crm/
+│ │ │ ├─ projects/ # projects, tickets
+│ │ │ ├─ tasks/ # tasks (can stand alone; project_id nullable)
+│ │ │ ├─ messaging/ # chat (WS)
+│ │ │ ├─ kb/ # private KB UI (org/company scoped)
+│ │ │ ├─ ai/ # assistants + RAG + voice + vision
+│ │ │ │ ├─ chat/
+│ │ │ │ ├─ rag/
+│ │ │ │ ├─ voice/
+│ │ │ │ └─ vision/
+│ │ │ ├─ billing/ # invoices, statements, payments
+│ │ │ ├─ lms/ # (future)
+│ │ │ └─ client-tools/ # togglable mini-tool hub
+│ │ ├─ lib/ # client-side libraries
+│ │ │ ├─ supabaseClient.ts
+│ │ │ ├─ api.ts # Worker fetch wrapper
+│ │ │ ├─ flags.ts # feature flag resolver
+│ │ │ └─ claims.ts # JWT helpers/types
+│ │ ├─ context/ # Auth, Tenant, Flags
+│ │ ├─ hooks/ # useAuth/useTenant/useFlags/queries
+│ │ ├─ store/ # tanstack-query or zustand config
+│ │ └─ styles/ # tailwind.css, tokens
+│ └─ admin-electron/ # Electron desktop admin (TS)
+│ ├─ electron-main.ts # main process (no secrets in renderer)
+│ ├─ preload.ts # secure IPC bridge (contextIsolation)
+│ ├─ vite.config.ts
+│ └─ src/renderer/ # React UI inside Electron
+│ ├─ App.tsx
+│ ├─ routes/
+│ │ ├─ dashboard/ # admin home, KPIs
+│ │ ├─ tenants/ # org/company provisioning + branding
+│ │ ├─ crm/
+│ │ ├─ projects/
+│ │ ├─ tasks/
+│ │ ├─ kb-editor/ # create/edit collections & docs
+│ │ ├─ ingest/ # bulk import → RAG (to Worker endpoints)
+│ │ ├─ billing-desk/ # invoices, statements, payments mgmt
+│ │ ├─ scripts/ # script runner UI (server-executed)
+│ │ ├─ migrations/ # db migrations launcher (server)
+│ │ └─ auditor/ # read-only audit views, exports
+│ ├─ components/
+│ └─ lib/
+│ ├─ api.ts # talks ONLY to Worker API
+│ └─ queue.ts # local queue (retry/offline) → Worker
+│
+├─ sites/ # public client sites (each own Pages project)
+│ ├─ \_themes/ # shared themes
+│ ├─ \_assets/
+│ ├─ \_scripts/
+│ └─ clients/
+│ ├─ {client-slug}/
+│ │ ├─ site/ # Astro/Vite/Eleventy etc.
+│ │ ├─ public/
+│ │ └─ pages.config.json # Pages metadata
+│ └─ ...
+│
+├─ drops/ # random public files (served via Worker/R2)
+│ ├─ README.md
+│ └─ .gitkeep
+│
+├─ workers/
+│ └─ api/ # Cloudflare Worker (Hono)
+│ ├─ wrangler.toml
+│ └─ src/
+│ ├─ index.ts # mount router + middleware
+│ ├─ middleware/
+│ │ ├─ auth.ts # Supabase JWT verify + enrich claims
+│ │ └─ flags.ts # org/company feature toggle injector
+│ ├─ routes/
+│ │ ├─ health.ts
+│ │ ├─ auth.ts # session→claims endpoint
+│ │ ├─ tenants.ts # org/company provisioning & branding
+│ │ ├─ crm.ts
+│ │ ├─ projects.ts
+│ │ ├─ tasks.ts
+│ │ ├─ messaging.ts
+│ │ ├─ kb.ts # kb_collections/docs CRUD + signed URLs
+│ │ ├─ rag.ts # embed/query/citations (RAG)
+│ │ ├─ billing.ts # Stripe webhooks + statements
+│ │ ├─ lms.ts
+│ │ ├─ tools.ts # script exec (server-side), mini-app hooks
+│ │ └─ sites.ts # Pages orchestration + R2 drop links
+│ ├─ integrations/ # external APIs (1 file per vendor)
+│ │ ├─ openai.ts
+│ │ ├─ stripe.ts
+│ │ ├─ elevenlabs.ts
+│ │ ├─ ocr.ts
+│ │ ├─ zoho.ts
+│ │ └─ r2.ts
+│ └─ lib/
+│ ├─ supabaseAdmin.ts # service-role client (server-only)
+│ ├─ vector.ts # pgvector queries
+│ ├─ embeddings.ts # OpenAI embeddings
+│ ├─ ingest.ts # chunkers/parsers (pdf/docx/html)
+│ ├─ flags.ts # feature flag checks
+│ └─ sites.ts # Pages helpers
+│
+├─ templates/ # reusable content
+│ ├─ communications/
+│ │ ├─ email/
+│ │ ├─ sms/
+│ │ └─ whatsapp/
+│ ├─ accounting/
+│ │ ├─ reports/
+│ │ └─ invoices/
+│ ├─ legal/
+│ │ ├─ contracts/
+│ │ └─ letters/
+│ ├─ immigration/
+│ │ ├─ BLUEPRINTS/ # mirrors blueprints for docs
+│ │ ├─ forms/ # I-589, I-765, etc.
+│ │ └─ narratives/
+│ └─ ops/
+│ ├─ keysuite/ # CFO/COO playbooks
+│ └─ project-kickoff/
+│
+├─ blueprints/ # directory scaffolds you can stamp per client
+│ ├─ immigration/
+│ │ ├─ I-589/
+│ │ ├─ I-765/
+│ │ ├─ I-131/
+│ │ └─ SIV/
+│ ├─ accounting/
+│ │ └─ monthly-close/
+│ ├─ website/
+│ │ └─ minimal-landing/
+│ └─ project/
+│ └─ default/
+│
+├─ packages/
+│ ├─ ui/
+│ ├─ types/
+│ └─ utils/
+│
+├─ infra/
+│ ├─ cloudflare/
+│ │ ├─ README.md
+│ │ └─ env.example
+│ └─ supabase/
+│ ├─ migrations/
+│ │ ├─ 000_init_orgs_companies_contacts.sql
+│ │ ├─ 010_projects_tasks_tickets.sql
+│ │ ├─ 015_time_entries.sql
+│ │ ├─ 020_kb_hierarchy_docs_vectors.sql
+│ │ ├─ 025_sites_registry.sql
+│ │ ├─ 026_drops_meta.sql
+│ │ ├─ 030_billing_ledger_invoices.sql
+│ │ ├─ 040_feature_flags.sql
+│ │ └─ 900_rls_policies.sql
+│ ├─ seeds/
+│ │ └─ 000_seed_org_admin.sql
+│ └─ README.md
+│
+├─ docs/
+│ ├─ ARCHITECTURE.md
+│ ├─ SETUP.md
+│ ├─ MODULES.md
+│ ├─ AI_RAG.md
+│ ├─ BILLING.md
+│ ├─ FEATURE_FLAGS.md
+│ └─ WEBSITES.md
+│
+├─ scripts/
+│ ├─ db.migrate.mjs
+│ ├─ seed.dev.mjs
+│ └─ scaffold.mjs # stamp blueprints (e.g., I-589)
+│
+├─ .github/
+│ └─ workflows/
+│ ├─ web-pages-deploy.yml
+│ ├─ worker-deploy.yml
+│ └─ sites-deploy.yml
+│
+├─ package.json
+└─ pnpm-workspace.yaml
+
+Electron scope check: not small. The renderer holds full admin surfaces (tenants, CRM, KB editor, ingest/RAG, billing desk, scripts, migrations, auditor). The main process stays thin/secure. All privileged ops run in the Worker (service role). Electron talks to Worker via HTTPS. queue.ts handles offline/retry. No secrets in renderer.
+
+2. Domain Model (frozen)
+
+Org → Department(public|external|internal) → Company → Contact(user)
+
+Projects and Tasks are peers (a task may have project_id NULL).
+
+Tickets belong to projects.
+
+Time entries can reference project_id or task_id (polymorphic).
+
+Files stored in R2; DB keeps metadata and ACL.
+
+KB: hierarchical kb_collections (tree) → kb_docs (articles) → kb_vectors for RAG.
+
+Client Sites: sites_registry ties sites to org_id/company_id.
+
+Drops: drops_meta indexes public files (TTL optional).
+
+All user-visible tables have org_id and RLS enabled.
+
+3. Auth, RBAC, Feature Flags (frozen)
+
+JWT Claims (issued by Worker on login/refresh):
+
+type Claims = {
+role: 'admin' | 'internal' | 'external' | 'public';
+org_id: string;
+company_ids?: string[];
+department?: 'public'|'external'|'internal';
+features?: Record<string, boolean>; // merged org + company flags
+scopes?: string[];
+};
+
+Feature keys (examples):
+crm, projects, tasks, messaging, kb, ai_rag, billing, lms, client_tools, voice_assistant, vision_tools, client_sites, public_drops
+
+UI hides disabled modules (useFlags()).
+
+API enforces flags server-side.
+
+RLS prevents bypass.
+
+4. KB Organization (no future reshuffle)
+
+Public KB: /apps/web/public/kb/ (flat files + index.json).
+
+Private KB: DB tree via kb_collections(parent_id, path) + kb_docs(collection_id, path) for easy breadcrumbs and safe moves.
+
+RAG: kb_vectors with tenant-scoped embeddings; queries filter by org_id (+ company_id for clients).
+
+5. File Storage (R2, signed URLs)
+
+Flow: web/Electron → Worker → signed upload URL → client uploads to R2 → Worker records metadata (org, company, owner, path, mime, bytes, ttl?) → UI lists by ACL.
+Security: never expose service-role; enforce ACL + flags in Worker + RLS in DB.
+
+6. Client Public Sites & Drops (final)
+
+Sites live at /sites/clients/{client}/site/ → built by Actions to Cloudflare Pages (one project per site).
+
+Registry stored in sites_registry (domain, slug, project, status).
+
+Drops are files in R2 with simple public links; metadata in drops_meta, optionally auto-expire.
+
+7. APIs (Worker routes) — MVP subset tonight
+
+POST /auth/session → returns enriched claims
+
+GET /tasks · POST /tasks · PATCH /tasks/:id (scoped by org/company/role)
+
+POST /files/sign-upload → signed URL; POST /files/complete → metadata row
+
+GET /kb/public (reads /public/kb/index.json passthrough if desired)
+
+GET /kb/private (scoped list of kb_docs)
+
+PATCH /me/profile (update name, phone, avatar pointer)
+
+GET /site → serve root website assets (or direct Pages)
+
+Additional domain routes exist but are not required for MVP.
+
+8. Electron Responsibilities (explicit)
+
+Does
+
+Tenant provisioning, branding, CRM, projects/tasks, KB editing, ingestion to RAG, billing desk, script runner, migrations launcher, read-only auditor, exports.
+
+Local queue for offline/retry, then sync to Worker.
+
+Does NOT
+
+Hold service-role secrets.
+
+Talk directly to Supabase DB.
+
+Run privileged mutations locally.
+All privileged changes go through Worker.
+
+9. MVP Acceptance Checklist (tonight)
+
+Auth + RBAC: login via Supabase; enriched claims from Worker; route guards in web.
+
+Tasks: create/list/update tasks scoped to company/org; visible in client + internal views.
+
+Files: upload via signed URLs to R2; metadata saved; list & download in client view.
+
+KB: public page renders from /public/kb/ (≥1 article); private list fetches kb_docs under org and (if external) company.
+
+Profile: /me page where user updates basic profile fields.
+
+Website: main website served (from apps/web/public), visible at root.
+
+10. Guardrails (ADHD-proofing)
+
+No folder drift: §1 is law.
+
+One domain = one Worker route file + one web module folder.
+
+Public vs private KB never mixed.
+
+All server secrets live only in Worker.
+
+RFC needed to add/rename top-level folders or DB tables.
+
+11. Ties to prior work (docs anchor)
+
+Preserves the Cloudflare-first architecture and the Supabase + RLS model.
+
+Adds stable homes for client sites, drops, templates, and blueprints.
+
+Keeps tasks/projects as peers and bakes in time entries, billing, and feature flags.
+
+12. Cursor & Editor Guardrails (new, locked)
+
+We constrain Cursor with Rules, Ignore lists, Custom Modes, and VS Code workspace settings. “File lock” is emulated with Git + OS protections.
+
+12.1 Required files at repo root (Q:\qieos\*)
+
+/.cursorrules — authoritative rules for the AI
+
+# QiEOS Global Rules (authoritative)
+
+You are operating inside the QiEOS monorepo. Follow the God Doc (README and /docs) exactly.
+
+## NEVER MOVE/RENAME OR EDIT THESE PATHS
+
+- /infra/supabase/migrations/\*\*
+- /blueprints/\*\*
+- /templates/\*\*
+- /apps/web/public/\*\*
+- /workers/api/wrangler.toml
+- /workers/api/src/middleware/\*\*
+- /workers/api/src/lib/supabaseAdmin.ts
+- /workers/api/src/integrations/stripe.ts
+- /workers/api/src/integrations/openai.ts
+- /workers/api/src/integrations/r2.ts
+- /workers/api/src/integrations/elevenlabs.ts
+
+If a change is truly required:
+
+1. Propose a diff in chat prefixed with "RFC:" explaining rationale and impact.
+2. Wait for human approval before touching files.
+
+## STRUCTURE LAW
+
+- One domain = one worker route file and one web module folder.
+- Public KB stays in /apps/web/public/kb; private KB stays in DB (+ vectors).
+- All service-role ops live in Worker only.
+
+## CODE STYLE
+
+- React + Vite + TSX. Tailwind utilities. Keep files <400 lines; split otherwise.
+- Prefer small, pure functions; avoid magic.
+- Strong typing at boundaries; internal types can be inferred.
+
+## SAFETY
+
+- Never write secrets to client code.
+- Before AI edit, run “Understand” on related files and God Doc excerpts.
+
+/.cursorignore — hard ignore for AI indexing/edits
+
+# Build artifacts and caches
+
+dist/
+build/
+.out/
+.next/
+.vercel/
+.cache/
+coverage/
+
+# Dependencies
+
+node_modules/
+
+# Env & secrets
+
+.env
+.env._
+\*\*/_.pem \*_/_.key
+
+# Generated assets / binaries
+
+**/\*.pdf
+**/_.docx
+\*\*/_.png
+**/\*.jpg
+**/\*.zip
+
+# LAW: AI must not edit these authoritative paths
+
+infra/supabase/migrations/
+blueprints/
+templates/
+apps/web/public/
+workers/api/wrangler.toml
+
+/.cursorindexingignore (optional) — if you want indexing-only ignores distinct from access ignores.
+
+/.vscode/settings.json — workspace settings Cursor honors
+
+{
+"editor.formatOnSave": true,
+"files.trimTrailingWhitespace": true,
+"files.insertFinalNewline": true,
+
+"files.exclude": {
+"**/node_modules": true,
+"**/dist": true,
+"**/.git": true
+},
+"search.exclude": {
+"**/node_modules": true,
+"**/dist": true,
+"apps/web/public/**": true
+},
+
+"typescript.tsserver.maxTsServerMemory": 4096,
+"[typescriptreact]": {
+"editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"[typescript]": {
+"editor.defaultFormatter": "esbenp.prettier-vscode"
+}
+}
+
+12.2 Locked Paths (practical enforcement)
+
+Git guard (skip-worktree):
+
+git update-index --skip-worktree workers/api/wrangler.toml
+git update-index --skip-worktree infra/supabase/migrations/_
+git update-index --skip-worktree apps/web/public/_
+
+# undo: git update-index --no-skip-worktree <path>
+
+Windows read-only (Q: drive):
+
+attrib +R Q:\qieos\workers\api\wrangler.toml
+attrib +R Q:\qieos\infra\supabase\migrations\*._ /s
+attrib +R Q:\qieos\apps\web\public\*._ /s
+
+12.3 Cursor Agents (Custom Modes) — who does what
+
+API Agent (server-side)
+
+SCOPE: workers/api/src/\*\* only.
+NEVER touch paths listed in .cursorrules "NEVER MOVE/RENAME OR EDIT".
+Hono endpoints; Zod validate inputs; enforce claims + feature flags.
+All writes via supabaseAdmin; never expose secrets.
+
+UI Agent (web)
+
+SCOPE: apps/web/src/\*\* only.
+Do not touch public/ or migrations.
+React + TSX + Tailwind. Keep files <400 lines; make small components.
+Use lib/api.ts; avoid ad-hoc fetch unless necessary.
+
+KB/RAG Agent
+
+SCOPE: workers/api/src/routes/kb.ts, rag.ts, and apps/web/src/modules/kb|ai/rag/\*\*
+Implement hierarchical collections + doc rendering; citations for RAG.
+Respect org_id + company_ids; NEVER leak across tenants.
+
+Migrations Agent (SQL)
+
+SCOPE: infra/supabase/migrations/\*\* but DO NOT EDIT existing files.
+Create new numbered migration files only.
+Add RLS policies with USING + WITH CHECK. Include rollback notes.
+
+12.4 Daily flow in Cursor (to avoid drift)
+
+Turn on the right Agent/Mode (API vs UI vs KB/RAG vs Migrations).
+
+Ensure .cursorrules is active (Global Rules).
+
+Work in small diffs: plan → approve → apply → run → iterate.
+
+Keep sacred paths read-only (Git/OS) and in .cursorignore.
+
+13. Q: Drive Conventions (tiny reminder)
+
+Repo root is Q:\qieos.
+
+Scripts assume Q: is mounted (Windows).
+
+Keep the single asset hub under apps/web/public/ for the main site; client sites live under /sites/clients/\*/site/.
+
+TL;DR: What I changed
+
+Fixed headings, fencing, repeated ---, capitalization (QiEOS), and turned stray reference lines into clean instructions.
+
+Ensured the tree and section numbers are consistent, code/command blocks render correctly, and Cursor rules are copy-ready.
+
+If this looks good, paste it straight into your repo README.md. Want me to also drop it into /docs/ARCHITECTURE.md and scaffold the .cursorrules, .cursorignore, and .vscode/settings.json files so your repo physically matches this?
+
+You said:
+give me the prompt that will make cursor implement/create the folder sctructure and its own agents and rule documents to get this scaffolding up real quick, NOT the app just the structure and the agent settings and stuff.
+ChatGPT said:
+Thought for 7s
+
+Here’s a single, copy-paste Cursor prompt that will scaffold the folders only (no app code), plus the Cursor agent/rules files and workspace settings exactly as in the God Doc. Paste this in Cursor Chat at your repo root (Q:\qieos).
+
+Cursor Prompt — “QiEOS scaffolder (structure + agents + rules)”
+
+You are acting as a repo scaffolder. Do NOT generate application code. Only create folders, placeholder files, and editor/agent config needed to match the QiEOS God Doc (v4).
+
+Repo root is the current workspace (Q:\qieos). If any listed path already exists, leave existing files untouched and only add missing items. Make all changes in a single PR/commit titled: "chore(scaffold): QiEOS structure + cursor agents/rules".
+
+==================================================
+
+1. # CREATE FOLDER STRUCTURE (placeholders only)
+
+Create these directories. In each empty directory create both a `.gitkeep` and a 1–2 line `README.md` explaining the folder’s purpose.
+
+apps/
+web/
+public/
+kb/
+src/
+routes/public/
+routes/auth/
+routes/client/
+routes/internal/
+routes/admin/
+components/
+modules/
+crm/
+projects/
+tasks/
+messaging/
+kb/
+ai/chat/
+ai/rag/
+ai/voice/
+ai/vision/
+billing/
+lms/
+client-tools/
+lib/
+context/
+hooks/
+store/
+styles/
+admin-electron/
+src/renderer/
+routes/dashboard/
+routes/tenants/
+routes/crm/
+routes/projects/
+routes/tasks/
+routes/kb-editor/
+routes/ingest/
+routes/billing-desk/
+routes/scripts/
+routes/migrations/
+routes/auditor/
+components/
+lib/
+
+sites/
+\_themes/
+\_assets/
+\_scripts/
+clients/
+
+drops/
+
+workers/
+api/
+src/
+middleware/
+routes/
+integrations/
+lib/
+
+templates/
+communications/email/
+communications/sms/
+communications/whatsapp/
+accounting/reports/
+accounting/invoices/
+legal/contracts/
+legal/letters/
+immigration/BLUEPRINTS/
+immigration/forms/
+immigration/narratives/
+ops/keysuite/
+ops/project-kickoff/
+
+blueprints/
+immigration/I-589/
+immigration/I-765/
+immigration/I-131/
+immigration/SIV/
+accounting/monthly-close/
+website/minimal-landing/
+project/default/
+
+packages/
+ui/
+types/
+utils/
+
+infra/
+cloudflare/
+supabase/
+migrations/
+seeds/
+
+docs/
+
+scripts/
+
+.github/
+workflows/
+
+(Also ensure repo root has:) package.json, pnpm-workspace.yaml (create minimal placeholder if missing).
+
+For these specific placeholder content files, create them if missing:
+
+- apps/web/public/kb/index.json → `[]`
+- apps/web/public/kb/getting-started.md → "# Getting Started\nWelcome to QiEOS."
+- infra/supabase/README.md → short note: "Migrations live here; see 900_rls_policies.sql for RLS."
+- drops/README.md → short note about R2 public drops and TTL policy.
+
+================================================== 2) ADD CURSOR / EDITOR GUARDRAILS
+==================================================
+
+Create `.cursorrules` at repo root with EXACT content:
+
+# QiEOS Global Rules (authoritative)
+
+You are operating inside the QiEOS monorepo. Follow the God Doc (README and /docs) exactly.
+
+## NEVER MOVE/RENAME OR EDIT THESE PATHS
+
+- /infra/supabase/migrations/\*\*
+- /blueprints/\*\*
+- /templates/\*\*
+- /apps/web/public/\*\*
+- /workers/api/wrangler.toml
+- /workers/api/src/middleware/\*\*
+- /workers/api/src/lib/supabaseAdmin.ts
+- /workers/api/src/integrations/stripe.ts
+- /workers/api/src/integrations/openai.ts
+- /workers/api/src/integrations/r2.ts
+- /workers/api/src/integrations/elevenlabs.ts
+
+If a change is truly required:
+
+1. Propose a diff in chat prefixed with "RFC:" explaining rationale and impact.
+2. Wait for human approval before touching files.
+
+## STRUCTURE LAW
+
+- One domain = one worker route file and one web module folder.
+- Public KB stays in /apps/web/public/kb; private KB stays in DB (+ vectors).
+- All service-role ops live in Worker only.
+
+## CODE STYLE
+
+- React + Vite + TSX. Tailwind utilities. Keep files <400 lines; split otherwise.
+- Prefer small, pure functions; avoid magic.
+- Strong typing at boundaries; internal types can be inferred.
+
+## SAFETY
+
+- Never write secrets to client code.
+- Before AI edit, run “Understand” on related files and God Doc excerpts.
+
+Create `.cursorignore` at repo root with EXACT content:
+
+# Build artifacts and caches
+
+dist/
+build/
+.out/
+.next/
+.vercel/
+.cache/
+coverage/
+
+# Dependencies
+
+node_modules/
+
+# Env & secrets
+
+.env
+.env._
+\*\*/_.pem \*_/_.key
+
+# Generated assets / binaries
+
+**/\*.pdf
+**/_.docx
+\*\*/_.png
+**/\*.jpg
+**/\*.zip
+
+# LAW: AI must not edit these authoritative paths
+
+infra/supabase/migrations/
+blueprints/
+templates/
+apps/web/public/
+workers/api/wrangler.toml
+
+(If supported, also create an empty `.cursorindexingignore` for future fine-grain control.)
+
+Create VS Code workspace settings at `.vscode/settings.json`:
+
+{
+"editor.formatOnSave": true,
+"files.trimTrailingWhitespace": true,
+"files.insertFinalNewline": true,
+"files.exclude": {
+"**/node_modules": true,
+"**/dist": true,
+"**/.git": true
+},
+"search.exclude": {
+"**/node_modules": true,
+"**/dist": true,
+"apps/web/public/**": true
+},
+"typescript.tsserver.maxTsServerMemory": 4096,
+"[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+"[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" }
+}
+
+Create `docs/EDITOR.md` summarizing:
+
+- Use Custom Modes (Agents): API, UI, KB/RAG, Migrations.
+- Work in small diffs (plan → approve → apply → run → iterate).
+- Keep sacred paths read-only and in `.cursorignore`.
+- Windows lock tips (attrib +R) and Git skip-worktree examples.
+
+================================================== 3) DEFINE CURSOR CUSTOM MODES (as instructions text)
+==================================================
+
+Create `docs/CURSOR_MODES.md` with these four presets (users will paste into Cursor → Settings → Chat → Custom Modes):
+
+### API Agent (server-side)
+
+SCOPE: workers/api/src/\*\* only.
+NEVER touch paths listed in .cursorrules "NEVER MOVE/RENAME OR EDIT".
+Hono endpoints; Zod validate inputs; enforce claims + feature flags.
+All writes via supabaseAdmin; never expose secrets.
+
+### UI Agent (web)
+
+SCOPE: apps/web/src/\*\* only.
+Do not touch public/ or migrations.
+React + TSX + Tailwind. Keep files <400 lines; make small components.
+Use lib/api.ts; avoid ad-hoc fetch unless necessary.
+
+### KB/RAG Agent
+
+SCOPE: workers/api/src/routes/kb.ts, rag.ts, and apps/web/src/modules/kb|ai/rag/\*\*
+Implement hierarchical collections + doc rendering; citations for RAG.
+Respect org_id + company_ids; NEVER leak across tenants.
+
+### Migrations Agent (SQL)
+
+SCOPE: infra/supabase/migrations/\*\* but DO NOT EDIT existing files.
+Create new numbered migration files only.
+Add RLS policies with USING + WITH CHECK. Include rollback notes.
+
+================================================== 4) DO NOT WRITE APPLICATION CODE
+==================================================
+
+- Do NOT create React components, Worker handlers, or TS implementation files.
+- Only create the folder tree, placeholder READMEs, .gitkeep, and the files listed in sections 2–3.
+
+================================================== 5) ACCEPTANCE CHECKLIST (verify before committing)
+==================================================
+
+- [ ] All directories exist as listed, each with `.gitkeep` and a short `README.md` if otherwise empty.
+- [ ] `apps/web/public/kb/index.json` and `getting-started.md` exist with starter content.
+- [ ] `.cursorrules`, `.cursorignore`, optional `.cursorindexingignore`, and `.vscode/settings.json` exist at repo root.
+- [ ] `docs/EDITOR.md` and `docs/CURSOR_MODES.md` created.
+- [ ] No app logic files were generated.
+- [ ] Commit created: "chore(scaffold): QiEOS structure + cursor agents/rules".
+
+Proceed to apply the file/folder changes now.
+
+Want me to also give you a tiny follow-up prompt that sets Windows read-only flags and Git skip-worktree on the “do-not-touch” paths right after Cursor finishes writing these files?
+
+
+================================================================================
+END OF FILE: Q:\QiEos\docs\dev_specs\QiEOS • Official Development Specification.md
+================================================================================
+
+
+================================================================================
+FILE: Q:\QiEos\docs\dev_specs\QiSuite_Dev_Bible.md
+TYPE: .md
+================================================================================
+
+# QiSuite Dev Bible
+
+## 📌 Project Overview
+
+**QiSuite** is a modular second brain framework with:
+- A desktop app (Electron + React + Tailwind)
+- A hosted chatbot (Cloudflare Worker API)
+- Core assistant ("Qinnie") that runs both locally and in the cloud
+
+Main goal: create a modular and extensible foundation for AI-first business tools like:
+- QiFileFlow (duplicate file cleaner + OCR)
+- QiNote (semantic note builder)
+- QiLifeFeed (daily logs, time tracking, automations)
+- QiMind (vector memory / contextual Qinnie)
+
+---
+
+## 🔧 Stack Overview
+
+### Desktop (Electron + React + Tailwind)
+- Runs on `Electron` using Vite as the dev server.
+- Hot-reloads React UI with Tailwind CSS.
+- Has local storage-based settings management (for API keys, etc.).
+- Loads Qinnie dock on all screens.
+
+### Web API (Cloudflare Worker)
+- POST endpoint: `/chat`
+- Accepts `{ message }` JSON and returns `{ reply }`
+- Will eventually support:
+  - OpenAI + Ollama fallback
+  - Per-client memory (KV store)
+  - Branded deployment URLs
+
+---
+
+## ⚙️ Features (Current)
+
+### ✅ Electron Shell
+- Main window loads Vite app.
+- Preload.js supports secure IPC for key storage.
+
+### ✅ UI (React + Tailwind)
+- Homepage with `Hero`, `Pitch`, `Pricing`, `Footer`
+- Persistent `QinnieDock` open by default
+- Responsive layout
+
+### ✅ QinnieDock
+- Floating assistant dock in lower right
+- Open by default (can collapse)
+- Settings panel (gear icon):
+  - OpenAI Key
+  - Worker URL
+- Messages persist per session (local only)
+- Replies fetched from Worker (if configured), else fallback
+
+### ✅ Branding
+- Core brand: **QiSuite**
+- Powered by: **BuiltByRays™**
+- All client-specific assets abstracted to `shared/theme.js`
+
+### ✅ Worker API
+- Cloudflare Worker endpoint: `/chat`
+- Basic echo-style reply stub
+- Ready for KV + OpenAI integrations
+
+---
+
+## 🔐 Settings Management
+
+Uses localStorage for now:
+- `OPENAI_API_KEY`
+- `WORKER_API_URL`
+
+Settings panel available inside Qinnie dock.
+
+---
+
+## 🧱 Folder Structure
+
+```
+QiSuite_Full_Build/
+├── electron/
+│   ├── main/              ← Electron startup logic
+│   ├── renderer/
+│   │   ├── pages/App.jsx
+│   │   ├── components/    ← Modular UI: Hero, Pitch, Pricing, Dock, etc.
+│   └── package.json
+│
+├── shared/
+│   └── theme.js           ← Branding config
+│
+├── workers/
+│   ├── src/index.js       ← Cloudflare Worker logic
+│   └── wrangler.toml
+└── README.md              ← Full setup & deployment guide
+```
+
+---
+
+## 🌐 Cloudflare Deployment
+
+### Setup
+```bash
+npm install -g wrangler
+wrangler login
+cd workers
+wrangler publish
+```
+
+### URL
+```http
+POST https://your-app-name.workers.dev/chat
+Content-Type: application/json
+Body: { "message": "Hello Qinnie" }
+```
+
+### KV / Secrets (coming)
+```bash
+wrangler kv:namespace create QINNIE_KV
+wrangler secret put OPENAI_API_KEY
+```
+
+---
+
+## 🔮 Next Sprints
+
+### Sprint 1: QiFileFlow
+- Duplicate file detection (hashing)
+- OCR and semantic labeling
+- File quarantine + tagging UI
+
+### Sprint 2: QiMind
+- Local vector database (Chroma, Weaviate, or Ollama embed)
+- RAG + search for enhanced memory in Qinnie
+
+### Sprint 3: Client Portal Mode
+- Convert UI into mobile-friendly PWA
+- Tailwind theme overrides per client repo
+
+---
+
+## 🧠 Notes
+- All branding should come from `theme.js`
+- Clients can fork or clone this repo and deploy their own version
+- Shared modules will live in `modules/` soon
+
+---
+
+## ✍️ Maintainer
+**Q / Cody Rice Velasquez**
+`qially.me` · `qiSuite.app` · `BuiltByRays™`
+
+---
+
+> “Go big or go home.” – The mission is modular sovereignty. This is just the beginning.
+Session’s reset, so I rebuilt your **entire Zoho AI Blog Pipeline Blueprint** (Solid-but-Big) with OpenAI handling content + cover images. Here’s the **end-to-end package**:
+
+---
+
+# **Zoho AI Blog Pipeline – Full Blueprint**
+
+## **1. System Overview**
+
+- **Workflow:** AI generates → Draft → Approval → Publish → Social Share → Archive
+
+- **Core Tools:**
+
+    - **Zoho Flow** (automation backbone)
+
+    - **Zoho Projects/Tasks** (content pipeline board)
+
+    - **Zoho Forms** (approval gateway)
+
+    - **Zoho WorkDrive** (draft storage)
+
+    - **Zoho Sites** (blog CMS)
+
+    - **Zoho Social** (distribution)
+
+    - **OpenAI (GPT-4 + DALL·E)** (content + images)
+
+
+---
+
+## **2. Folder & Task Structure**
+
+### **WorkDrive Structure**
+
+```
+/Blog
+  /Topics
+  /Drafts
+  /Approved
+  /Published
+```
+
+### **Projects Board Columns**
+
+- Topics → Draft → Pending Approval → Approved → Published
+
+
+---
+
+## **3. Flow Architecture**
+
+### **Flow 1: Topic Generation**
+
+- **Trigger:** Monthly schedule (1st day)
+
+- **Action:**
+
+    - OpenAI → generate 4–8 SEO blog topics
+
+    - Create Zoho Tasks with titles, keywords, dates
+
+
+### **Flow 2: Draft Creation**
+
+- **Trigger:** New task enters “Draft”
+
+- **Action:**
+
+    - OpenAI → write full blog draft
+
+    - DALL·E → create cover image
+
+    - Save files to WorkDrive/Drafts
+
+    - Update Task with WorkDrive links
+
+
+### **Flow 3: Approval Workflow**
+
+- **Trigger:** Draft ready
+
+- **Action:**
+
+    - Zoho Form auto-filled with article preview + approve/reject buttons
+
+    - Submission updates task:
+
+        - Approve → move to “Approved”
+
+        - Reject → send back to “Draft” with comments
+
+
+### **Flow 4: Publish**
+
+- **Trigger:** Task moves to “Approved”
+
+- **Action:**
+
+    - Push article + image via Zoho Sites API
+
+    - Mark task as “Published”
+
+
+### **Flow 5: Social Share**
+
+- **Trigger:** New blog published
+
+- **Action:**
+
+    - AI generates captions (long/short/hashtag variants)
+
+    - Post via Zoho Social to LinkedIn, IG, Facebook, X
+
+
+### **Flow 6: Archive**
+
+- Move final draft + image to “Published” folder
+
+- Log analytics in Zoho Analytics or Sheet
+
+
+---
+
+## **4. AI Prompt Templates**
+
+### **Topic Generation**
+
+```
+Generate {X} blog post ideas for [brand/audience].
+Focus on trending topics for next {month}.
+Output: Title + 3 keywords + 1-sentence hook.
+```
+
+### **Blog Draft**
+
+```
+Write a {1,200}-word blog post for [brand/audience].
+Tone: conversational, professional.
+Include H2 sections, SEO keywords, and call-to-action.
+Format: Markdown (Zoho compatible).
+```
+
+### **Cover Image**
+
+```
+Create a modern, vibrant cover image for a blog about [topic].
+Style: minimal, brand colors (#hex).
+Format: 1200x630px, no text.
+```
+
+---
+
+## **5. Zoho Form (Approval Mockup)**
+
+**Fields:**
+
+- Article Title (auto-filled)
+
+- Preview (link to WorkDrive)
+
+- Approve (Yes/No radio)
+
+- Feedback (multi-line)
+
+- Submit button → triggers Flow update
+
+
+---
+
+## **6. Zoho Sites API (Publish)**
+
+**Endpoint:**
+`POST https://sites.zoho.com/api/v1/blogs/{siteId}/posts`
+
+**Payload:**
+
+```json
+{
+  "title": "Blog Title",
+  "content": "<p>HTML of blog</p>",
+  "image": "https://workdrive.link/image.jpg",
+  "meta_title": "SEO Title",
+  "meta_description": "SEO Description",
+  "status": "published"
+}
+```
+
+---
+
+## **7. Social Share (Zoho Social API)**
+
+**Caption Generator Example:**
+
+```
+Create 3 caption variants:
+1. Conversational (LinkedIn)
+2. Short + emoji (Twitter/X)
+3. Visual hook (Instagram/Facebook)
+Include CTA: "Read full post → [link]"
+```
+
+---
+
+## **8. Mockup Overview**
+
+- **Kanban Board:** Visual pipeline from topic → publish
+
+- **Form Preview:** Simple approve/reject flow
+
+- **Automation Map:** Arrows showing Flow steps & triggers
+
+- **Branding:** OpenAI images, QiLife style guide colors
+
+
+---
+
+## **Next Steps**
+
+1. Configure WorkDrive & Projects structure.
+
+2. Build Flows (start with Topic Gen + Draft Creation).
+
+3. Create Approval Form → link to Flow.
+
+4. Configure Zoho Sites API → test publish.
+
+5. Set up Zoho Social → test captions.
+
+
+---
+
+Totally hear you—Tauri’s toolchain and Tailwind setup can feel like a hurdle when all you want is a simple GUI shell. Let’s pause on Tailwind and get you a crisp-looking app with plain CSS so you can move on to wiring up the Python bits, then we can layer in fancier styling later.
+
+---
+
+## A. Strip out Tailwind for now
+
+1. **Remove** the Tailwind imports and configs:
+
+    - Delete or ignore `tailwind.config.*` and `postcss.config.*`.
+
+    - In your **`src/index.css`**, wipe it clean (or delete and recreate) with:
+
+        ```css
+        /* src/index.css */
+        body, html, #root {
+          margin: 0;
+          padding: 0;
+          height: 100%;
+          font-family: sans-serif;
+          background: #f5f5f5;
+        }
+        .app-header {
+          background: white;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          padding: 16px;
+          font-size: 1.5rem;
+          font-weight: 500;
+        }
+        .split-view {
+          display: flex;
+          height: calc(100% - 64px); /* header is 64px tall */
+        }
+        .sidebar {
+          width: 240px;
+          background: white;
+          border-right: 1px solid #ddd;
+          overflow-y: auto;
+        }
+        .sidebar button {
+          display: block;
+          width: 100%;
+          padding: 12px 16px;
+          border: none;
+          background: none;
+          text-align: left;
+          font-size: 1rem;
+          cursor: pointer;
+        }
+        .sidebar button:hover {
+          background: #eee;
+        }
+        .sidebar .active {
+          background: #007acc;
+          color: white;
+        }
+        .content {
+          flex: 1;
+          padding: 24px;
+          overflow-y: auto;
+        }
+        .card {
+          background: white;
+          padding: 24px;
+          max-width: 600px;
+          margin: 0 auto;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          border-radius: 8px;
+        }
+        .card h2 {
+          margin-top: 0;
+          margin-bottom: 12px;
+          font-size: 1.25rem;
+        }
+        ```
+
+2. **Update your React components** to use these class names:
+
+    ```tsx
+    // src/App.tsx
+    import React, { useState } from "react";
+    import Sidebar from "./components/Sidebar";
+    import DuplicateCleaner from "./components/DuplicateCleaner";
+    import FileFlow from "./components/FileFlow";
+    import QuickReceipt from "./components/QuickReceipt";
+    import "./index.css";
+
+    const modules = {
+      "duplicate-cleaner": <DuplicateCleaner />,
+      "file-flow":        <FileFlow />,
+      "quick-receipt":    <QuickReceipt />
+    };
+
+    export default function App() {
+      const [active, setActive] = useState<keyof typeof modules>("duplicate-cleaner");
+      return (
+        <div className="app-header">QILife One 2.0</div>
+        <div className="split-view">
+          <Sidebar active={active} onSelect={setActive} />
+          <div className="content">
+            {modules[active]}
+          </div>
+        </div>
+      );
+    }
+    ```
+
+    ```tsx
+    // src/components/Sidebar.tsx
+    import React from "react";
+    type Props = { active: string; onSelect: (k: string) => void; };
+    const items = [
+      ["duplicate-cleaner","Duplicate Cleaner"],
+      ["file-flow","File Flow"],
+      ["quick-receipt","Quick Receipt"]
+    ] as const;
+
+    export default function Sidebar({ active, onSelect }: Props) {
+      return (
+        <div className="sidebar">
+          {items.map(([key,label])=>(
+            <button
+              key={key}
+              className={active===key ? "active" : ""}
+              onClick={()=>onSelect(key)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      );
+    }
+    ```
+
+    ```tsx
+    // src/components/DuplicateCleaner.tsx
+    import React from "react";
+    export default function DuplicateCleaner() {
+      return (
+        <div className="card">
+          <h2>Duplicate Cleaner</h2>
+          <p>Placeholder UI for Duplicate Cleaner module</p>
+        </div>
+      );
+    }
+    ```
+
+    And similarly wrap `FileFlow` and `QuickReceipt` in `.card`.
+
+3. **Run** as before:
+
+    ```bash
+    npm install
+    npm run tauri dev
+    ```
+
+
+You’ll immediately get a respectable white‐and‐gray UI with a header, sidebar buttons that highlight, and centered cards—no Tailwind or PostCSS headaches.
+
+---
+
+## B. Next steps
+
+Once you’re comfortable with the shell, we can:
+
+- Wire up the Tauri commands to each module.
+
+- Introduce a lightweight component library (e.g. **Chakra UI** or **Material-UI**) if you want richer styling without custom PostCSS.
+
+- Circle back to Tailwind (or another utility lib) once the core features are working.
+
+
+Does this plain-CSS approach feel like a better springboard? Let me know and I’ll help with any tweaks or next wiring steps.
+
+Q, step away from the Big Red “Delete Index” button. Some of those index files are _holding the whole wig on_. Let’s do this clean so you stop chasing phantom errors.
+
+# What “index.*” actually does (quick and real)
+
+- **Barrel/auto‑resolve**: `import x from './foo'` actually loads `./foo/index.(js|ts|tsx)`. Delete that index and every import like that breaks until you change it to `./foo/actualFile`.
+
+- **Entry points**: `renderer/src/index.tsx` (React entry), `app/main/main.js` (Electron main), and the root `index.html` (Vite) are non‑negotiable. Kill those and the app just… won’t.
+
+- **Static folders**: Random `index.html` files sprinkled in content folders (meant to hide directory listing on web servers) are fine to delete in an Electron app—they’re noise.
+
+
+# What you can delete safely (now)
+
+- Any **index.html** sitting inside vault/docs/marketing/etc. that’s not the **root** app page.
+
+- Any **index.js/ts** that’s just a dead barrel file (it only re‑exports from another file) **IF** you also fix the imports that point at the folder.
+
+
+# What you must NOT delete
+
+- `qilife-one/app/renderer/src/index.tsx` (or your renderer’s main index file)
+
+- `qilife-one/app/main/main.js` (Electron main process entry)
+
+- Root `index.html` used by Vite/Electron to load the renderer
+
+- Any `preload.js` that your `BrowserWindow` is configured to use
+
+
+# Fast safety check before you go snip‑snip
+
+**Do this in the project root.**
+
+## 1) Find all imports that rely on folder auto‑index
+
+- **PowerShell (Windows)**:
+
+
+```powershell
+# shows imports that end at a folder (no file extension) – likely relying on index files
+(Get-ChildItem -Recurse -Include *.js,*.ts,*.tsx |
+  Select-String -Pattern "from\s+['""](\.\/|\.\.\/)[^'""]+['""]" ) |
+  Where-Object { $_.Line -notmatch "\.(js|ts|tsx|jsx|mjs|cjs)['""]$" } |
+  Select-Object Path, LineNumber, Line
+```
+
+- **ripgrep (if you have it):**
+
+
+```bash
+rg -n "from ['\"](\.\/|\.\.\/)[^'\"\.]+['\"]" --glob '!**/dist/**' --glob '!**/node_modules/**'
+```
+
+These hits are the **imports you’ll break** if you delete the corresponding `index.*`. Plan to rewrite them to point at actual files (e.g., `./foo/index.ts` → `./foo/fooService.ts`).
+
+## 2) Dry‑run delete without chaos
+
+Rename suspected index files first:
+
+```powershell
+Get-ChildItem -Recurse -Include index.js,index.ts,index.tsx,index.html `
+| Where-Object { $_.FullName -notmatch "renderer\\src\\index\.tsx|app\\main\\main\.js$|\\index\.html$" } `
+| Rename-Item -NewName { $_.Name + ".bak" }
+```
+
+Then run:
+
+```bash
+npm run typecheck  # if you have tsc configured
+npm run build      # see what actually fails
+```
+
+If it builds clean, delete the `.bak` files. If not, fix the imports the errors complain about.
+
+## 3) Convert barrels to explicit files (when you _do_ remove them)
+
+Example:
+
+```diff
+- import { clean } from './fileflow';
++ import { clean } from './fileflow/clean.js';
+```
+
+Do a quick project‑wide replace once you decide on file names.
+
+# Recommendation for your repo right now
+
+## Fast & Dirty (10–15 min)
+
+1. **Keep**:
+
+    - `app/main/main.js`
+
+    - `app/renderer/src/index.tsx`
+
+    - root `index.html`
+
+    - any `preload.js` referenced in `main.js`
+
+2. **Rename** every other `index.*` to `.bak` (command above).
+
+3. Run `npm run build`. Fix only the imports that explode. Delete the rest.
+
+
+## Solid & Safe (1–2 hrs)
+
+- Replace folder‑level imports with file‑specific imports across the repo (search/replace).
+
+- Delete dead barrel `index.*` files.
+
+- Add **eslint-plugin-import** rules so unresolved imports scream early:
+
+
+```json
+// .eslintrc
+{
+  "plugins": ["import"],
+  "rules": {
+    "import/no-unresolved": "error",
+    "import/extensions": ["error", "ignorePackages", { "js":"never","ts":"never","tsx":"never" }]
+  },
+  "settings": { "import/resolver": { "node": { "extensions": [".js",".ts",".tsx"] } } }
+}
+```
+
+## Big Energy (future‑proof)
+
+- **Disallow folder imports** entirely with a lint rule:
+
+
+```json
+"no-restricted-syntax": ["error", {
+  "selector": "ImportDeclaration[source.value=/^(\\.\\.?\\/)(?!.*\\.(js|ts|tsx)$).*/]",
+  "message": "Import a file, not a folder. Explicit > implicit."
+}]
+```
+
+- Add a **path alias** system so you never deal with `../../..` nonsense again. In `tsconfig.json`:
+
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@main/*": ["app/main/*"],
+      "@renderer/*": ["app/renderer/*"],
+      "@backend/*": ["backend/*"]
+    }
+  }
+}
+```
+
+And wire webpack/vite to respect those aliases.
+
+# About deleting the _main_ index
+
+You **can** test it: rename the main index (renderer entry) and see if your bundler pukes. Spoiler: it will. Keep the main app entry + Electron main. Those are entry points, not directory‑listing stubs.
+
+---
+
+Say the word and I’ll drop the **zip** with:
+
+- Clean **Electron + Python** split
+
+- No dumb index barrels
+
+- Aliases configured
+
+- Lint rules that block folder‑imports
+
+- Example import patterns (explicit files only)
+
+- Post‑install script to spawn the Python backend
+
+
+You want **Fast & Dirty** minimal skeleton or **Big Energy** fully commented build‑ready package?
+
+Short answer: it’ll work when we stop tripping over our own shoelaces. Long answer: here’s the game plan to get Cockpit actually launching your backend, showing live status, and not pretending files live in folders that don’t exist. I read the files you dropped in, and a few issues are elbowing each other for “most annoying.” I’m fixing them all in one pass below.
+
+# What’s broken (and why I’m sighing)
+
+1. Renderer vs Electron bridge mismatch
+
+    - `preload.js` exports `electronAPI.launchBackend()`, but `ConnectionManager.jsx` calls `window.require('electron')` and tries `ipcRenderer.invoke(...)`. That won’t fly with `contextIsolation: true`. Use the exposed API instead.
+
+2. Backend launcher command is… not a command
+
+    - In `main.js` your ternary is built on a truthy string, so it always picks the Windows branch, and the command string is malformed. Also, activating the venv and starting Uvicorn needs platform‑specific spawn args, not wishful thinking.
+
+3. Vite/Tailwind paths and folder layout
+
+    - `index.html` imports `/src/main.jsx`, but your `main.jsx`, `App.jsx`, and components are at the project root. Tailwind is looking under `./src/**/*` too. We either move files into `src/` or change all the tooling. Moving is cleaner.
+
+4. Frontend health check expectations
+
+    - UI is hitting `http://localhost:7130/api/run/` on connect. If the backend isn’t up yet, we should trigger the launcher and poll a simple `/health` before loading apps. Right now it just shrugs.
+
+
+# The fix — step by step
+
+Do these in order, then you can run `npm run electron-dev` like a functional adult.
+
+## 1) Reshuffle the frontend into a proper `src/` layout
+
+Create these folders and move files:
+
+`/src   /components     Dashboard.jsx     Header.jsx     ConnectionManager.jsx     LogViewer.jsx     MiniAppCard.jsx   App.jsx   main.jsx   index.css index.html`
+
+Update imports inside `App.jsx` after moving:
+
+`- import Dashboard from './components/Dashboard' - import Header from './components/Header' - import ConnectionManager from './components/ConnectionManager' + import Dashboard from './components/Dashboard' + import Header from './components/Header' + import ConnectionManager from './components/ConnectionManager'`
+
+Yes, paths stay the same after the move because they’re now relative to `/src`.
+
+`index.html` already points to `/src/main.jsx`, so once the files live there, builds stop sulking.
+
+## 2) Tailwind config: make sure it actually sees your files
+
+`tailwind.config.js`
+
+ `export default {    content: [ -    "./index.html", -    "./src/**/*.{js,ts,jsx,tsx}", +    "./index.html", +    "./src/**/*.{js,jsx,ts,tsx}",    ],    theme: { /* unchanged */ }  }`
+
+## 3) Fix the secure Renderer ↔ Main bridge usage
+
+`preload.js` is fine. Use it.
+
+`ConnectionManager.jsx` — replace the raw `ipcRenderer` usage and add a real health check with basic polling:
+
+`-import React, { useState } from 'react'; -import axios from 'axios'; +import React, { useState } from 'react'; +import axios from 'axios';   export default function ConnectionManager({ onConnect }) {    const [status, setStatus] = useState("Disconnected");  -  const checkBackend = async () => { +  const checkBackend = async () => {      try { -      await axios.get("http://localhost:7130/api/run/"); -      setStatus("Connected"); -      onConnect(); +      await axios.get("http://localhost:7130/health"); +      setStatus("Connected"); +      onConnect();      } catch (e) {        console.warn("Backend not running. Attempting to launch..."); -      launchBackend(); +      await launchBackend(); +      await waitForHealth();      }    };  -  const launchBackend = async () => { -    const { ipcRenderer } = window.require('electron'); -    ipcRenderer.invoke("launch-backend") -      .then(() => { -        setStatus("Connected"); -        onConnect(); -      }) -      .catch(() => { -        setStatus("Failed to start"); -      }); -  }; +  const launchBackend = async () => { +    if (!window.electronAPI?.launchBackend) { +      setStatus("No bridge"); +      throw new Error("electronAPI not available"); +    } +    await window.electronAPI.launchBackend(); +  }; + +  const waitForHealth = async (timeoutMs = 15000) => { +    const start = Date.now(); +    while (Date.now() - start < timeoutMs) { +      try { +        await axios.get("http://localhost:7130/health", { timeout: 1000 }); +        setStatus("Connected"); +        onConnect(); +        return; +      } catch { +        await new Promise(r => setTimeout(r, 500)); +      } +    } +    setStatus("Failed to start"); +    throw new Error("Backend failed to become healthy in time"); +  };     return (      <div className="absolute top-4 right-6">        <button          onClick={checkBackend}          className="bg-electric text-white px-4 py-2 rounded shadow hover:bg-blue-600"        >          {status === "Connected" ? "Connected" : "Connect"}        </button>      </div>    );  }`
+
+Also update `App.jsx` so Connect follows the same logic and doesn’t hammer `/api/run/` blindly:
+
+`-  const fetchApps = async () => { +  const fetchApps = async () => {      setIsLoading(true)      try { -      const response = await axios.get('http://localhost:7130/api/run/') +      const response = await axios.get('http://localhost:7130/api/apps')        setApps(response.data)      } catch (err) {        console.error('Failed to fetch miniapps:', err)        setApps([])      } finally {        setIsLoading(false)      }    }     const handleConnect = async () => {      if (!isConnected) { -      // Try to connect and fetch apps        try { -        await fetchApps() +        // Ask ConnectionManager’s button or call the bridge directly if needed. +        if (window.electronAPI?.launchBackend) { +          await window.electronAPI.launchBackend() +        } +        // wait for health quickly +        await axios.get('http://localhost:7130/health', { timeout: 5000 }) +        await fetchApps()          setIsConnected(true)        } catch (err) {          console.error('Failed to connect:', err)          setIsConnected(false)        }      } else {        setIsConnected(false)        setApps([])      }    }`
+
+If your backend doesn’t have `/health` and `/api/apps` yet, you can point these to whatever you actually have. I’m standardizing the endpoints because future-you will thank me.
+
+## 4) Make the backend launcher actually run on Windows, macOS, and Linux
+
+Replace your `ipcMain.handle('launch-backend', ...)` in `main.js` with a sane, cross‑platform spawn. This version:
+
+- Detects platform
+
+- Activates the venv if present
+
+- Uses `uvicorn main:app --host 127.0.0.1 --port 7130`
+
+- Leaves `--reload` for dev only
+
+- Logs output so you can see what exploded
+
+
+ ``// main.js  const { app, BrowserWindow, ipcMain } = require('electron')  const path = require('path')  const isDev = !app.isPackaged  const { spawn } = require('child_process')   let mainWindow   function createWindow() { /* unchanged */ }   app.whenReady().then(() => {    createWindow()     // Handle backend launch from frontend request -  ipcMain.handle('launch-backend', () => { -    const backendPath = path.join(__dirname, '..', 'QiLifeCore-BackendAPI') -    const venvActivate = process.platform === 'win32' -      ? path.join(backendPath, 'venv', 'Scripts', 'activate.bat') -      : path.join(backendPath, 'venv', 'bin', 'activate') - -    const command = 'cmd.exe /c "${venvActivate} && ${backendPath} && python -m uvicorn main:app --reload --port 7130"' -      ? `cmd.exe /c "${venvActivate} && uvicorn main:app --reload"` -      : `bash -c "source ${venvActivate} && uvicorn main:app --reload"` - -    console.log('Launching backend from:', backendPath) -    spawn(command, { cwd: backendPath, shell: true }) -  }) +  ipcMain.handle('launch-backend', async () => { +    const backendPath = path.join(__dirname, '..', 'QiLifeCore-BackendAPI') +    const isWin = process.platform === 'win32' +    const venvPython = isWin +      ? path.join(backendPath, 'venv', 'Scripts', 'python.exe') +      : path.join(backendPath, 'venv', 'bin', 'python') + +    // Prefer venv python if it exists, otherwise fall back to system python +    const pythonCmd = require('fs').existsSync(venvPython) +      ? venvPython +      : (isWin ? 'python' : 'python3') + +    const uvicornArgs = [ +      '-m', 'uvicorn', 'main:app', +      '--host', '127.0.0.1', +      '--port', '7130', +      ...(isDev ? ['--reload'] : []) +    ] + +    console.log('Launching backend:', pythonCmd, uvicornArgs.join(' ')) +    const child = spawn(pythonCmd, uvicornArgs, { cwd: backendPath, shell: false }) + +    child.stdout.on('data', d => console.log('[backend]', d.toString().trim())) +    child.stderr.on('data', d => console.error('[backend]', d.toString().trim())) +    child.on('close', code => console.log('Backend exited with code', code)) + +    return true +  })  })   app.on('window-all-closed', () => {    if (process.platform !== 'darwin') app.quit()  })``
+
+## 5) Dev workflow that doesn’t make you cry
+
+- Install deps:
+
+    `npm install`
+
+- Start vite + electron together:
+
+    `npm run electron-dev`
+
+- Click “Connect” in the UI. It will:
+
+    1. Try `/health`
+
+    2. If down, call the bridge to launch backend
+
+    3. Poll `/health` for up to ~15s
+
+    4. Load `/api/apps` and render
+
+
+If you don’t have `/health` in the FastAPI backend yet, add the world’s most boring endpoint:
+
+`# in QiLifeCore-BackendAPI/main.py from fastapi import FastAPI  app = FastAPI()  @app.get("/health") def health():     return {"ok": True}  @app.get("/api/apps") def apps():     # TODO: wire to your real mini-app registry     return ["FileFlow Duplicate Cleaner", "Cockpit Test App"]`
+
+## 6) Optional polish so it feels alive
+
+- `Header.jsx` connect button is a bit confused: if you’re connected, show Disconnect, but don’t route that through the same `onConnect`. You already handle this in `App.jsx`, so it’s fine. Consider disabling while polling so humans don’t click like caffeinated woodpeckers.
+
+- `Dashboard.jsx` metrics are faked. Later, read real system stats from backend via a `/metrics` endpoint. For now, keep the vibe.
+
+
+# TL;DR build order
+
+1. Move files into `/src` as above
+
+2. Patch `ConnectionManager.jsx`, `App.jsx`, `main.js` exactly as shown
+
+3. Ensure backend has `/health` and `/api/apps`
+
+4. `npm run electron-dev`
+
+5. Click Connect. It should launch the backend and populate apps, like a responsible adult app would.
+
+
+# What you’ll get after this pass
+
+- Connect button that actually starts the backend and waits for it to be ready
+
+- No forbidden `ipcRenderer` shenanigans in the Renderer
+
+- Vite and Tailwind no longer blindfolded
+
+- A clean path to packaging with `npm run dist`
+
+
+If you want me to also wire the live logs (`LogViewer.jsx`) against a FastAPI `websocket` endpoint, that’s the next chunk: add `/ws/{log}` in the backend using `WebSocket` and stream `uvicorn` or per‑mini‑app logs. For today, let’s make the ignition key turn the engine instead of the wipers.
+
+Here you go—clean, receipt-ready, Obsidian-friendly. Two files: **Dev Docs** and **SOP**. Paste straight into your vault.
+
+---
+
+# `DEV_DOCS_qially-support.md`
+
+````md
+---
+title: "QiAlly Support KB — Dev Docs"
+project: "access.qially.com/support"
+owner: "QiAlly (Q)"
+status: "active"
+stack: ["Astro", "Starlight", "Cloudflare Pages/Workers", "Markdown/MDX"]
+tags: ["docs", "kb", "astro", "starlight", "cloudflare", "elevenlabs", "zoho-bookings"]
+updated: "2025-09-13"
+---
+
+# QiAlly Support KB — Developer Documentation
+
+## 0) Purpose
+A lightweight, public-facing knowledge base at **https://access.qially.com/support** with search, ToC, clean sidebar, optional ElevenLabs voice bubble, and booking button/embed.
+
+---
+
+## 1) Architecture Overview
+- **Framework**: Astro + Starlight (static site generator; MD/MDX content, built-in Pagefind search).
+- **Hosting**: Cloudflare Pages **or** Worker Assets. We mount under **`/support`** using Astro `base: '/support'`.
+- **Path Ownership**:
+  - If the rest of `access.qially.com` is separate, a **Worker** routes `access.qially.com/support*` to this build.
+  - If this repo *is* the access site, just add the `/support` docs app inside and keep `base: '/support'`.
+
+---
+
+## 2) Local Dev
+
+### Prereqs
+- Node 20+
+- pnpm or npm
+- Cloudflare Wrangler (`npm i -D wrangler`) if using Worker Assets
+
+### Commands
+```bash
+# Scaffold (first time)
+npm create astro@latest -- --template starlight
+# Dev
+npm i
+npm run dev
+# Build (respecting base=/support)
+npm run build
+# Serve via Worker (if using Worker Assets)
+npx wrangler deploy
+````
+
+---
+
+## 3) Config
+
+### `astro.config.mjs` (key bits)
+
+```ts
+import { defineConfig, envField } from 'astro/config';
+import starlight from '@astrojs/starlight';
+
+export default defineConfig({
+  site: 'https://access.qially.com',
+  base: '/support',
+  integrations: [
+    starlight({
+      title: 'QiAlly — Support',
+      description: 'How we work, expectations, billing, boundaries, and help.',
+      lastUpdated: true,
+      tableOfContents: { minHeadingLevel: 2, maxHeadingLevel: 3 },
+      sidebar: [
+        { label: 'Start', items: ['index'] },
+        { label: 'Working Together', items: [
+          'how-we-work', 'communication', 'agreements-expectations', 'revisions-and-change-requests'
+        ]},
+        { label: 'Ops & Safety', items: [
+          'billing-and-payments', 'security-and-access', 'support-hours'
+        ]},
+        { label: 'Get Help', items: ['book-time'] }
+      ],
+      head: [
+        { tag: 'script', attrs: {
+          src: 'https://unpkg.com/@elevenlabs/convai-widget-embed',
+          async: true, type: 'text/javascript'
+        }}
+      ]
+    })
+  ],
+  env: {
+    schema: {
+      PUBLIC_ELEVENLABS_AGENT_ID: envField.string({ context: 'client', access: 'public', optional: true }),
+      PUBLIC_BOOKING_URL: envField.string({ context: 'client', access: 'public', optional: true })
+    }
+  }
+});
+```
+
+### Env
+
+Create `.env` or Pages env vars:
+
+```
+PUBLIC_BOOKING_URL=https://bookings.zoho.com/your-page
+PUBLIC_ELEVENLABS_AGENT_ID=XXXXXXXX
+```
+
+> Only **PUBLIC_*** envs appear client-side. Do not store secrets here.
+
+---
+
+## 4) Content Structure
+
+```
+src/
+  content/
+    docs/
+      index.md
+      how-we-work.md
+      communication.md
+      agreements-expectations.md
+      revisions-and-change-requests.md
+      billing-and-payments.md
+      security-and-access.md
+      support-hours.md
+      book-time.mdx
+  components/
+    BookingEmbed.astro
+    ConvaiWidget.astro (optional)
+```
+
+### Sample Content Frontmatter
+
+```md
+---
+title: How I Work
+description: Process, deliverables, and collaboration rhythm.
+updated: 2025-09-13
+---
+```
+
+### Booking Embed
+
+`src/components/BookingEmbed.astro`
+
+```astro
+---
+const url = import.meta.env.PUBLIC_BOOKING_URL ?? 'https://bookings.zoho.com/your-page';
+---
+<div style="width:100%;height:min(1200px,100vh);">
+  <iframe src={url} style="width:100%;height:100%;border:0;" loading="lazy" />
+</div>
+```
+
+`src/content/docs/book-time.mdx`
+
+```mdx
+---
+title: Book Time
+description: Meet with Q for direct help.
+updated: 2025-09-13
+---
+
+<a class="sl-button" href={import.meta.env.PUBLIC_BOOKING_URL} target="_blank" rel="noopener">
+  Open Booking Page
+</a>
+
+<details>
+  <summary>Prefer inline booking?</summary>
+  <BookingEmbed />
+</details>
+
+export const components = {
+  BookingEmbed: (await import('../../components/BookingEmbed.astro')).default
+};
+```
+
+### ElevenLabs Bubble (optional)
+
+`src/components/ConvaiWidget.astro`
+
+```astro
+---
+const agentId = import.meta.env.PUBLIC_ELEVENLABS_AGENT_ID;
+---
+{agentId && <elevenlabs-convai agent-id={agentId}></elevenlabs-convai>}
+```
+
+Mount it in a page or layout when ready.
+
+---
+
+## 5) Deployment Options
+
+### A) Cloudflare Pages (simple)
+
+- Build command: `npm run build`
+
+- Output dir: `dist`
+
+- Custom domain: `access.qially.com`
+
+- Because `base='/support'`, the docs live under `/support` correctly.
+
+
+### B) Worker Assets (subpath isolation)
+
+`wrangler.toml`
+
+```toml
+name = "qially-support"
+main = "src/worker.ts"
+compatibility_date = "2025-09-13"
+
+routes = [
+  { pattern = "access.qially.com/support*", zone_name = "qially.com" }
+]
+
+[assets]
+directory = "./dist"
+not_found_handling = "single-page-application"
+```
+
+`src/worker.ts`
+
+```ts
+export default {
+  async fetch(request, env) {
+    return env.ASSETS.fetch(request);
+  },
+} as ExportedHandler;
+```
+
+---
+
+## 6) Theming & UX
+
+- Starlight handles dark mode and ToC out of the box.
+
+- Keep headings H2/H3 for ToC clarity.
+
+- Add small “Last updated” badge via frontmatter.
+
+- Optional JSON-LD `FAQPage` if you add an FAQ doc.
+
+
+---
+
+## 7) QA Checklist
+
+- `/support` loads on hard refresh (no 404).
+
+- Search finds words in body titles and content.
+
+- Booking link opens; embed shows on `/book-time`.
+
+- If `PUBLIC_ELEVENLABS_AGENT_ID` present, widget appears and loads once.
+
+- Lighthouse a11y ≥ 95.
+
+
+---
+
+## 8) Maintenance
+
+- Content authors edit `src/content/docs/*`.
+
+- PR requires preview build passing, markdown lint clean, and link check.
+
+- Version bump in `CHANGELOG.md` on user-visible content changes.
+
+
+---
+
+````
+
+---
+
+# `SOP_qially-support.md`
+```md
+---
+title: "QiAlly Support KB — SOP"
+project: "access.qially.com/support"
+owner: "QiAlly (Q)"
+status: "active"
+tags: ["sop", "ops", "docs", "kb", "workflow", "compliance"]
+updated: "2025-09-13"
+---
+
+# Standard Operating Procedure — QiAlly Support KB
+
+## 1) Scope
+Covers content changes, releases, rollbacks, and routine hygiene for the public Support KB at `/support`.
+
+---
+
+## 2) Roles
+- **Owner (Q):** approves policy language, signs off on releases.
+- **Editor:** writes/updates docs, follows content checklist.
+- **Maintainer:** runs builds, deploys, and handles incidents.
+
+---
+
+## 3) Branching & Releases
+- `main`: production (immutable except via PR).
+- `feat/<topic>`: content/features.
+- **Release cadence:** as needed; prefer small, atomic changes.
+- **PR requirements:**
+  - Checklist completed (below).
+  - Preview build green.
+  - One reviewer sign-off (Owner or Maintainer).
+
+---
+
+## 4) Content Update Workflow
+1. **Draft** in `feat/<topic>`: edit or add `src/content/docs/*.md(x)`.
+2. **Lint & Links**:
+   - Headings logical (H2/H3).
+   - Short descriptions present.
+   - Run link check (internal + external).
+3. **Tone & Clarity**:
+   - Plain language, no legalese unless needed.
+   - Actionable bullets; “what to do,” not just “what is.”
+4. **Metadata**:
+   - Update frontmatter `updated: YYYY-MM-DD`.
+   - Keep titles ≤ 60 chars, descriptions ≤ 160 chars.
+5. **Preview**:
+   - `npm run dev` locally, spot-check ToC, search, booking, and widget (if enabled).
+6. **PR** → review → **merge**.
+7. **Deploy**:
+   - Pages: merge triggers build to `dist`.
+   - Worker Assets: `npm run build && npx wrangler deploy`.
+8. **Post-Deploy** smoke test:
+   - `/support`, `/support/how-we-work`, `/support/book-time`.
+   - Search returns recent changes.
+   - Hard refresh works (SPA fallback ok).
+
+---
+
+## 5) Incident Response
+- **Severity S1 (Critical):** Broken page load, widespread 404s, booking down.
+  - Action: Rollback to last known good build.
+    - Pages: redeploy previous successful build in dashboard.
+    - Worker: `wrangler versions list` (if using), then redeploy prior bundle; or `git revert` and redeploy.
+  - Notify stakeholders; note incident in `INCIDENTS.md`.
+- **Severity S2 (Major):** Widget or search degraded, content error in legal/billing page.
+  - Action: hotfix branch → targeted change → fast deploy.
+- **Severity S3 (Minor):** Typos, small layout issues.
+  - Action: batch into next routine release.
+
+---
+
+## 6) Governance — Policies & Sensitive Sections
+- **Agreements & Expectations**, **Billing**, **Security** = **Owner approval required** before publish.
+- Use versioned diffs in PR description. Keep **`CHANGELOG.md`** updated.
+
+---
+
+## 7) Accessibility & QA Checklist (run every PR)
+- Headings sequential; ToC shows H2/H3 only.
+- Alt text for any images (rare in this KB).
+- Links: descriptive, not “click here”.
+- Contrast and focus visible (Starlight default OK).
+- Keyboard nav reaches booking button and any expandable content.
+
+---
+
+## 8) SEO Hygiene
+- Frontmatter description present (≤160 chars).
+- Unique titles per page.
+- If an FAQ doc exists, consider a simple JSON-LD `FAQPage`.
+- Canonical is the page URL under `/support`.
+
+---
+
+## 9) Integrations
+
+### Booking
+- **Env:** `PUBLIC_BOOKING_URL` must be a public, embeddable URL.
+- Test both: button (new tab) and embed (loads in < 3s, responsive).
+
+### ElevenLabs (optional)
+- **Env:** `PUBLIC_ELEVENLABS_AGENT_ID` must be set for bubble to render.
+- Domain allowlist must include `access.qially.com`.
+- If issues: comment out `ConvaiWidget` include; keep script for later.
+
+---
+
+## 10) Backups & Export
+- The repo is the source of truth.
+- Weekly: tag `content-YYYY.MM.DD` after notable additions.
+- Quarterly: export static HTML (`dist/`) and archive to S3/Drive.
+
+---
+
+## 11) Deletion Safety (AI/Editor Guardrails)
+- Never hard-delete files.
+- If removal needed, **move** to `.trash/` preserving path.
+- Note deletions in PR description and request explicit approval.
+
+---
+
+## 12) Change Log Format (`CHANGELOG.md`)
+````
+
+## 2025-09-13
+
+- Added: initial KB scaffold; pages (How I Work, Communication, Agreements, Revisions, Billing, Security, Hours, Book Time).
+
+- Config: base=/support; Pagefind search default.
+
+- Deploy: Worker Assets route access.qially.com/support*.
+
+
+```
+
+---
+
+## 13) Cursor Kickoff Prompt (for repeatability)
+```
+
+Role: Implement and maintain the QiAlly Support KB at access.qially.com/support using Astro + Starlight.
+Objectives:
+
+- Configure astro.config.mjs with site=[https://access.qially.com](https://access.qially.com/) and base=/support.
+
+- Create the docs listed in Dev Docs.
+
+- Implement BookingEmbed.astro and optional ConvaiWidget.astro.
+
+- Ensure Pagefind search, ToC, dark mode, and SPA fallback work on subpath.
+
+- Respect Deletion Safety: never delete; move to .trash/ preserving paths and report moves.
+
+- Produce a PR with checklist, link check pass, and a CHANGELOG entry.
+
+
+Deliverables:
+
+- Working build in dist/; deploy via Pages or Worker Assets.
+
+- README updates and Dev Docs refresh if paths/config change.
+
+
+```
+
+---
+
+## 14) Review Cadence
+- Monthly: review “Agreements & Expectations,” “Billing,” and “Security” for drift.
+- Quarterly: run Lighthouse and accessibility review; track scores.
+
+---
+
+## 15) Exit Criteria
+- Content complete and accurate.
+- Search returns expected results.
+- Booking flow (button and embed) verified.
+- Optional voice widget verified or safely disabled.
+```
+
+—
+
+Need me to prefill those docs with your exact policy language and booking URL next? I’ll wire it clean and keep your brand voice tight.
+
+================================================================================
+END OF FILE: Q:\QiEos\docs\dev_specs\QiSuite_Dev_Bible.md
+================================================================================
+
+
+================================================================================
+FILE: Q:\QiEos\docs\dev_specs\SETUP.md
+TYPE: .md
+================================================================================
+
+# QiEOS Setup Guide
+
+This guide will help you set up the QiEOS development environment and deploy to production.
+
+## Prerequisites
+
+- **Node.js 18+** - [Download](https://nodejs.org/)
+- **pnpm** - `npm install -g pnpm`
+- **Git** - [Download](https://git-scm.com/)
+- **Wrangler CLI** - `npm install -g wrangler`
+- **Supabase Account** - [Sign up](https://supabase.com/)
+- **Cloudflare Account** - [Sign up](https://cloudflare.com/)
+
+## Quick Start
+
+1. **Clone and setup**
+
+   ```bash
+   git clone <repository-url>
+   cd qieos
+   pnpm setup
+   ```
+
+2. **Set up Supabase**
+
+   - Create a new Supabase project
+   - Run `scripts/create-migrations.sql` in the SQL editor
+   - Get your project URL and API keys
+
+3. **Configure Cloudflare**
+
+   - Create R2 buckets: `qieos-files` and `qieos-files-dev`
+   - Get your Cloudflare API token
+   - Set up wrangler secrets
+
+4. **Start development**
+   ```bash
+   pnpm dev
+   ```
+
+## Detailed Setup
+
+### 1. Database Setup (Supabase)
+
+1. **Create Supabase Project**
+
+   - Go to [Supabase Dashboard](https://supabase.com/dashboard)
+   - Click "New Project"
+   - Choose organization and enter project details
+   - Wait for project to be ready
+
+2. **Run Database Migrations**
+
+   - Go to SQL Editor in your Supabase dashboard
+   - Copy and paste the contents of `scripts/create-migrations.sql`
+   - Click "Run" to execute the migration
+   - Verify tables were created in the Table Editor
+
+3. **Get API Keys**
+   - Go to Settings > API
+   - Copy your Project URL and API keys
+   - You'll need: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
+
+### 2. Cloudflare Setup
+
+1. **Create R2 Buckets**
+
+   ```bash
+   # Login to Cloudflare
+   wrangler login
+
+   # Create buckets
+   wrangler r2 bucket create qieos-files
+   wrangler r2 bucket create qieos-files-dev
+   ```
+
+2. **Set up Worker Secrets**
+
+   ```bash
+   cd workers/api
+
+   # Set secrets
+   wrangler secret put SUPABASE_URL
+   wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+   wrangler secret put OPENAI_API_KEY
+   wrangler secret put STRIPE_SECRET_KEY
+   ```
+
+3. **Deploy Worker**
+   ```bash
+   pnpm --filter qieos-api deploy
+   ```
+
+### 3. Environment Configuration
+
+1. **Copy Environment Templates**
+
+   ```bash
+   cp infra/cloudflare/env.example infra/cloudflare/.env
+   cp apps/web/.env.example apps/web/.env
+   cp workers/api/.env.example workers/api/.env
+   ```
+
+2. **Fill in Environment Variables**
+   - Update `.env` files with your actual values
+   - Never commit `.env` files to git
+
+### 4. Development
+
+1. **Start Development Servers**
+
+   ```bash
+   # Start all services
+   pnpm dev
+
+   # Or start individually
+   pnpm --filter qieos-web dev    # Web app on :5173
+   pnpm --filter qieos-api dev    # Worker on :8787
+   ```
+
+2. **Build and Test**
+
+   ```bash
+   # Build all packages
+   pnpm build
+
+   # Build web app
+   pnpm --filter qieos-web build
+
+   # Type check worker
+   pnpm --filter qieos-api type-check
+   ```
+
+## Deployment
+
+### Web App (Cloudflare Pages)
+
+1. **Manual Deployment**
+
+   ```bash
+   pnpm deploy:web
+   ```
+
+2. **GitHub Actions** (Recommended)
+   - Push to `main` branch
+   - GitHub Actions will automatically deploy
+   - Requires `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets
+
+### Worker (Cloudflare Workers)
+
+1. **Manual Deployment**
+
+   ```bash
+   pnpm deploy:worker
+   ```
+
+2. **GitHub Actions** (Recommended)
+   - Push to `main` branch
+   - GitHub Actions will automatically deploy
+
+### Client Sites (Cloudflare Pages)
+
+1. **Deploy All Sites**
+
+   ```bash
+   pnpm deploy:sites
+   ```
+
+2. **Deploy Specific Site**
+   ```bash
+   cd sites/clients/your-site
+   wrangler pages deploy . --project-name=qieos-your-site
+   ```
+
+## Validation Checklist
+
+After setup, verify these endpoints work:
+
+- [ ] `GET /health` - Worker health check
+- [ ] `POST /auth/session` - Authentication endpoint
+- [ ] `GET /tasks` - Tasks CRUD with RLS
+- [ ] `POST /files/sign-upload` - File upload to R2
+- [ ] `GET /kb/public` - Public knowledge base
+- [ ] `GET /kb/private` - Private knowledge base
+- [ ] `PATCH /me/profile` - Profile updates
+- [ ] Root website serves from Pages
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Build Failures**
+
+   - Check Node.js version: `node --version` (should be 18+)
+   - Clear node_modules: `rm -rf node_modules && pnpm install`
+   - Check TypeScript errors: `pnpm --filter qieos-web type-check`
+
+2. **Database Connection Issues**
+
+   - Verify Supabase URL and keys
+   - Check RLS policies are applied
+   - Ensure user has proper permissions
+
+3. **Cloudflare Deployment Issues**
+
+   - Verify API token has correct permissions
+   - Check wrangler.toml configuration
+   - Ensure secrets are set: `wrangler secret list`
+
+4. **Authentication Issues**
+   - Verify Supabase Auth is configured
+   - Check JWT claims enrichment in Worker
+   - Ensure RLS policies allow user access
+
+### Getting Help
+
+- Check the [God Doc](README.md) for architecture details
+- Review [Amendment I](<docs/dev_specs/QiEOS%20•%20Official%20Development%20Specification%20(Amendment%20I).md>) for schema details
+- Look at the [Development Log](DEV_LOG.md) for recent changes
+
+## Next Steps
+
+Once setup is complete:
+
+1. **Test MVP Features**
+
+   - Authentication flow
+   - Task management
+   - File uploads
+   - Knowledge base access
+
+2. **Customize for Your Use Case**
+
+   - Update feature flags
+   - Customize UI components
+   - Add your branding
+
+3. **Deploy to Production**
+   - Set up custom domains
+   - Configure production environment
+   - Set up monitoring and alerts
+
+---
+
+**Need help?** Check the troubleshooting section or review the project documentation.
+
+
+================================================================================
+END OF FILE: Q:\QiEos\docs\dev_specs\SETUP.md
+================================================================================
+
+
+================================================================================
+EXTRACTION COMPLETE
+Total files processed: 7
+Output saved to: Q:\QiEos\docs\dev_specs\code_extraction_2025-09-13_06-33-41.txt
+================================================================================
+Here’s a clean Markdown recap you can drop straight into your vault:
+
+```markdown
+# QiLife Cockpit – Dev Session Summary
+
+**Date:** 2025-09-13
+**Context:** Debugging Cockpit + MiniApp integration
+
+---
+
+## 🔑 Key Issues & Fixes
+
+### 1. Import Errors
+- Cockpit initially failed to start because `Header.jsx` wasn’t found.
+- Fixed by restoring `src/components/Header.jsx`.
+
+### 2. MiniApp Discovery
+- Original setup required manual edits to `modules.json`.
+- Replaced with **auto-discovery**:
+  - Scans `./miniapps/*/`
+  - Reads `miniapp.json` or `cockpit.module.json`
+  - If missing, **infers** UI/backend:
+    - UI = first `index.html` in `dist/`, `static/`, or `public`
+    - Backend = `app.py` / `main.py` / `server.js` / `index.js`
+  - Marks modules as:
+    - `ui`, `python`, `node`, or `hybrid`
+
+### 3. Backend Handling
+- Python backends now run headless on Windows via `pythonw`.
+- Node backends run with Electron’s Node runtime.
+- Start/stop lifecycle tied to `ipcMain`.
+
+### 4. Renderer/UI
+- Added sidebar navigation:
+  - Dashboard
+  - Settings (with Refresh button)
+  - Logs
+  - Dynamic MiniApp entries (auto-populated)
+- Each MiniApp opens in a **full-pane `<webview>`** (via `ModuleHost.jsx`).
+
+### 5. Blank Screen Issue
+- Occurred because `preload.js` and `ModuleHost.jsx` were missing/broken.
+- Delivered a **baseline zip** (`cockpit_min_fix.zip`) with:
+  - `main.js`, `preload.js`, `webview_preload.js`
+  - `main_modules.js` (auto-discovery)
+  - `src/App.jsx` and `src/components/ModuleHost.jsx`
+  - `vite.config.js` and `package.json` fixes
+
+---
+
+## 📂 Directory Expectations
+
+```
+
+QiLifeCore-Cockpit/
+src/
+App.jsx
+components/
+Header.jsx
+Dashboard.jsx
+ModuleHost.jsx
+miniapps/
+EmpowerQnow/miniapp.json
+DirectoryMapper/miniapp.json
+...
+
+```
+
+- **Miniapps** can be dropped into `miniapps/` with no manual edits.
+- Loader will auto-scan and expose them in the sidebar.
+
+---
+
+## ⚡ Next Steps
+
+1. Confirm EQN (EmpowerQnow) miniapp loads content correctly.
+2. Test Directory Mapper inside Cockpit:
+   - Add folder picker via `window.cockpitHost.pickDirectory()`.
+   - Render tree output directly in Cockpit (no external Python window).
+3. Expand `ModuleHost.jsx` to support backend-only miniapps (no UI).
+
+---
+
+**Outcome:** Cockpit is now capable of discovering and loading miniapps automatically, running backends headless, and presenting UIs full-pane via a sidebar-driven layout.
+```
+
+Do you want me to also include the **sample `miniapp.json` schema** we settled on, so you don’t have to dig through logs later?
+Snap list, no fluff. Here are the **QiPortal** sections and what they actually do—split into **MVP (build now)** and **Upgrades (scale-ready)**.
+
+# MVP — launch fast
+
+## 1) Auth & Onboarding
+
+* Email/password (dummy first, swappable later), magic link option.
+* Role-aware (Client / Admin); passcode gate for `/admin`.
+* First-run checklist (verify profile, add contacts, link billing).
+
+## 2) Home / Dashboard
+
+* At-a-glance cards: Open tickets, tasks due, recent files, next meeting.
+* Quick actions: “New ticket,” “Upload file,” “Book time,” “Start chat.”
+
+## 3) Chat (Client ↔ Team)
+
+* Real-time thread with typing + read receipts (stub now).
+* File drops (png/pdf/doc) with previews.
+* Message pinning + internal notes (agent-only).
+
+## 4) Tickets
+
+* Table: Title • Status • Priority • Assignee • Updated.
+* Detail view: description, activity log, attachments, status changes.
+* Client can open/close, comment, and upload evidence.
+
+## 5) Tasks (Lite Kanban)
+
+* Columns: Backlog / In-Progress / Review / Done.
+* Drag-drop cards with due date, assignee, checklist, labels.
+
+## 6) Files / Vault
+
+* Folder view + search; upload/download.
+* Version history (stubbed), file sharing inside ticket or chat.
+
+## 7) Appointments
+
+* Embedded booking (link to Calendly/Zoho Bookings for MVP).
+* Upcoming + past meetings; add agenda/notes.
+
+## 8) Notifications
+
+* In-app bell + email digests.
+* Rules: ticket status change, new message, file shared, task due.
+
+## 9) Profile & Org
+
+* Client profile, company info, contacts.
+* Preferences (timezone, locale, notification settings).
+
+## 10) Admin Panel
+
+* Client list, impersonate, team members, roles/permissions.
+* Global settings: statuses, priorities, labels, SLA timers.
+
+---
+
+# Upgrades — future-proof muscle
+
+## A) Billing & Payments
+
+* Invoices, estimates, saved payment methods.
+* Auto-pay, dunning emails, cost centers per ticket/project.
+* Integrations: Zoho Billing/Books, Stripe.
+
+## B) Knowledge Base
+
+* Articles, FAQs, how-to flows. Contextual suggestions (on ticket create).
+* Feedback (“Did this help?”), article analytics.
+
+## C) Forms & E-Sign
+
+* Dynamic intake forms (conditional fields).
+* Signable PDFs, audit trail, templates per service line.
+
+## D) Projects & Sprints
+
+* Milestones, burndown, sprint board, velocity snapshots.
+* Cross-link tickets, tasks, files, KPIs.
+
+## E) Analytics
+
+* Dashboards: SLA, response time, CSAT/NPS, workload heatmaps.
+* Client-visible progress KPIs; export CSV.
+
+## F) Integrations Hub
+
+* Zoho Desk/Flow, Cloudflare Workers webhooks, Supabase/DB.
+* Drive/iCloud/Dropbox connectors; Slack/Email piping.
+
+## G) Security & Compliance
+
+* 2FA, device/session management, IP allowlist, audit logs.
+* PII redaction, role-based field visibility, data retention policies.
+
+## H) Mobile PWA & Offline
+
+* Installable app, push notifications.
+* Offline drafts for tickets/messages; sync on reconnect.
+
+## I) Internationalization & Accessibility
+
+* i18n strings, RTL support; WCAG-friendly components.
+* Date/number/locale formatting.
+
+---
+
+# Suggested Navigation (clean & predictable)
+
+**Client:** Dashboard • Chat • Tickets • Tasks • Files • Appointments • Knowledge • Billing • Profile
+**Admin:** Overview • Clients • Team & Roles • Templates (tickets/forms/emails) • Settings • Integrations • Analytics • Audit
+
+---
+
+# Key Entities (data you’ll actually store)
+
+* **User** `{id, role, name, email, org_id, timezone, locale, prefs}`
+* **Org/Client** `{id, name, domain, contacts[], billing_settings}`
+* **Ticket** `{id, org_id, requester_id, title, status, priority, assignee_id, tags[], created_at, updated_at, sla_target}`
+* **Task** `{id, org_id, title, status, assignee_id, due_at, labels[], checklist[]}`
+* **Message** `{id, channel_id|ticket_id, author_id, body, attachments[], created_at}`
+* **File** `{id, org_id, name, path, version, linked_to:[ticket_id|task_id], uploaded_by}`
+* **Invoice/Payment (upgrade)** `{id, org_id, amount, status, due_at}`
+
+---
+
+# Routes (starter map)
+
+```
+/                -> Landing
+/client          -> Client Dashboard
+/client/chat     -> Chat
+/client/tickets  -> Ticket list
+/client/tickets/:id
+/client/tasks
+/client/files
+/client/appointments
+/client/knowledge
+/client/billing
+/client/profile
+
+/admin                 -> Admin home
+/admin/clients         -> Client list
+/admin/clients/:id     -> Profile & impersonate
+/admin/team            -> Members & roles
+/admin/templates       -> Forms/Email/Ticket fields
+/admin/settings
+/admin/integrations
+/admin/analytics
+/admin/audit
+```
+
+---
+
+# Two-Tier Build Plan
+
+**Tier 1 — Bare fix (this week):**
+Auth (dummy) • Dashboard • Chat (single room) • Tickets (CRUD) • Tasks (simple Kanban) • Files (upload) • Appointments (embed) • Notifications (in-app) • Profile • Admin basics.
+
+**Tier 2 — Upgrade/future-proof (next):**
+Billing • Knowledge base • Forms + E-Sign • Projects/Sprints • Analytics • Integrations hub • 2FA + audit logs • PWA + offline • i18n/a11y.
+
+---
+
+# Guardrails (so it stays sane)
+
+* **Single source of truth:** one `org_id` ties tickets/tasks/files.
+* **RBAC first:** permissions on read/write per module.
+* **Event bus:** emit `ticket.updated`, `file.added` for notifications/logs.
+* **Config via JSON:** statuses, priorities, labels controlled in Admin.
+* **Module isolation:** each section is a route + service, easy to swap providers.
+
+Want me to convert this into a **Markdown spec file with YAML front matter** for your Obsidian vault, or generate a **ready-made JSON schema** your AI builder can ingest?
+Here’s your flow chart showing how the QiAlly email pipeline works with a dedicated subdomain (`mail.qially.com`):
+
+* **Supabase Auth** kicks off the email →
+* **SMTP (smtp.zeptomail.com)** handles the send →
+* **DNS (mail.qially.com)** supplies SPF, DKIM, DMARC →
+* **ZeptoMail** verifies sender →
+* Finally it lands in the **recipient’s inbox**.
+
+This setup isolates your transactional mail on `mail.qially.com`, so your main domain (`qially.com`) stays clean and reputation-safe.
+
+Want me to also draft the **exact DNS records** (SPF, DKIM, DMARC) you’d publish for `mail.qially.com`?
+Here’s a tight little **minimum free stack table** based on what you just clarified—no fluff, just what you actually need and will use:
+
+---
+
+### Minimum Free Stack
+
+| Function                | Current Option                 | Free / Best Alternative                 | Notes                                                                                                                                                                                                 |
+| ----------------------- | ------------------------------ | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Email + Calendar**    | Google One (personal Gmail)    | Sticking with Gmail + Calendar          | You *can* add aliases if you upgrade to Workspace, but with personal Gmail you’re limited. Workaround: set up **Send As** from Gmail settings using your custom domain email (forward to your Gmail). |
+| **File Storage**        | Google Drive / SudaBase        | Google Drive (included with Google One) | Since you already have Google One, this is easiest. Supabase can do structured file/db but not as smooth for regular storage.                                                                         |
+| **Client Portal**       | Supabase + Cloudflare + GitHub | Keep as is                              | You’re already building QiPortals here, no replacement needed.                                                                                                                                        |
+| **Task Management**     | GitHub Issues/Projects         | GitHub (built-in)                       | No Trello/ClickUp needed—you can track tasks in your repos.                                                                                                                                           |
+| **Support / Tickets**   | Email (Zoho Desk alt)          | Gmail + Labels/Folders                  | If it’s just “glorified email,” don’t overcomplicate.                                                                                                                                                 |
+| **Forms / Surveys**     | Build-your-own                 | DIY in Supabase or Google Forms         | Quick forms = Google Forms. Full control = build in Supabase.                                                                                                                                         |
+| **Signatures (e-sign)** | Build-your-own                 | DIY module later                        | For now, free trials exist (HelloSign, DocuSign), but since you’ll build it, skip external dependency.                                                                                                |
+| **Passwords**           | Zoho Vault                     | **Bitwarden Free**                      | Works better, open-source, syncs everywhere.                                                                                                                                                          |
+| **Authenticator**       | Google Authenticator           | Stick with it                           | Already your favorite, widely supported. No reason to change.                                                                                                                                         |
+
+---
+
+### Quick Notes
+
+* **Email Aliases**: You can set up “Send As” in Gmail settings if you own your domain. Example: `info@qially.me` forwards into your Gmail, but when replying you can send *from* `info@qially.me`. That gives you the “Workspace look” without paying.
+* **Supabase vs Google Drive**: Use Drive for normal docs, Supabase for structured app storage (client uploads, etc.).
+* **Security**: Bitwarden + Google Authenticator covers you. If you want extra resilience, add a backup code manager (like 1Password export, or even just encrypted local doc).
+
+---
+
+Do you want me to also show you **exactly how to set up the Gmail “Send As” alias** with your `qially.me` domain so you can ditch Zoho Mail cleanly?
+Got it. To make this **the single source of truth** for the Cockpit project, here’s the tightened **Project Instructions** that all future mini apps must follow. It’s short, direct, and enforces the standard way of working.
+
+---
+
+# 📘 QiLife Cockpit: Project Instructions
+
+**Version**: 2025.08.31
+**Maintainer**: Cody Rice Velasquez (Q)
+**Root**: `QiLife-One/`
+
+---
+
+## 🎯 Core Rules
+
+* **Every mini app** lives in `/modules/<app-kebab>/`
+* Must follow **exact folder structure**
+* Must expose **backend + frontend contracts**
+* Must include **manifest.json + README.md**
+* Must pass **Cockpit smoke tests**
+
+---
+
+## 📁 Folder Structure
+
+```
+modules/
+└── <app-kebab>/
+    ├── manifest.json          # Metadata
+    ├── <app-kebab>.js         # Node logic (optional if backend-only)
+    ├── <AppPascal>.jsx        # React UI component
+    ├── <app-kebab>-ipc.js     # IPC bindings (if needed)
+    ├── README.md              # Usage + integration doc
+    └── tests/                 # Optional test specs
+```
+
+---
+
+## 🔌 Contracts
+
+### Backend (FastAPI)
+
+* Must provide:
+
+  * `POST /api/run/<id>` → returns `{ log_file }`
+  * `WS /api/run/ws/<id>` → streams logs (line-delimited text)
+* Logs saved under `QILIFE_USER_DATA/logs/<id>/`
+
+### Frontend (Cockpit)
+
+* Use **MiniAppCard.jsx** pattern
+* Logs routed to **LogViewer.jsx**
+* App appears in **Dashboard.jsx** list
+
+### IPC
+
+* If Node integration needed, expose via `<app-kebab>-ipc.js`
+* Only register IPC handlers from `main.js`
+* All renderer calls go through `preload.js`
+
+---
+
+## 🧩 Mini App Manifest
+
+```json
+{
+  "id": "<app-kebab>",
+  "name": "<App Pretty Name>",
+  "version": "0.1.0",
+  "entry_ui": "./<AppPascal>.jsx",
+  "entry_node": "./<app-kebab>.js",
+  "permissions": ["fs", "process"],
+  "description": "Short summary."
+}
+```
+
+---
+
+## ✅ Smoke Test Checklist
+
+* [ ] `POST /api/run/<id>` returns log path
+* [ ] Log file created + non-empty
+* [ ] `WS /api/run/ws/<id>` streams logs
+* [ ] Cockpit Run button launches app
+* [ ] Logs visible in Cockpit
+* [ ] Works in dev (`npm run electron-dev`) and prod (`npm run dist`)
+
+---
+
+## 🚀 Workflow
+
+1. Scaffold folder with boilerplate
+2. Implement backend + frontend
+3. Add `manifest.json` + README.md
+4. Run dev build → test end-to-end
+5. Commit module
+
+---
+
+## 🔮 Future
+
+* Auto-scan manifests to load apps dynamically
+* Shared `runMiniApp` helper for all Node-based mini apps
+* Central config store (persistent settings)
+
+---
+
+This guarantees: **one structure, one API, one log flow**. Every app is interchangeable, no exceptions.
+
+---
+
+Do you want me to also generate a **ready-to-paste `boilerplate.sh` script** that scaffolds a new mini app folder with the correct files already stubbed out? That way, each new app starts 100% compliant.
+Snap & steer: we’ll add a tiny **config file** so you can tweak AI behavior without touching code, and we’ll lock in the **Ollama checks** so the app actually talks to your local model.
+
+# 1) Config file (drop-in)
+
+Create `qivault-intake-ocr.config.yaml` in the repo root. This **overrides** `.env` knobs and sets the AI options the model can use.
+
+```yaml
+# qivault-intake-ocr.config.yaml
+paths:
+  inbox: "K:/Qi-KB/_0-Inbox"
+  vault: "K:/Qi-KB/ClientsKBs/_shared/_Vault"
+  notes_dir: "Notes"
+  assets_dir: "Assets"
+  logs_dir: ".logs"
+
+naming:
+  prefix: "MAS"                           # binder/collection code
+  # If primary date missing, use today's date
+  fallback_date: "today"
+  # If collision on filenames, suffix with -001, -002, etc.
+  collision_strategy: "sequence"
+
+ocr:
+  langs: ["eng","pus","fas"]              # tesseract langs
+  dpi: 300
+  jpeg_quality: 90
+  confidence_threshold: 55                # < threshold → review_needed = true
+
+ai:
+  provider: "ollama"                      # local only for MVP
+  url: "http://localhost:11434"
+  model: "llama3.1:8b"                    # or mistral:7b, qwen2.5:7b, etc.
+  first_pass_chars: 12000                 # char caps to keep runs snappy
+  second_pass_chars: 8000                 # read more only if needed
+  enable_second_pass: true
+  summary_max_words: 120
+  tags_min: 3
+  tags_max: 8
+  # Allowed doc types—model must choose from this list
+  allowed_doc_types:
+    - invoice
+    - receipt
+    - id
+    - letter
+    - form
+    - court_order
+    - email
+    - siv
+    - asylum
+    - medical
+    - finance
+    - education
+    - photo
+    - unknown
+
+rules:
+  # Regex you care about; model can lean on these hints in the prompt
+  date_hint_regex: "\\b(\\d{4})[-/.](\\d{1,2})[-/.](\\d{1,2})\\b"
+  issuer_whitelist: ["USCIS","IRS","SSA","USDOJ","Lyft","Zoho","QuickBooks"]
+  topic_max_len: 20
+
+failover:
+  # If Ollama is down, still write the note with minimal YAML and set review_needed=true
+  allow_without_ai: true
+```
+
+# 2) Minimal code tweak to use the config
+
+Add this loader near the top of `intake_local.py` (before defaults). If the file exists, it **overrides** `.env`.
+
+```python
+# at top with other imports
+import yaml
+
+CFG_PATH = Path(__file__).with_name("qivault-intake-ocr.config.yaml")
+CFG = {}
+if CFG_PATH.exists():
+    CFG = yaml.safe_load(CFG_PATH.read_text(encoding="utf-8")) or {}
+
+def cfg(path, default=None):
+    # tiny helper: nested lookups like cfg(["ai","model"], "llama3.1:8b")
+    if isinstance(path, (list, tuple)):
+        cur = CFG
+        for k in path:
+            if not isinstance(cur, dict) or k not in cur: return default
+            cur = cur[k]
+        return cur
+    return CFG.get(path, default)
+```
+
+Then replace the current env defaults with config-aware reads:
+
+```python
+INBOX      = Path(cfg(["paths","inbox"], os.getenv("INBOX","./inbox")))
+VAULT      = Path(cfg(["paths","vault"], os.getenv("VAULT","./vault")))
+NOTES_DIR  = cfg(["paths","notes_dir"], os.getenv("NOTES_DIR","Notes"))
+ASSETS_DIR = cfg(["paths","assets_dir"], os.getenv("ASSETS_DIR","Assets"))
+LOGS_DIR   = cfg(["paths","logs_dir"],  os.getenv("LOGS_DIR",".logs"))
+
+# OCR
+OCR_LANGS = "+".join(cfg(["ocr","langs"], os.getenv("OCR_LANGS","eng").split("+")))
+DPI       = cfg(["ocr","dpi"], 300)
+JPG_QUAL  = cfg(["ocr","jpeg_quality"], 90)
+CONFIDENCE_THRESHOLD = int(cfg(["ocr","confidence_threshold"], int(os.getenv("CONFIDENCE_THRESHOLD","55"))))
+
+# AI
+OLLAMA_URL   = cfg(["ai","url"], os.getenv("OLLAMA_URL","http://localhost:11434"))
+OLLAMA_MODEL = cfg(["ai","model"], os.getenv("OLLAMA_MODEL","llama3.1:8b"))
+FIRST_PASS_CHARS  = int(cfg(["ai","first_pass_chars"], int(os.getenv("FIRST_PASS_CHARS","12000"))))
+SECOND_PASS_CHARS = int(cfg(["ai","second_pass_chars"], int(os.getenv("SECOND_PASS_CHARS","8000"))))
+ENABLE_SECOND_PASS = bool(cfg(["ai","enable_second_pass"], True))
+SUMMARY_MAX_WORDS  = int(cfg(["ai","summary_max_words"], 120))
+TAGS_MIN = int(cfg(["ai","tags_min"], 3))
+TAGS_MAX = int(cfg(["ai","tags_max"], 8))
+DOC_TYPES = cfg(["ai","allowed_doc_types"], [
+    "invoice","receipt","id","letter","form","court_order","email","siv","asylum","medical","finance","education","photo","unknown"
+])
+
+# Naming
+PREFIX = cfg(["naming","prefix"], os.getenv("PREFIX","MAS"))
+```
+
+Update the places where `pdf_to_images` is called to use `DPI`/`JPG_QUAL`:
+
+```python
+def pdf_to_images(pdf_path: Path, dpi=DPI, quality=JPG_QUAL):
+    ...
+```
+
+And in the JSON schema prompt, use `SUMMARY_MAX_WORDS`, `DOC_TYPES`, `TAGS_MIN/MAX` to keep the model aligned:
+
+```python
+SYSTEM = f"""You are a local file-intake assistant. RETURN ONLY JSON, no prose.
+Schema: {json.dumps(SCHEMA)}
+Rules:
+- summary ≤ {SUMMARY_MAX_WORDS} words; concise.
+- doc_type must be one of: {", ".join(DOC_TYPES)}; else "unknown".
+- dates.primary as YYYYMMDD if you can; else null. dates.all as YYYYMMDD list (unique).
+- tags: {TAGS_MIN}–{TAGS_MAX} lowercase slugs.
+- proposed_name: <PREFIX>-<YYYYMMDD>-<doc_type>-<topic>-<issuer?>
+- Set needs_more_context=true only if you cannot confidently determine doc_type OR summary OR primary date.
+- confidence 0..1.
+"""
+```
+
+Gate the second pass with the new flag:
+
+```python
+if ENABLE_SECOND_PASS and first.get("needs_more_context") and rest:
+    add, _ = split_chars(rest, SECOND_PASS_CHARS)
+    ...
+```
+
+# 3) How to make sure Ollama is actually used
+
+Quick, receipt-ready checks:
+
+**A. Is Ollama running and a model available?**
+
+```powershell
+# List models known to Ollama
+curl http://localhost:11434/api/tags
+
+# If your model isn't listed, pull one:
+ollama pull llama3.1:8b
+# or: ollama pull mistral:7b
+```
+
+**B. Can the app reach Ollama?**
+
+* Your `.env` or `config.yaml` must have `ai.url: "http://localhost:11434"` and `ai.model: "llama3.1:8b"`.
+* From Python, the code calls:
+  `POST {OLLAMA_URL}/api/chat` with `{"model": OLLAMA_MODEL, "messages":[...]}`
+* If that call fails, you’ll see `[ERR] ... ConnectionError` in the console.
+
+**C. First-run smoke test**
+
+1. Start the watcher:
+
+   ```
+   .\.venv\Scripts\python.exe intake_local.py
+   ```
+2. Drop a simple 1-page PDF into `INBOX`.
+3. Expect console: `[OK] file.pdf → <FINAL>.md`
+   In the YAML, `ai.model` should show your Ollama model name, and the `summary/doc_type` should be populated.
+
+**D. Fallback (so you’re never blocked)**
+
+* With `failover.allow_without_ai: true`, if Ollama is down:
+
+  * The note still gets created,
+  * `doc_type: "unknown"`,
+  * `review_needed: true`,
+  * filename falls back to the deterministic rule.
+
+# 4) Optional guardrails
+
+Add these to `.gitignore` so no one accidentally commits outputs if paths get mis-set:
+
+```
+# never commit vault content if someone points outputs into repo
+/Notes/
+/Assets/
+/.logs/
+/inbox/
+/failed/
+*.error.txt
+```
+
+# 5) TL;DR next moves
+
+1. Create `qivault-intake-ocr.config.yaml` (above).
+2. Paste the tiny loader + overrides into `intake_local.py`.
+3. `ollama pull llama3.1:8b` (or your model) and confirm `/api/tags`.
+4. Run the script and drop a PDF.
+
+Momentum: once this is humming, we can bolt the EOS cockpit later by adding `--serve` without touching the OCR/AI core.
+Yes, that’s a solid rule for Cursor. It forces documentation discipline. Cursor tends to happily generate and modify code, but unless you tell it explicitly, it won’t stop to update your project knowledge base.
+
+Here’s why this rule works:
+
+* **Single source of truth:** Keeping all architecture, schema, and migration notes in `qieos.md` means you won’t lose track of “why” decisions were made.
+* **Milestone markers:** “After a major feature or milestone, update `qieos.md`” makes Cursor tie code changes to project history.
+* **Schema sync:** Having the DB schema documented in the same file prevents drift between code and design.
+* **Migration continuity:** Forcing every new addition/migration into `qieos.md` ensures you don’t end up with scattered docs.
+
+You might tighten the wording for Cursor so it’s unambiguous:
+
+```md
+# Rule for Cursor
+
+Always open and read `qieos.md` **before making any code changes**.
+After completing any **major feature, refactor, or milestone**, update `qieos.md`.
+Always document:
+- The entire codebase structure and module responsibilities
+- Current database schema
+- Any new additions, migrations, or changes
+
+All technical documentation MUST live in `qieos.md`.
+```
+
+That phrasing makes it less optional and harder for Cursor to ignore.
+
+Want me to draft a `qieos.md` starter template that matches your Cockpit repo right now, so Cursor has a living doc to update from day one?
+Got it — here’s the same **bullet-proof structure**, adapted for a project-level `.cursorrules` file that applies **globally** with `alwaysApply: true`.
+
+This version assumes the project is `qieos`, the dev docs live in `docs/`, and it will be automatically applied to all files that match your globs.
+
+````yaml
+---
+description: >
+  Qieos project hard rules for safety, file operations, and documentation.
+  These rules MUST always be respected by AI and automation tools.
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+## SAFETY RULES (MANDATORY)
+
+- **Never expose secrets in client code.**
+  No API keys, tokens, passwords, environment variables, or private data may be written into public/client code.
+
+- **Context before code.**
+  Always run `Understand` (or equivalent) on:
+  - The file(s) being edited
+  - The entire `docs/` folder (including `docs/qieos.md` and all dev guides)
+
+- **Fail safe, not dangerous.**
+  Prefer reversible, non-destructive actions. Stop and surface questions if unsure.
+
+---
+
+## FILE & DIRECTORY DELETION POLICY (HARD STOP)
+
+- **No permanent deletion.**
+  Never delete files or directories outright.
+  Never run destructive commands (`rm -rf`, `git clean`, `del /s`, etc.) without explicit user confirmation.
+
+- **Safe Removal Workflow:**
+  1. **Move, do not delete.** Move files/folders into `.trash/` at repo root.
+  2. **Preserve full path.** Example:
+     ```
+     apps/web/src/foo.tsx → .trash/apps/web/src/foo.tsx
+     ```
+  3. **Report & pause.** List what was moved and wait for explicit approval before any permanent deletion.
+
+- **Only purge when user explicitly confirms.**
+
+---
+
+## PROJECT DOCUMENTATION STANDARD
+
+- **Single Source of Truth:**
+  `docs/qieos.md` is the canonical dev doc for architecture, database schema, and guidelines.
+
+- **Required Practice:**
+  - Always read `docs/qieos.md` before coding.
+  - After major features or milestones, update `docs/qieos.md`.
+  - Fully document the database schema in this file.
+  - Add all migrations here as they are created.
+
+---
+
+## AI / AUTOMATION INTENT
+
+- Always gather full context before changing code.
+- Prefer explicit, reproducible steps over “magic fixes.”
+- Never bypass `.trash/` workflow.
+- Treat `.trash/` as reversible storage until the user confirms purge.
+
+---
+
+## ONE-LINER FOR AGENTS
+
+> **Always read and update `docs/qieos.md` before coding. Never delete — always move to `.trash/` preserving full path, and confirm before purging.**
+
+````
+
+This file will:
+
+* Apply automatically to the entire project (`**/*`) because of `alwaysApply: true`.
+* Force context-gathering and doc awareness (`docs/qieos.md` is required reading).
+* Enforce your `.trash/` workflow with no exceptions.
+* Give even “dumb” AI agents a clear one-liner to follow.
+
+Would you like me to also draft a **starter `docs/qieos.md` template** (with sections for architecture, database schema, milestones, and dev rules) so everything is ready for the AI to read and update? That would lock in the process even tighter.
+Short version: you’re not “way off,” but “merge the other repo into this one” is how you accidentally detonate your working auth. The safe move is a controlled graft: mount only the pieces you need (KB, chatbot, etc.) behind stable interfaces, keep your existing auth + admin dashboard untouched, and integrate incrementally.
+
+Here’s how to do it without breaking your good stuff.
+
+Context-first
+
+What’s solid: KeySuite access → admin dashboard renders, auth works, sign-in page is good.
+
+What’s wobbly: settings “update” flow (write paths / data mutations).
+
+What you want: bring in KB + chatbot + companion components from the other template repo.
+
+Recommendation
+
+Don’t ask Cursor to “just integrate everything.” Tell it to:
+
+analyze both repos,
+
+surface conflicts (routing, UI libs, Tailwind config, env vars, API clients),
+
+scaffold modular mounts for KB and Chatbot under a new apps/client route (or src/modules/*) with feature flags, and
+
+wire them to the existing auth/session without touching the sign-in/dashboard routes.
+
+Two practical patterns (both work; pick one):
+
+Subtree import: Pull over only the folders that contain KB/chatbot UI and their data clients, into src/modules/kb and src/modules/assistant. Great for keeping a single repo.
+
+Package extraction: Turn the other repo’s KB + chatbot into local packages (packages/kb, packages/assistant), then install them in your app. Great if you’ll reuse across portals.
+
+Below are tight, Cursor-friendly prompts you can paste now.
+
+Prompt 1 — “Scout & Plan (no changes yet)”
+
+Use this first. It keeps auth/dashboard safe while the agent maps the terrain.
+
+You are a senior integrator. Goal: mount a Knowledge Base (KB) and Chatbot from a SECOND repository into the CURRENT working portal WITHOUT breaking existing auth and admin dashboard.
+
+Inputs:
+- Current repo = “Portal Core”: Vite + React app with working sign-in and admin dashboard. Auth is the source of truth; do not modify auth routes, providers, or session storage.
+- Other repo = “Components Template”: has KB pages, Chatbot UI, and supporting utils.
+
+Tasks (do not write code yet; output a plan + diff-only risk report):
+1) Scan both repos. List:
+   - Routing systems used (React Router? file-based?).
+   - UI frameworks and configs (Tailwind config, PostCSS, shadcn, etc.).
+   - State mgmt (context, Redux, Zustand), fetch libs, and API base URLs.
+   - Env vars required by KB/Chatbot.
+2) Identify conflict points:
+   - Tailwind config merges (plugins, content globs, theme extensions).
+   - Global CSS collisions.
+   - Duplicate deps / version skews (react, react-router, @tanstack, shadcn).
+   - Build tooling differences (tsconfig paths, eslint, aliasing).
+3) Propose a “Controlled Graft” plan:
+   - Create mount points: `src/modules/kb/*` and `src/modules/assistant/*`.
+   - Export each module as a self-contained component tree with its own index route.
+   - Add routes: `/kb` and `/assistant` (client-facing), guarded by existing auth.
+   - Introduce feature flags: `VITE_FEATURE_KB`, `VITE_FEATURE_ASSISTANT`.
+   - Keep ALL existing auth/dashboard files unmodified.
+4) Define explicit contracts:
+   - Session/identity (what props/hooks the modules can use).
+   - Data layer (how modules read/write; e.g., a thin adapter: `src/lib/appClient.ts`).
+   - The minimal adapter API these modules need (list functions + types).
+5) Output:
+   - A step-by-step merge sequence in small commits.
+   - A checklist of exact files to copy/move from the other repo and their destinations.
+   - A dependency pin/upgrade plan minimizing churn.
+   - A rollback note (how to disable via feature flags and revert commits).
+
+Prompt 2 — “Implement the Controlled Graft”
+
+Run this after Prompt 1 gives you the plan.
+
+Implement the “Controlled Graft” plan, in SAFE, small commits:
+
+Guardrails:
+- NEVER edit the existing auth or admin dashboard files.
+- All new code goes under: `src/modules/kb/*`, `src/modules/assistant/*`, `src/lib/adapters/*`.
+- If the template repo uses globals (e.g., Tailwind theme, provider wrappers), localize them or shim via module-level providers. Do not replace app-level providers.
+- Use feature flags: `VITE_FEATURE_KB`, `VITE_FEATURE_ASSISTANT` defaulting to false.
+
+Steps:
+1) Create mount points:
+   - `src/modules/kb/index.tsx` exporting <KBApp />.
+   - `src/modules/assistant/index.tsx` exporting <AssistantApp />.
+2) Add adapter layer:
+   - `src/lib/adapters/session.ts` → wraps existing auth/session hooks and exposes:
+       `getSession()`, `useSession()`, `requireAuth(redirectTo?: string)`
+   - `src/lib/adapters/data.ts` → thin client for reads/writes used by KB/Chatbot.
+     Keep endpoints/envs in `src/config/env.ts`. No hardcoded URLs.
+3) Wire routes:
+   - In the router, add guarded routes:
+       `/kb` → lazy-load KBApp if `VITE_FEATURE_KB === 'true'`
+       `/assistant` → lazy-load AssistantApp if `VITE_FEATURE_ASSISTANT === 'true'`
+   - If flags are false, routes return 404 component.
+4) Tailwind + CSS:
+   - Merge template’s tailwind config incrementally. If conflicts, scope module CSS with a top-level `.kb-scope` / `.assistant-scope` wrapper.
+   - Add only necessary plugins/content globs.
+5) Dependencies:
+   - Add only the minimal deps required by the modules. Pin versions to match current app major/minor when possible.
+6) Env & types:
+   - Add `VITE_FEATURE_KB` and `VITE_FEATURE_ASSISTANT` to `.env.example` and `src/config/env.ts`.
+7) Tests & smoke checks:
+   - Add a simple route-guard test ensuring unauthenticated users cannot access `/kb` or `/assistant`.
+   - Add a render smoke test for each module (lazy load OK).
+
+Deliverables:
+- Commits per step with messages.
+- A short `INTEGRATION_NOTES.md` listing what came in, where it lives, how to turn it off, and known follow-ups.
+
+Minimal Git safety net
+
+Run these before you start:
+
+git switch -c feat/kb-assistant-graft
+git commit --allow-empty -m "chore: start controlled graft for KB & assistant"
+
+
+If anything feels spicy:
+
+git switch -
+git revert <last_bad_commit_sha>
+
+Why this supports the main project goal
+
+Keeps your working auth + dashboard stable (core portal experience intact).
+
+Introduces KB/Chatbot as modular, feature-flagged add-ons (safer iteration, quick rollback).
+
+Creates a thin adapter layer so future data-store swaps (Supabase → Cloudflare or vice versa) don’t ripple through the UI.
+
+What changed / delivered
+
+A safe strategy (“controlled graft”) instead of a risky monolithic merge.
+
+Two Cursor prompts: one to analyze and plan, one to implement in small, reversible steps.
+
+How it builds on prior work
+
+Respects your current, functioning auth and admin dashboard.
+
+Uses the Cloudflare/Vite/React scaffold you already stood up, instead of replacing it.
+
+Next 1–2 steps
+
+Paste Prompt 1 and let Cursor produce the plan + conflict report.
+
+Paste Prompt 2 to implement in guarded commits with feature flags.
+
+When you’ve got the plan output, share the conflict list and I’ll tailor the exact file copy map and any Tailwind or router shims needed.
+
+You said:
+Or playing devil's advocate, would it be a safer bet to go the other way? Start, clone that repo, have all that in there, and then, you know, surgically integrate what we do have into that repo since it's bigger? What do you think is the best idea?
+ChatGPT said:
+Thought for a second
+Thought for 8s
+
+You’re asking the right “devil’s-advocate” question. Here’s the clean answer:
+
+TL;DR
+
+Default safest: keep your current working repo (auth + admin) as the base and graft in only the KB/chatbot pieces. Fewer blast-radius risks.
+
+Switch bases only if the “bigger” template repo gives you a cohesive, already-wired architecture you plan to keep long-term (routing conventions, layout system, shared data layer) and your current repo is still thin enough that porting auth/admin is trivial.
+
+Think of it like transplant surgery:
+
+Your current portal is a healthy heart (auth/session + admin). Don’t swap hearts unless the new body is demonstrably better and compatible.
+
+The template repo is a body with lots of limbs (KB, chatbot, extras). It’s usually safer to attach limbs to the healthy heart than to move the heart into a new body.
+
+Decision guide (pick in 2 minutes)
+
+Choose the Controlled Graft (keep current base) if ≥2 of these are true:
+
+Auth/session is production-reliable (yours is).
+
+Admin/dashboard routes are stable (yours are).
+
+The “big” repo’s extras are modular enough to import as packages or feature-scoped modules.
+
+You want incremental feature flags and easy rollback.
+
+Choose the Base Swap (use big repo as base) if ≥2 of these are true:
+
+The big repo already has the exact routing layout and providers you want to standardize on (including KB nav structure, theming, shadcn/Tailwind tokens).
+
+Your current app is still thin and you can re-implement auth there without breaking flows (i.e., your auth is a drop-in provider).
+
+You intend to reuse that big repo’s architecture across multiple portals and want one canonical skeleton.
+
+In most real teams, Controlled Graft wins. The “big base swap” tends to drag in hidden globals (theme tokens, router assumptions, provider order, CSS resets) that subtly wreck your login and dashboard.
+
+If you do go “bigger repo as base,” do it surgically
+
+Here’s the safe sequence so you don’t nuke login:
+
+Freeze a branch in your current repo with a minimal, portable Auth Shell
+
+Export only what the new base needs: <AuthProvider>, useSession(), SignInPage, and the admin layout.
+
+Wrap with a tiny adapter: getSession(), requireAuth(redirectTo).
+
+Create a “/portal-core” feature slice in the big repo
+
+Drop the Auth Shell and Admin routes under src/features/portal-core/*.
+
+Do not change the big repo’s app-level providers. Localize yours behind an adapter provider that consumes the big repo’s config/env.
+
+Wire routes behind flags
+
+Add /admin and /auth/* routes to the big repo, but guard them with VITE_FEATURE_PORTAL_CORE=true.
+
+Keep the KB/chatbot routes untouched. Now you can test admin + sign-in in isolation.
+
+Smoke tests & rollback
+
+Unauthed users can’t hit /admin.
+
+Toggling the flag removes your injected routes cleanly.
+
+Cursor prompt for that path:
+
+You are a senior integrator. We are adopting the Template repo as the new base.
+Goal: transplant our existing Auth + Admin (Portal Core) into the Template WITHOUT breaking Template’s KB/Chatbot.
+
+Guardrails:
+- Do not modify Template’s global providers/theme beyond adding a local AdapterProvider for Portal Core.
+- All Portal Core code lives under src/features/portal-core/* and is routed behind VITE_FEATURE_PORTAL_CORE.
+
+Tasks:
+1) Create src/features/portal-core/ with:
+   - providers/AuthProvider.tsx exporting useSession(), getSession(), requireAuth()
+   - routes/auth/* (SignInPage, SignOut handler)
+   - routes/admin/* (AdminLayout + index)
+   - lib/env.ts to map Template env vars to what AuthProvider expects
+2) Add routes:
+   - /auth/* and /admin guarded by requireAuth(); feature-flagged by VITE_FEATURE_PORTAL_CORE.
+3) Add .env.example keys and a README: how to toggle the feature and test.
+4) Add two smoke tests: unauthenticated redirect and basic admin render.
+Output small commits, each step isolated with messages.
+
+Why my default recommendation is Controlled Graft
+
+Your auth + dashboard are already working. Those are the most fragile pieces to move.
+
+You can mount KB and the chatbot as feature-flagged modules with a thin adapter layer for data + session.
+
+Rollback is instant: flip a flag or revert a couple commits. No dependency churn tsunami.
+
+Small Steps (per your Client Portal playbook)
+
+Pick the direction: Controlled Graft (default) or Base Swap (only if that template is your long-term skeleton).
+
+Run the corresponding Cursor prompt (I gave you both). Keep commits tiny, flags on by default, and don’t touch your working auth files.
+
+What changed / delivered
+
+A clear, opinionated decision framework and two ready-to-paste Cursor prompts for either path.
+
+How it builds on prior work
+
+Preserves your functioning sign-in + admin flows while expanding toward KB/chatbot—exactly the path you’ve been walking.
+
+Next 1–2 steps
+
+Tell me which route you’re taking. I’ll tailor the exact file map (what to copy, where to mount, and the env/adapter shim) so you can run it in one pass with feature flags and instant rollback.
+
+You said:
+“Yeah, so let's debate that. If you think about it, that larger repo, it has literally everything already. We just need to plug in essentially our auth, which since we're using super-based OTP, that didn't take long at all. It wasn't that difficult, and we just had to update routers. That was all we really had to do. The bigger repo should be ready to go, you know, pretty much, and we could... I don't really remember what the CSS or what the styling looks like. I think it's more of a darker style, but it still looks great. It looks just as good, if not better, than the admin panel. And so if that's the admin dashboard, and I need an admin dashboard, it almost makes more sense to use the bigger repo because it already has tenants set up for clients and things like that. It's set up for client access, and then we could just slap on the admin dashboard. That almost seems to make more sense, and in the long run, should take less time.”
+00:59
+ChatGPT said:
+
+That makes total sense, especially if the bigger repo already has a lot of the infrastructure in place and it aligns with the direction you want to go. It can definitely save time in the long run.
+
+So let’s go ahead with that approach! We’ll treat your current auth and admin dashboard as a module that gets plugged into the bigger repo.
+
+Here’s the plan in a nutshell:
+
+Clone the bigger repo: This will be your new base.
+
+Port over your auth: Since it’s Supabase-based and straightforward, it should be easy to integrate.
+
+Update the router: Make sure that the new repo uses your auth and has the admin dashboard.
+
+Leverage the existing tenant structure: That way, you get the
+
+You said:
+“Can we just essentially branch off of where we're at now in the repo, then get clone the big repo, and then start to graft what we did have working onto the big repo? Is that what you're saying? Or am I just starting a whole new repo?”
+00:17
+ChatGPT said:
+
+You’ve got it! The best approach is to create a branch from your current repo so that you have a safe, stable backup of everything that’s working right now. Then you’ll clone the bigger repo into a new directory and gradually integrate your existing auth and admin dashboard into that bigger repo.
+
+You said:
+ok, yes can you give me the instruction for cursor, i already have the dev docs for the big repo queued just need to start the agent off.
+ChatGPT said:
+
+Perfect — since you’ve queued up the dev docs for the “big repo,” we’ll start Cursor with a very direct orchestration prompt. This gets the agent moving without letting it bulldoze what works. The goal: adopt the big repo as base, port your working auth/admin into it as a feature module, then wire it up safely.
+
+Here’s the Cursor kick-off prompt for Agent 1 (planning + setup):
+
+Prompt for Cursor
+You are a senior integrator. We are adopting the Template repo (“big repo”) as the new base for our Client Portal.
+We need to bring over the existing Auth + Admin Dashboard (from our current repo) without breaking any of the KB/Chatbot or other template components.
+
+Inputs:
+- Template repo = new base. Already has Knowledge Base, Chatbot, extra modules.
+- Current repo = “Portal Core.” Has working Supabase Auth and Admin Dashboard with sign-in flow.
+- We have the dev docs for the Template repo.
+
+Tasks:
+1. Create a new feature slice in the Template repo:
+   src/features/portal-core/*
+   - providers/AuthProvider.tsx: wraps Supabase auth and exports useSession(), getSession(), requireAuth().
+   - routes/auth/*: SignInPage, SignOut handler.
+   - routes/admin/*: AdminLayout + index page.
+   - lib/env.ts: maps Template repo env vars to what AuthProvider needs.
+
+2. Add routes to the Template repo’s router:
+   - /auth/* and /admin guarded by requireAuth().
+   - All behind a feature flag: VITE_FEATURE_PORTAL_CORE (default true).
+   - If flag is false, these routes return 404.
+
+3. Integration rules:
+   - DO NOT edit Template’s global providers/theme. Localize Portal Core behind an AdapterProvider if needed.
+   - Keep commits small and descriptive (e.g. “feat: add portal-core auth provider,” “feat: wire portal-core admin routes”).
+   - Add .env.example keys and update README: how to toggle the feature and test.
+   - Add two smoke tests: unauthenticated redirect works, admin renders when signed in.
+
+4. Deliverables:
+   - Step-by-step plan of exact files to add or edit.
+   - Final code diffs for each step.
+   - Short INTEGRATION_NOTES.md explaining: what was added, how to toggle with env flag, and known follow-ups.
+
+Why this fits your situation
+
+Starts from the big repo as base (your devil’s advocate path).
+
+Keeps your existing auth/admin intact by isolating them as a module (portal-core).
+
+Uses feature flags → rollback is instant if something misbehaves.
+
+Next step: paste this prompt into Cursor. It will give you a plan + file map. Once you have that, I’ll help refine the file moves (e.g. which exact auth hooks, context providers, and admin routes to port first).
+
+Want me to also prep the follow-up implementation prompt (the one that actually moves the code) so you can run it immediately after the planning step?
+If you’re standing up a `public.client_updates` table in Supabase, you’ll want to cover three layers:
+
+1. **Identity / Ownership** – who the update belongs to
+2. **Content** – what the update is
+3. **Tracking / Meta** – when and how it changes
+
+Here’s a solid starting set of columns you can create (you can always expand later):
+
+### Identity / Ownership
+
+* `id` → `uuid` (primary key, default `gen_random_uuid()`)
+* `client_id` → `uuid` (foreign key to `public.clients.id` or however you store clients)
+* `updated_by` → `uuid` (optional, if you want to track which user/admin made the update)
+
+### Content
+
+* `title` → `text` (short label for the update, optional)
+* `message` → `text` (the actual update content)
+* `status` → `text` or `enum` (e.g. “pending”, “in\_progress”, “complete”, “archived”)
+* `category` → `text` or `enum` (e.g. “billing”, “project”, “support”, “general”)
+* `attachments` → `jsonb` (store file references, URLs, or metadata if needed)
+
+### Tracking / Meta
+
+* `created_at` → `timestamptz` (default `now()`)
+* `updated_at` → `timestamptz` (default `now()`, with trigger to auto-update)
+* `is_public` → `boolean` (flag if the update should be visible to clients in the portal)
+* `priority` → `int` (optional, to order updates by importance)
+
+---
+
+**Optional sugar, depending on your use case:**
+
+* `read_at` → `timestamptz` (track when the client viewed it)
+* `tags` → `text[]` (for flexible filtering/search)
+* `meta` → `jsonb` (dump extra structured info without schema changes)
+
+---
+
+This way, your `public.client_updates` can handle everything from “Project X milestone hit” to “Invoice paid” while staying flexible and future-proof.
+
+Do you want me to also sketch the SQL `CREATE TABLE` statement with all these fields so you can drop it straight into Supabase?
+Yep—I see two issues mixed together:
+
+1. Wrangler is still seeing a **token** in your environment (so OAuth login refuses).
+2. Your **Account ID** is set to the placeholder `your_account_id_here`, so deploy hits `/accounts/your_account_id_here/...` and fails.
+
+Fastest path: stick with **API Token mode** right now and set the **real** values, then deploy. Copy/paste these exactly in PowerShell from `Q:\QiEos`:
+
+## A) Inspect & clear any stale vars (just to be sure)
+
+```
+gci env:CLOUDFLARE*; gci env:CF_*
+$env:CLOUDFLARE_API_TOKEN   = $null
+$env:CLOUDFLARE_ACCOUNT_ID  = $null
+$env:CF_API_TOKEN           = $null
+$env:CF_ACCOUNT_ID          = $null
+```
+
+## B) Set your **real** Account ID + a valid **API Token**
+
+> Get Account ID from your Cloudflare dashboard (don’t paste it here).
+> Use one of your existing tokens that has Pages permissions.
+
+```
+$env:CLOUDFLARE_API_TOKEN  = "<PASTE_REAL_TOKEN>"
+$env:CLOUDFLARE_ACCOUNT_ID = "<PASTE_REAL_ACCOUNT_ID>"
+$env:CF_API_TOKEN          = $env:CLOUDFLARE_API_TOKEN
+$env:CF_ACCOUNT_ID         = $env:CLOUDFLARE_ACCOUNT_ID
+```
+
+## C) Deploy Cody’s site (static folder deploy)
+
+```
+pnpm dlx wrangler@4.35.0 pages deploy "sites/clients/_qsites/codyricevelasquez" --project-name=qieos-codyricevelasquez
+```
+
+If that works, repeat for the rest:
+
+```
+pnpm dlx wrangler@4.35.0 pages deploy "sites/clients/_qsites/empowerqnow"         --project-name=qieos-empowerqnow
+pnpm dlx wrangler@4.35.0 pages deploy "sites/clients/_qsites/qsaysit"             --project-name=qieos-qsaysit
+pnpm dlx wrangler@4.35.0 pages deploy "sites/clients/_qsites/tu_angela"           --project-name=qieos-tu-angela
+pnpm dlx wrangler@4.35.0 pages deploy "sites/clients/_qsites/casteneda-flooring"  --project-name=qieos-casteneda-flooring
+pnpm dlx wrangler@4.35.0 pages deploy "sites/clients/_qsites/zjk-resource"        --project-name=qieos-zjk-resource
+```
+
+---
+
+### Prefer OAuth instead? (optional clean switch)
+
+You have a token set **somewhere persistent** (User/Machine). Clear it once, then use OAuth.
+
+> Run PowerShell **as Administrator** for Machine scope; then **restart** your terminal after these:
+
+```
+[Environment]::SetEnvironmentVariable("CLOUDFLARE_API_TOKEN",$null,"User")
+[Environment]::SetEnvironmentVariable("CF_API_TOKEN",$null,"User")
+[Environment]::SetEnvironmentVariable("CLOUDFLARE_ACCOUNT_ID",$null,"User")
+[Environment]::SetEnvironmentVariable("CF_ACCOUNT_ID",$null,"User")
+
+[Environment]::SetEnvironmentVariable("CLOUDFLARE_API_TOKEN",$null,"Machine")
+[Environment]::SetEnvironmentVariable("CF_API_TOKEN",$null,"Machine")
+[Environment]::SetEnvironmentVariable("CLOUDFLARE_ACCOUNT_ID",$null,"Machine")
+[Environment]::SetEnvironmentVariable("CF_ACCOUNT_ID",$null,"Machine")
+```
+
+Then, fresh terminal:
+
+```
+cd Q:\QiEos
+pnpm dlx wrangler@4.35.0 login
+pnpm dlx wrangler@4.35.0 pages deploy "sites/clients/_qsites/codyricevelasquez" --project-name=qieos-codyricevelasquez
+```
+
+---
+
+### About the “Errors  Files … exit code 2”
+
+That’s your **Worker** TypeScript complaining (unrelated to the static Pages deploy). We’ll fix those next, but they won’t block the static site uploads you’re doing now.
+
+---
+
+#### Traceability
+
+**What changed/delivered:** Exact commands to clear bogus envs, set the real token/account, and deploy; plus a clean OAuth fallback.
+**How it builds on prior work:** Keeps the “one Pages project per site” flow, avoids the `your_account_id_here` placeholder, and sidesteps Worker build errors while you publish static sites.
+**Next 1–2 steps:** (1) Set the real token + account ID and deploy Cody; (2) repeat for the others, then we’ll circle back to the Worker TS error list.
+perfect — I pulled your **current God Doc** from the repo PDF. now let’s lock in the **DB schema + Cloudflare setup** we drafted as the next constitutional amendment.
+
+---
+
+# QiEOS • Official Development Specification (Amendment I)
+
+```yaml
+amendment: I
+title: Supabase Schema + Cloudflare Setup
+status: ratified
+date: 2025-09-10
+```
+
+## 14) Supabase Schema (frozen baseline)
+
+All SQL migrations live under `/infra/supabase/migrations/`. The following files are now canonical:
+
+* **000\_init\_orgs\_companies\_contacts.sql** → orgs, departments, companies, contacts
+* **010\_projects\_tasks\_tickets.sql** → projects, tasks (nullable project\_id), tickets
+* **015\_time\_entries.sql** → polymorphic time entries
+* **020\_kb\_hierarchy\_docs\_vectors.sql** → hierarchical collections, docs, vectors (pgvector)
+* **025\_sites\_registry.sql** → client site registry (Pages project + domain)
+* **026\_drops\_meta.sql** → metadata for R2 public drops
+* **030\_billing\_ledger\_invoices.sql** → invoices + ledger
+* **040\_feature\_flags.sql** → feature keys, org\_features, module\_access
+* **900\_rls\_policies.sql** → RLS templates using `qieos_org()`, `qieos_role()`, `qieos_company_ids()`
+
+**Principles:**
+
+* Every user-facing table has `org_id` and **RLS enabled**.
+* JWT claims (`org_id`, `role`, `company_ids`, `features`) control visibility.
+* Service-role (Worker) bypasses RLS for privileged operations.
+
+---
+
+## 15) Cloudflare Setup (frozen baseline)
+
+Cloudflare is the platform of record. All config lives in `/infra/cloudflare/`.
+
+### 15.1 Worker (`workers/api/wrangler.toml`)
+
+```toml
+name = "qieos-api"
+main = "src/index.ts"
+compatibility_date = "2025-09-10"
+
+[vars]
+SUPABASE_URL = ""
+SUPABASE_SERVICE_ROLE_KEY = ""
+OPENAI_API_KEY = ""
+STRIPE_SECRET_KEY = ""
+JWT_ISSUER = "qieos"
+EMBEDDING_DIM = "1536"
+
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "qieos-files"
+preview_bucket_name = "qieos-files-dev"
+```
+
+Secrets are stored via `wrangler secret put`.
+
+### 15.2 R2
+
+* Buckets: `qieos-files`, `qieos-files-dev`.
+* Worker endpoints handle signed uploads and metadata (`drops_meta`).
+
+### 15.3 Pages
+
+* `apps/web` builds to `dist/`.
+* Deployed as Cloudflare Pages project `qieos-web`.
+* `.github/workflows/web-pages-deploy.yml` builds with PNPM and deploys artifact.
+
+### 15.4 Worker CI
+
+* `.github/workflows/worker-deploy.yml` builds `workers/api` and deploys via Wrangler.
+
+---
+
+## 16) Validation Checklist
+
+* [ ] `pnpm -C infra/supabase migrate` applies schema to Supabase.
+* [ ] Worker boots with `pnpm -C workers/api dev` and responds on `/health`.
+* [ ] `/auth/session` returns enriched claims.
+* [ ] `/tasks` CRUD works with RLS.
+* [ ] `/files/sign-upload` issues signed URL → file lands in R2 → metadata row written.
+* [ ] `/kb/public` and `/kb/private` return articles.
+* [ ] `/me/profile` updates successfully.
+* [ ] Root website serves from Pages.
+
+---
+
+✅ what changed:
+
+* Added **Amendment I** to the God Doc covering Supabase schema and Cloudflare setup.
+* Keeps all prior structure intact; this extends, not rewrites.
+
+👉 next step: I can generate the **actual SQL files** under `/infra/supabase/migrations/` and the **starter wrangler.toml + GitHub workflows** so they’re physically in your repo. want me to?
+Here’s where we’re at, pulling from your updated docs:
+
+* **Session Log & Dev Workflow** is in place (`Session Log`, agents, Cursor kickoff prompt, safety rules).
+* **God Doc v4** locks the monorepo tree and MVP scope: Auth + RBAC, Tasks, File storage, Knowledge Base, Profile update, and Public site.
+* **Amendment I** locks in Supabase schema and Cloudflare baseline setup (wrangler.toml, R2 buckets, Pages deploy, Worker CI).
+* **Agents kit** is in repo (`kickoff.md`, `logger.md`, `auditor.md`, safety rules).
+
+So the core rules + architecture are frozen. The **MVP now requires making them *real***.
+
+### Next 2 steps toward MVP:
+
+1. **Materialize the schema + infra baselines**
+
+   * Generate and commit the SQL migration files listed in Amendment I under `/infra/supabase/migrations/`.
+   * Add the starter `wrangler.toml` and `.github/workflows` for Pages + Worker deploy.
+   * This grounds the “frozen” spec into code so migrations/CI run.
+
+2. **Run the validation checklist** from Amendment I (one endpoint at a time):
+
+   * `pnpm -C infra/supabase migrate` → verify DB is seeded with orgs/companies/contacts.
+   * `pnpm -C workers/api dev` → confirm `/health` responds.
+   * Hit `/auth/session` and `/tasks` to prove RLS + CRUD works with Supabase claims.
+
+---
+
+**What changed/delivered**: Context anchored; next steps trimmed to schema + infra implementation.
+**How it builds on prior work**: We already froze the spec; this is about instantiating it.
+**Next 1–2 steps**: (a) Generate SQL + wrangler.toml + workflows in repo, (b) run first `migrate` + Worker `/health` test.
+
+Do you want me to spit out the actual migration files and starter configs now so they’re ready to drop into `/infra/`?
+Based on the repo extraction, you already have a **multi-tenant SaaS client portal skeleton** with features like:
+
+* Multi-tenant architecture with role-based access (admin, client, team)
+* AI-powered knowledge base with RAG + chat
+* Real-time messaging via WebSockets
+* Project progress tracking, service requests, invoices
+* Stripe integration for payments
+* Admin dashboard + client dashboard UI shells
+
+Here’s a **prompt you can drop into Cursor (or another AI agent)** to scaffold a full SaaS template around those pieces:
+
+---
+
+**Prompt for AI SaaS Template Creation**
+
+> Create a full SaaS template for a **multi-tenant client portal** with the following modules:
+>
+> * **Authentication & Roles:** Multi-tenant user system (admin, team, client). Email + password auth, role-based routing.
+> * **Dashboards:**
+>
+>   * Admin dashboard → client management, “view as client”, project/invoice overview.
+>   * Client dashboard → project progress cards, recent messages, KB articles, service request button.
+> * **Knowledge Base:** Per-client document storage with AI chat assistant (RAG, sources shown).
+> * **Messaging:** Real-time chat (WebSockets), sidebar + threaded conversations.
+> * **Payments & Invoices:** Stripe integration for invoice creation + payment (checkout, confirm intent, status updates).
+> * **Service Requests:** Clients submit new requests; admins/team can update status.
+> * **Notifications:** Real-time system notifications + unread counts.
+> * **UI/UX:** Glassmorphism style, Tailwind + Framer Motion for smooth animations, responsive design.
+>
+> **Tech stack:** React 19 + Vite + TypeScript (frontend), TailwindCSS + shadcn/ui, Node/Express + WebSockets (backend), Drizzle ORM + Postgres, Stripe for payments.
+>
+> **Deliverables:**
+>
+> 1. Folder structure (`apps/client`, `apps/admin`, `server`, `shared`) with modular components.
+> 2. Example pages: `/login`, `/dashboard`, `/projects`, `/kb`, `/messages`, `/invoices`.
+> 3. API routes for users, invoices, service requests, knowledge base, chat.
+> 4. Example seed data for demo clients/projects.
+> 5. Feature flags to toggle modules per tenant.
+
+---
+
+That prompt ties directly to the repo’s existing structure and features.
+
+Would you like me to refine this into a **Cursor “surgical build plan”** (step-by-step tasks it can execute safely) so you can run it without risking the whole repo at once?
+Got you. Here’s a single, one-agent **Final Audit + Cleanup** prompt that (1) inspects everything, (2) produces a clear report, and (3) safely cleans the repo with backups, a DRY-RUN first, then an APPLY pass. It also gives you an “undo” path (backup zip + dedicated git branch).
+
+---
+
+### Cursor Agent — **Final Audit + Cleanup (DRY-RUN then APPLY)**
+
+```bash
+cursor> TASK: Full MVP Audit + Safe Cleanup + Report
+
+# ==== CONFIG (edit these booleans only) ====
+APPLY=false            # false = DRY-RUN (no writes). Set true to apply the fixes.
+DELETE_UNUSED=false    # if true (with APPLY=true), move orphaned files to .trash/ instead of just listing them.
+MAX_LINES_PER_FILE=200000
+
+# ==== SCOPE ====
+# Repo should contain: apps/web (or apps/client), workers/* or server/*, packages/ui, config for deploy (wrangler/pages).
+# Auth via Supabase (env: VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY). Optional: Stripe keys, MCP worker.
+
+# ==== ACTIONS ====
+# 1) STRUCTURE & ROUTES AUDIT
+# - Walk entire repo; generate tree of key areas: apps/, packages/, workers/ or server/, config files.
+# - Verify presence of the MVP pages/features in the selected frontend app:
+#   landing, dashboard (/app), knowledge base (/app/kb), chat/messaging (/app/chat), payments (/app/payments), settings (/app/profile or /app/settings).
+# - Verify auth wiring:
+#   a) single source of truth for Supabase client (e.g., lib/supabase.ts or supabase.js)
+#   b) UserContext (or equivalent) referenced by ProtectedRoute and root layout.
+# - Verify module registrations (router/index, feature nav, plop injection markers like //<-- INJECT -->).
+
+# 2) CONFIG & ENV AUDIT
+# - Check Vite config for target app (apps/web or apps/client).
+# - Check Cloudflare: wrangler.toml for workers/*, Pages build command, output dir, and env keys referenced in code.
+# - List all used env vars found in code; compare against .env.example or Pages/Workers config files if present.
+# - Stripe stub: confirm references are guarded if keys not present.
+
+# 3) QUALITY SWEEP
+# - Typecheck and lint: report errors/warnings (do not fix in DRY-RUN).
+# - Dead imports / unused files: detect
+#   a) files not referenced by any import graph (excluding public/, .md, .json config) -> mark "orphaned"
+#   b) duplicate components by name with differing paths -> mark "duplicates"
+# - Filename hygiene: propose safe renames (normalize MAS-0001 etc.), produce rename_map.csv with reason + confidence.
+# - Detect oversized artifacts (>5MB) that don’t belong in repo; flag for removal or Git LFS.
+
+# 4) OUTPUTS (ALWAYS)
+# - Write a Markdown report at ./_audit/AUDIT_REPORT.md including:
+#   ✅ Passed checks
+#   ⚠️ Warnings
+#   ❌ Failures
+#   Recommended Next Fixes (prioritized)
+#   Summaries: routes, envs, worker/pages configs
+# - Write CSVs at ./_audit/:
+#   - rename_map.csv -> current_path, proposed_path, reason, confidence
+#   - orphans.csv -> path, reason
+#   - duplicates.csv -> path_a, path_b, reason
+#   - env_usage.csv -> variable, files[]
+# - Print a short executive summary to the console.
+
+# 5) SAFETY BACKUP (APPLY only)
+# - If APPLY=true:
+#   a) create git branch: chore/final-audit-cleanup-$(date +%Y%m%d-%H%M)
+#   b) create backup zip of repo (excluding node_modules): ./_backup/repo-backup-$(date +%Y%m%d-%H%M).zip
+#   c) snapshot CSVs into the branch
+
+# 6) APPLY FIXES (APPLY only)
+# - Apply safe renames from rename_map.csv where confidence >= 0.90.
+# - If DELETE_UNUSED=true: move orphaned files into ./.trash/$(date)/ (preserve structure).
+# - Run automated formatting (prettier/eslint) and compile/typecheck.
+# - Update .env.example with any missing keys referenced in code (add commented placeholders).
+# - Ensure README “Deploy” section has Pages build and Workers deploy notes; if missing, append a minimal block.
+# - Commit changes to the branch with message: "chore(audit): structure cleanup, safe renames, env parity, docs".
+
+# 7) POST-APPLY VERIFICATION
+# - Re-run router scan to ensure no broken imports after renames.
+# - Re-run typecheck to confirm zero new errors were introduced.
+# - Append “Post-Apply Verification” results to ./_audit/AUDIT_REPORT.md
+
+# 8) UNDO INSTRUCTIONS (ALWAYS)
+# - Add to AUDIT_REPORT.md:
+#   To undo:
+#   - `git checkout -B main` then `git revert -m 1 <merge_or_commit>` OR
+#   - `git switch -C restore-from-backup && unzip ./_backup/repo-backup-*.zip -d ./ && git add -A && git commit -m "restore"`
+#   - If only file moves: `git restore --source=HEAD~1 -- .` or cherry-pick prior commit.
+
+# ==== IMPLEMENTATION NOTES ====
+# - DO NOT store secrets in report/CSVs.
+# - Treat apps/web as primary if both apps/web and apps/client exist; otherwise pick the one containing the most routes.
+# - Respect MAX_LINES_PER_FILE to avoid loading huge blobs into memory; skip and flag if exceeded.
+# - For rename heuristics, avoid changing import specifiers outside same folder unless safe; otherwise mark as low-confidence.
+
+# ==== DELIVERABLES ====
+# 1) ./_audit/AUDIT_REPORT.md (full findings + next fixes + undo)
+# 2) ./_audit/*.csv (rename_map, orphans, duplicates, env_usage)
+# 3) If APPLY=true:
+#    - ./_backup/repo-backup-*.zip
+#    - new branch with committed changes
+# 4) Console summary with:
+#    - Counts: files scanned, renames proposed/applied, orphans detected/moved
+#    - Lint/typecheck status
+#    - Next 3 priority fixes
+
+# ==== RUN MODE ====
+# Start in DRY-RUN (APPLY=false). After review, set APPLY=true (and optionally DELETE_UNUSED=true) and re-run.
+```
+
+---
+
+## Why this works (and how it supports the main goal)
+
+* **Context first:** It audits structure, wiring, envs, and pages that define your MVP (auth, KB, chat, payments, settings).
+* **Docs anchor / Goal check:** It enforces the module layout and deployment paths you’ve been building toward (Cloudflare Pages + Workers, Supabase auth) and outputs a single report we can use to sign off.
+* **Small steps:** It runs DRY-RUN first; you flip one boolean to APPLY.
+* **Traceability:** It writes a Markdown report, CSV maps, a backup zip, and uses a dedicated branch for easy rollback.
+
+### What you’ll get after DRY-RUN
+
+* `_audit/AUDIT_REPORT.md` with ✅/⚠️/❌, prioritized fixes, and the repo tree summary.
+* CSVs for renames, orphans, duplicates, and env usage.
+
+### How it builds on prior work
+
+* Respects your existing auth, routing, KB/AI plan, and deployment target.
+* Uses the same “rename map” strategy you’ve used before to avoid surprises.
+
+### Next 1–2 steps
+
+1. Run it as provided (DRY-RUN). Skim the `AUDIT_REPORT.md` and CSVs.
+2. If it looks good, re-run with `APPLY=true` (and `DELETE_UNUSED=true` if you want orphan files moved into `.trash/` automatically).
+Yes — what you sent is in line with the structure you’ve been building. It matches the **God Doc + Amendment I** design for QiEOSand the safety/agent workflow rules.
+
+Here’s the alignment check:
+
+### ✅ Strengths
+
+* **Front Matter section** (Cover, Executive Summary, Application & Declaration) follows the “frozen baseline” style in the repo — predictable entry points.
+* **Exhibits numbered EX-01 → EX-09** exactly match the conventions in your existing case trees.
+* You’re explicitly flagging **index files** (e.g. `01_Index.md`) and noting where they are missing or non-standard. That’s the same pattern Cursor can use to auto-detect compliance.
+* The **Exhibits Master Index tables** are consistent: `#`, `Date`, `File` (and sometimes `Title`). That will make scripting ingestion or pgvector embedding straightforward.
+* You called out anomalies (`3043-22-02` ghost dates, “United\_Slates” typos, duplicate EX-B-003/004/005 entries). That’s exactly the forensic detail you need for court-ready binders.
+
+### ⚠️ Minor Fixes / Improvements
+
+* **Standardize index naming**: EX-08 and EX-09 indexes should be renamed to `01_Index.md` so the parser doesn’t special-case them.
+* **Missing EX-07 index**: Add `01_Index.md` in that folder, even if it’s a stub.
+* **Date format drift**: Some entries use `3043-22-02` or `0905-20-25`. Those need normalization (likely `YYYY-MM-DD`). You can keep the raw string in metadata but also provide a parsed date field.
+* **Title consistency**: Some rows in EX-02 and EX-03 have truncated titles (`…-rev`, `…-Un`). Consider enforcing a `max_title_length` rule in your exporter so they don’t cut off mid-word.
+* **Duplicate numbering**: EX-01.01 is repeated for many unrelated files. You may want a second-level numbering scheme (e.g. EX-01.01, EX-01.02, etc.) so every artifact has a unique slot.
+
+### 📌 Bottom line
+
+Your TOC is **structurally correct** and already aligned with your dev spec. It just needs polish on naming/formatting to make it “machine-safe” (so Cursor and pgvector can consume without hacks).
+
+Would you like me to generate a **fix-plan diff** (rename map + index stubs + date normalization) so you can drop it straight into Cursor under the `safety-rules` workflow? That way it will produce the minimal, reversible changes (`.trash/` for old names, new `01_Index.md` stubs) without breaking your God Doc guarantees.
+Alright Gina mode on. I read through your uploaded **README.md** and **DEV\_LOG.md**. Those are the authoritative sources for your QiEOS project, so any chat that doesn’t add clarity beyond what’s already in those files is clutter. Here’s the breakdown:
+
+### 🔑 Keep (Relevant & Helpful)
+
+* **Dev workflow / MVP / Supabase schema / Cloudflare setup chats** → These tie directly into the steps listed in the dev log (Supabase migrations, Cloudflare worker config, MVP checklist). They extend what’s in your README/DEV\_LOG and keep your momentum.
+* **Cursor agent rule + audit prompt chats** → Useful since your `.cursorrules` and audit process are explicitly mentioned in the dev log. That scaffolding is part of how you maintain quality.
+* **Portal hierarchy / site scraping / support site flow chats** → Still relevant because they map the structure of your client portals and support sites. These give practical application of the QiEOS architecture.
+* **Supabase columns / Cloudflare auth vs Supabase auth chats** → Relevant because your dev log explicitly notes “NOT using Cloudflare Auth, confirmed Supabase Auth + magic links.”
+* **MVP build setup chats** (workers KV, Supabase vs Cloudflare auth, etc.) → All tied to current dev phase.
+
+### 🗑️ Delete (Outdated or Side-quests)
+
+* **Dream reflection / sermon / EmpowerQNow spiritual chats** → Valuable personally, but not part of this project’s repo. Keep them in a separate Obsidian vault maybe, but delete from this workspace.
+* **Image/logo requests (blue hummingbird, SVG logos, QiSuite web assets)** → Good for branding, but they don’t inform the QiEOS technical repo. Archive them in a design folder, not here.
+* **Personal client questions (I-589 asylum filings, family affidavits, USCIS forms, etc.)** → Important legally, but not linked to QiEOS repo. Better in Zai’s immigration binder vault.
+* **Flow plan for client support site at access.qially.com** → Only keep if you’re folding it into QiEOS as part of `sites/clients/` stamping. Otherwise, it’s more of a side project.
+
+### ✨ My Suggestion
+
+Use this workspace only for **QiEOS technical development** (auth, schema, worker config, portal stamping). Move the rest (dreams, legal, branding) into their own Obsidian vaults so this repo’s convo stays clean and focused.
+
+Want me to give you a clean “keep/delete” list by chat title (like a checklist you can literally run down and archive/delete)?

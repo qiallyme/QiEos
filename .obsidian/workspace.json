@@ -11,10 +11,10 @@
             "id": "7afd5a1df21be310",
             "type": "leaf",
             "state": {
-              "type": "graph",
+              "type": "empty",
               "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "icon": "lucide-file",
+              "title": "New tab"
             }
           }
         ]
@@ -74,7 +74,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 350.5
   },
   "right": {
     "id": "0373a8aa227894e9",
@@ -162,9 +162,44 @@
       "bases:Create new base": false
     }
   },
-  "active": "7afd5a1df21be310",
+  "active": "a698d1673e6b0c8c",
   "lastOpenFiles": [
-    "_qieos_docs/QiEos Constitution.md",
-    "_qieos_docs/QiEOS • Official Development Specification (Amendment I).md"
+    "scripts/merge-kb.mjs",
+    "docs/devops/code_extraction_2025-09-13_06-33-41.txt",
+    "docs/kb/QiSuite_Dev_Bible.md",
+    "docs/devops/QIEOS.md",
+    "docs/kb/QiEOS • Official Development Specification.md",
+    "docs/kb/QiEOS • Official Development Specification Session 20250910-0001.md",
+    "docs/kb/QiEOS • Official Development Specification (Amendment I).md",
+    "docs/kb/SETUP.md",
+    "docs/kb/code_extraction_2025-09-13_06-33-41.txt",
+    "docs/kb",
+    "docs/devops",
+    "docs/backend/cursor/agents/workflows/daily-kickoff.md",
+    "docs/backend/cursor/agents/scripts/devlog_append.py",
+    "docs/backend/cursor/agents/templates/session-entry.md",
+    "docs/backend/cursor/agents/templates/change-summary.md",
+    "docs/backend/cursor/agents/workflows",
+    "docs/backend/cursor/agents/scripts",
+    "docs/backend/cursor/agents/templates",
+    "docs/backend/cursor/agents/safety-rules.md",
+    "docs/backend/cursor/agents/auditor.md",
+    "docs/backend/cursor/agents/README.md",
+    "docs/backend/cursor/agents/logger.md",
+    "docs/backend/cursor/agents/kickoff.md",
+    "docs/backend/cursor/EDITOR.md",
+    "docs/backend/cursor/CURSOR_MODES.md",
+    "docs/backend/cursor/agents",
+    "docs/backend/cursor",
+    "docs/backend/API_KEYS.md",
+    "docs/QiEOS • Official Development Specification.md",
+    "docs/QiEOS • Official Development Specification Session 20250910-0001.md",
+    "docs/QiEOS • Official Development Specification (Amendment I).md",
+    "docs/QiSuite_Dev_Bible.md",
+    "docs/a-general/QiEOS • Official Development Specification.md",
+    "docs/a-general/QiEOS • Official Development Specification Session 20250910-0001.md",
+    "docs/a-general/QiEOS • Official Development Specification (Amendment I).md",
+    "docs/c-backend/cursor/agents/workflows/daily-kickoff.md",
+    "Untitled.canvas"
   ]
 }

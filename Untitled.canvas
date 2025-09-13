@@ -1,0 +1,27 @@
+{
+	"nodes":[
+		{"id":"a6c4be1dedaa658d","x":640,"y":-560,"width":250,"height":60,"color":"1","type":"text","text":"# External"},
+		{"id":"260b2ba0860ad678","x":0,"y":-560,"width":250,"height":60,"color":"3","type":"text","text":"# Internal"},
+		{"id":"d6ce232b969ac2c7","x":-630,"y":-680,"width":250,"height":60,"color":"6","type":"text","text":"# Stack"},
+		{"id":"3bc3d41af506fd36","x":-920,"y":-530,"width":250,"height":60,"color":"2","type":"text","text":"CURSOR IDE"},
+		{"id":"30a91d83fe527fcb","x":-445,"y":-400,"width":250,"height":60,"color":"4","type":"text","text":"SUPABASE"},
+		{"id":"617af5b68f6bc56c","x":-280,"y":-183,"width":250,"height":60,"color":"1","type":"text","text":"AUTH"},
+		{"id":"c58b841fbbb53b8a","x":-920,"y":-340,"width":250,"height":60,"color":"2","type":"text","text":"GITHUB"},
+		{"id":"2472fdc1338625e8","x":-630,"y":-183,"width":250,"height":60,"color":"4","type":"text","text":"STORAGE"},
+		{"id":"d6a5c695085bb58d","x":-920,"y":0,"width":250,"height":50,"color":"2","type":"text","text":"CLOUDFLARE"},
+		{"id":"64899ff630d577e3","x":-755,"y":200,"width":250,"height":60,"color":"3","type":"text","text":"WORKERS"},
+		{"id":"ae705ed6d83651ae","x":-1080,"y":200,"width":250,"height":60,"color":"1","type":"text","text":"HOSTING"}
+	],
+	"edges":[
+		{"id":"d90db2b274fa9421","fromNode":"d6ce232b969ac2c7","fromSide":"bottom","toNode":"3bc3d41af506fd36","toSide":"top"},
+		{"id":"19ca091ed258eb08","fromNode":"3bc3d41af506fd36","fromSide":"bottom","toNode":"c58b841fbbb53b8a","toSide":"top","color":"2"},
+		{"id":"ab3fdea237114e81","fromNode":"c58b841fbbb53b8a","fromSide":"bottom","toNode":"d6a5c695085bb58d","toSide":"top","color":"2"},
+		{"id":"85b132507ab55d57","fromNode":"d6ce232b969ac2c7","fromSide":"bottom","toNode":"30a91d83fe527fcb","toSide":"top","color":"4"},
+		{"id":"b5b4823d6f55ef2a","fromNode":"30a91d83fe527fcb","fromSide":"bottom","toNode":"2472fdc1338625e8","toSide":"top","color":"4"},
+		{"id":"f0d1f58053c70c55","fromNode":"30a91d83fe527fcb","fromSide":"bottom","toNode":"617af5b68f6bc56c","toSide":"top","color":"4"},
+		{"id":"48c32bfe7645993b","fromNode":"d6a5c695085bb58d","fromSide":"bottom","toNode":"ae705ed6d83651ae","toSide":"top","color":"2"},
+		{"id":"1ccc3cb75f746d33","fromNode":"d6a5c695085bb58d","fromSide":"bottom","toNode":"64899ff630d577e3","toSide":"top","color":"3"},
+		{"id":"7200449018e9c4a8","fromNode":"2472fdc1338625e8","fromSide":"bottom","toNode":"d6a5c695085bb58d","toSide":"right","color":"4"},
+		{"id":"7e3d5cccf838e149","fromNode":"617af5b68f6bc56c","fromSide":"bottom","toNode":"d6a5c695085bb58d","toSide":"right","color":"1"}
+	]
+}

@@ -13,6 +13,7 @@
     "dev": "concurrently -n WORKER,WEB -c magenta,cyan \"pnpm --dir workers/api dev\" \"pnpm --dir apps/web dev\"",
     "build": "pnpm --filter @qieos/types build && pnpm --filter @qieos/utils build",
     "build:kb": "node scripts/build-neurite-kb.mjs",
+    "kb:bible": "node scripts/merge-kb.mjs",
     "build:neurite": "pnpm --dir apps/Nuerite/Neurite build",
     "postbuild": "pnpm build:kb && echo 'KB pages synced to Neurite'",
     "dev:neurite": "pnpm --dir apps/Nuerite/Neurite start",
