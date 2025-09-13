@@ -9,12 +9,29 @@ coverage/
 
 # Dependencies
 node_modules/
+pnpm-lock.yaml
+
+# repos & vcs
+.git/
+.snapshots/
+snapshots/*.zip
+snapshots/*.bundle
+snapshots/*.manifest.json
+snapshots/*code_extraction*.txt
+
+# trash/archive
+.trash/
 
 # Env & secrets
 .env
 .env.*
 **/*.pem
 **/*.key
+*.local
+
+# OS noise
+.DS_Store
+Thumbs.db
 
 # Generated assets / binaries
 **/*.pdf
