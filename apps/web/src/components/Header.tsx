@@ -18,8 +18,16 @@ const Header = () => {
     <header className="sticky top-0 bg-background/80 backdrop-blur-md z-50 shadow-sm border-b border-border/50">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-4">
-          <Link to="/" className="text-2xl font-bold">
-            QiAlly
+          <Link
+            to="/"
+            className="flex items-center space-x-2 text-2xl font-bold"
+          >
+            <img
+              src="https://res.cloudinary.com/dp5b5fymz/image/upload/v1755927329/qibird.svg"
+              alt="QiAlly Logo"
+              className="w-8 h-8"
+            />
+            <span>QiAlly</span>
           </Link>
 
           <nav className="hidden md:flex items-center space-x-8">
@@ -38,7 +46,13 @@ const Header = () => {
             ))}
           </nav>
 
-          <div className="flex items-center">
+          <div className="flex items-center space-x-4">
+            <a
+              href="https://portal.qially.com/auth/login"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Login
+            </a>
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-accent"
@@ -97,6 +111,13 @@ const Header = () => {
               {link.text}
             </NavLink>
           ))}
+          <a
+            href="https://portal.qially.com/auth/login"
+            onClick={() => setIsOpen(false)}
+            className="block bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md text-center font-medium mt-4"
+          >
+            Login
+          </a>
         </nav>
       )}
     </header>

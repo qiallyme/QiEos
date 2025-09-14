@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Directory Mapper</title>
+    <style>
+      body { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial; margin: 0; }
+      .wrap { display: grid; grid-template-rows: auto 1fr; height: 100vh; }
+      header { padding: 12px 16px; border-bottom: 1px solid #e5e7eb; }
+      main { display: grid; grid-template-columns: 320px 1fr; height: calc(100vh - 49px); }
+      .panel { padding: 16px; border-right: 1px solid #e5e7eb; }
+      .out { padding: 16px; }
+      input[type="text"], select { width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 8px; }
+      label { font-size: 12px; color: #374151; display: block; margin-top: 12px; }
+      button { padding: 8px 12px; border-radius: 8px; border: 1px solid #111827; background: #111827; color: white; cursor: pointer; }
+      button.secondary { background: #f3f4f6; color: #111827; border-color: #e5e7eb; }
+      textarea { width: 100%; height: calc(100vh - 120px); border: 1px solid #d1d5db; border-radius: 8px; padding: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: 12px; white-space: pre; }
+      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .muted { color: #6b7280; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <strong>Directory Mapper</strong>
+      </header>
+      <main>
+        <div class="panel">
+          <label>Directory path</label>
+          <input id="dir" type="text" placeholder="C:\Projects\QiLife" />
+
+          <div class="row">
+            <label>Max depth</label>
+            <label>Show files</label>
+          </div>
+          <div class="row">
+            <select id="depth">
+              <option value="all">All</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+            </select>
+            <select id="files">
+              <option value="true" selected>Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+
+          <label>Include hidden</label>
+          <select id="hidden">
+            <option value="true" selected>Yes</option>
+            <option value="false">No</option>
+          </select>
+
+          <div style="margin-top: 16px; display:flex; gap:8px;">
+            <button id="run">Run</button>
+            <button id="copy" class="secondary">Copy Output</button>
+          </div>
+
+          <p class="muted" id="status"></p>
+        </div>
+        <div class="out">
+          <textarea id="out" placeholder="Tree output will appear here..."></textarea>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const port = 8750; // keep in sync with miniapp.json args
+      $("run").onclick = async () => {
+        const payload = {
+          directory: $("dir").value,
+          show_files: $("files").value === "true",
+          include_hidden: $("hidden").value === "true",
+          max_depth: $("depth").value
+        };
+        $("status").textContent = "Running...";
+        $("out").value = "";
+        try {
+          const res = await fetch(`http://127.0.0.1:${port}/run`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (data.ok) {
+            $("status").textContent = "Done. Saved to: " + data.path;
+            $("out").value = data.tree;
+          } else {
+            $("status").textContent = "Error: " + (data.error || "unknown");
+          }
+        } catch (e) {
+          $("status").textContent = "Error contacting backend: " + e;
+        }
+      };
+      $("copy").onclick = async () => {
+        try {
+          await navigator.clipboard.writeText($("out").value || "");
+          $("status").textContent = "Copied.";
+        } catch {}
+      };
+    </script>
+  </body>
+</html>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
@@ -8,8 +8,32 @@ export function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { signIn, signInWithMagicLink } = useAuth();
+  const { signIn, signInWithMagicLink, claims } = useAuth();
   const navigate = useNavigate();
+
+  // Extract client slug from current domain
+  const getClientSlugFromDomain = () => {
+    const hostname = window.location.hostname;
+    if (
+      hostname.includes(".qially.com") &&
+      !hostname.startsWith("www.") &&
+      !hostname.startsWith("portal.")
+    ) {
+      return hostname.split(".")[0];
+    }
+    return null;
+  };
+
+  const clientSlug = getClientSlugFromDomain();
+
+  // Helper function to get redirect URL based on user's client slug
+  const getRedirectUrl = (userClaims: any) => {
+    if (userClaims?.client_slug) {
+      return `https://${userClaims.client_slug}.qially.com`;
+    }
+    // Fallback to main site for users without a specific client slug
+    return "https://qially.com";
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,13 +42,21 @@ export function Login() {
 
     try {
       await signIn(email, password);
-      navigate("/client");
+      // Wait for claims to be loaded, then redirect
+      // The redirect will happen in the useEffect below
     } catch (err: any) {
       setError(err.message || "Login failed");
-    } finally {
       setLoading(false);
     }
   };
+
+  // Handle redirect after successful login and claims are loaded
+  useEffect(() => {
+    if (claims && !loading) {
+      const redirectUrl = getRedirectUrl(claims);
+      window.location.href = redirectUrl;
+    }
+  }, [claims, loading]);
 
   const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +64,7 @@ export function Login() {
     setError("");
 
     try {
-      await signInWithMagicLink(email);
+      await signInWithMagicLink(email, clientSlug || undefined);
       setError("If the email exists, a sign-in link was sent.");
     } catch (err: any) {
       setError(err.message || "Failed to send magic link");

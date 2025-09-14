@@ -1,0 +1,59 @@
+{
+  "crawl_info": {
+    "base_url": "https://access.qially.com/support",
+    "max_pages": 3,
+    "max_chars_per_page": 15000,
+    "crawled_at": "2025-09-09T06:02:07.004610",
+    "total_pages": 3
+  },
+  "pages": [
+    {
+      "slug": "support",
+      "url": "https://access.qially.com/support",
+      "title": "",
+      "short_summary": ".",
+      "bullets": [
+        "Additional information available",
+        "Additional information available",
+        "Additional information available",
+        "Additional information available",
+        "Additional information available"
+      ],
+      "rag_chunk": "Title: \n\n",
+      "status": "success",
+      "crawled_at": "2025-09-09T06:02:03.813180"
+    },
+    {
+      "slug": "support-faq",
+      "url": "https://access.qially.com/support/faq",
+      "title": "",
+      "short_summary": ".",
+      "bullets": [
+        "Additional information available",
+        "Additional information available",
+        "Additional information available",
+        "Additional information available",
+        "Additional information available"
+      ],
+      "rag_chunk": "Title: \n\n",
+      "status": "success",
+      "crawled_at": "2025-09-09T06:02:04.881732"
+    },
+    {
+      "slug": "support-contact",
+      "url": "https://access.qially.com/support/contact",
+      "title": "",
+      "short_summary": ".",
+      "bullets": [
+        "Additional information available",
+        "Additional information available",
+        "Additional information available",
+        "Additional information available",
+        "Additional information available"
+      ],
+      "rag_chunk": "Title: \n\n",
+      "status": "success",
+      "crawled_at": "2025-09-09T06:02:05.972158"
+    }
+  ]
+}

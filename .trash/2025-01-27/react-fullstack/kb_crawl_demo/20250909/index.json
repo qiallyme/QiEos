@@ -1,0 +1,59 @@
+{
+  "crawl_info": {
+    "base_url": "https://docs.python.org/3/tutorial/",
+    "max_pages": 3,
+    "max_chars_per_page": 15000,
+    "crawled_at": "2025-09-09T06:03:59.807099",
+    "total_pages": 3
+  },
+  "pages": [
+    {
+      "slug": "3-tutorial-introduction-html",
+      "url": "https://docs.python.org/3/tutorial/introduction.html",
+      "title": "3. An Informal Introduction to Python \u2014 Python 3.13.7 documentation",
+      "short_summary": "3. An Informal Introduction to Python \u00c2\u00b6 In the following examples, input and output are distinguished by the presence or absence of prompts ( >>> and \u00e2\u0080\u00a6 ): to repeat the example, you must type everything after the prompt, when the prompt appears; lines that do not begin with a prompt are output from the interpreter.",
+      "bullets": [
+        "Section: 3. An Informal Introduction to Python\u00c2\u00b6",
+        "Key topic: word",
+        "Key topic: string",
+        "Additional information available",
+        "Additional information available"
+      ],
+      "rag_chunk": "Title: 3. An Informal Introduction to Python \u2014 Python 3.13.7 documentation\n\nSections: 3. An Informal Introduction to Python\u00c2\u00b6\n\n3. An Informal Introduction to Python \u00c2\u00b6 In the following examples, input and output are distinguished by the presence or absence of prompts ( >>> and \u00e2\u0080\u00a6 ): to repeat the example, you must type everything after the prompt, when the prompt appears; lines that do not begin with a prompt are output from the interpreter. Note that a secondary prompt on a line by itself in an example means you must type a blank line; this is used to end a multi-line command. You can use the \u00e2\u0080\u009cCopy\u00e2\u0080\u009d button (it appears in the upper-right corner when hovering over or tapping a code example), which strips prompts and omits output, to copy and paste the input lines into your interpreter. Many of the examples in this manual, even those entered at the interactive prompt, include comments. Comments in Python start with the hash character, # , and extend to the end of the physical line. A comment may appear at the start of a line or following whitespace or code, but not within a string literal. A hash character within a string literal is just a hash character. Since comments are to clarify code and are not interpreted by Python, they may be omitted when typing in examples. Some examples: # this is the first comment spam = 1 # and this is the second comment # ... and now a third! text = \"# This is not a comment because it's inside quotes.\" 3.1. Using Python as a Calculator \u00c2\u00b6 Le",
+      "status": "success",
+      "crawled_at": "2025-09-09T06:03:51.983467"
+    },
+    {
+      "slug": "3-tutorial-controlflow-html",
+      "url": "https://docs.python.org/3/tutorial/controlflow.html",
+      "title": "4. More Control Flow Tools \u2014 Python 3.13.7 documentation",
+      "short_summary": "4. More Control Flow Tools \u00c2\u00b6 As well as the while statement just introduced, Python uses a few more that we will encounter in this chapter.",
+      "bullets": [
+        "Section: 4. More Control Flow Tools\u00c2\u00b6",
+        "Key topic: print",
+        "Key topic: case",
+        "Additional information available",
+        "Additional information available"
+      ],
+      "rag_chunk": "Title: 4. More Control Flow Tools \u2014 Python 3.13.7 documentation\n\nSections: 4. More Control Flow Tools\u00c2\u00b6\n\n4. More Control Flow Tools \u00c2\u00b6 As well as the while statement just introduced, Python uses a few more that we will encounter in this chapter. 4.1. if Statements \u00c2\u00b6 Perhaps the most well-known statement type is the if statement. For example: >>> x = int ( input ( \"Please enter an integer: \" )) Please enter an integer: 42 >>> if x < 0 : ... x = 0 ... print ( 'Negative changed to zero' ) ... elif x == 0 : ... print ( 'Zero' ) ... elif x == 1 : ... print ( 'Single' ) ... else : ... print ( 'More' ) ... More There can be zero or more elif parts, and the else part is optional. The keyword \u00e2\u0080\u0098 elif \u00e2\u0080\u0099 is short for \u00e2\u0080\u0098else if\u00e2\u0080\u0099, and is useful to avoid excessive indentation. An if \u00e2\u0080\u00a6 elif \u00e2\u0080\u00a6 elif \u00e2\u0080\u00a6 sequence is a substitute for the switch or case statements found in other languages. If you\u00e2\u0080\u0099re comparing the same value to several constants, or checking for specific types or attributes, you may also find the match statement useful. For more details see match Statements . 4.2. for Statements \u00c2\u00b6 The for statement in Python differs a bit from what you may be used to in C or Pascal. Rather than always iterating over an arithmetic progression of numbers (like in Pascal), or giving the user the ability to define both the iteration step and halting condition (as C), Python\u00e2\u0080\u0099s for statement iterates over the items of any sequence (a list or a string), in the order that they appear in t",
+      "status": "success",
+      "crawled_at": "2025-09-09T06:03:54.437102"
+    },
+    {
+      "slug": "3-tutorial-datastructures-html",
+      "url": "https://docs.python.org/3/tutorial/datastructures.html",
+      "title": "5. Data Structures \u2014 Python 3.13.7 documentation",
+      "short_summary": "5. Data Structures \u00c2\u00b6 This chapter describes some things you\u00e2\u0080\u0099ve learned about already in more detail, and adds some new things as well.",
+      "bullets": [
+        "Section: 5. Data Structures\u00c2\u00b6",
+        "Key topic: list",
+        "Key topic: lists",
+        "Additional information available",
+        "Additional information available"
+      ],
+      "rag_chunk": "Title: 5. Data Structures \u2014 Python 3.13.7 documentation\n\nSections: 5. Data Structures\u00c2\u00b6\n\n5. Data Structures \u00c2\u00b6 This chapter describes some things you\u00e2\u0080\u0099ve learned about already in more detail, and adds some new things as well. 5.1. More on Lists \u00c2\u00b6 The list data type has some more methods. Here are all of the methods of list objects: list. append ( x ) Add an item to the end of the list. Similar to a[len(a):] = [x] . list. extend ( iterable ) Extend the list by appending all the items from the iterable. Similar to a[len(a):] = iterable . list. insert ( i , x ) Insert an item at a given position. The first argument is the index of the element before which to insert, so a.insert(0, x) inserts at the front of the list, and a.insert(len(a), x) is equivalent to a.append(x) . list. remove ( x ) Remove the first item from the list whose value is equal to x . It raises a ValueError if there is no such item. list. pop ( [ i ] ) Remove the item at the given position in the list, and return it. If no index is specified, a.pop() removes and returns the last item in the list. It raises an IndexError if the list is empty or the index is outside the list range. list. clear ( ) Remove all items from the list. Similar to del a[:] . list. index ( x [ , start [ , end ] ] ) Return zero-based index of the first occurrence of x in the list. Raises a ValueError if there is no such item. The optional arguments start and end are interpreted as in the slice notation and are used to limit the search to",
+      "status": "success",
+      "crawled_at": "2025-09-09T06:03:57.405507"
+    }
+  ]
+}

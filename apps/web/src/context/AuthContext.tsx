@@ -10,6 +10,7 @@ export interface Claims {
   company_ids: string[];
   department: string;
   features: Record<string, boolean>;
+  client_slug?: string;
 }
 
 interface AuthContextType {
@@ -67,13 +68,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Send magic link to email
-  const signInWithMagicLink = async (email: string) => {
-    const redirectBase =
-      import.meta.env.VITE_SITE_URL || window.location.origin;
-    const emailRedirectTo = `${redirectBase}/auth/login`;
+  const signInWithMagicLink = async (email: string, clientSlug?: string) => {
+    // Determine redirect URL based on client slug
+    let emailRedirectTo: string;
+    if (clientSlug) {
+      emailRedirectTo = `https://${clientSlug}.qially.com/auth/callback`;
+    } else {
+      emailRedirectTo = "https://portal.qially.com/auth/callback";
+    }
+
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo },
+      options: {
+        emailRedirectTo,
+        shouldCreateUser: true,
+      },
     });
     if (error) throw error;
   };

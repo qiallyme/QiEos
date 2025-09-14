@@ -23,7 +23,14 @@ export function Header({ isSidebarOpen, onMenuToggle }: HeaderProps) {
               <Menu className="h-5 w-5" />
             )}
           </Button>
-          <h1 className="text-xl font-semibold text-white">QiPortals</h1>
+          <div className="flex items-center space-x-2">
+            <img
+              src="https://res.cloudinary.com/dp5b5fymz/image/upload/v1755927329/qibird.svg"
+              alt="QiAlly Logo"
+              className="w-6 h-6"
+            />
+            <h1 className="text-xl font-semibold text-white">QiPortals</h1>
+          </div>
         </div>
 
         <div className="flex items-center gap-2">

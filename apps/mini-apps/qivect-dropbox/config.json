@@ -1,0 +1,6 @@
+{
+  "name": "qivect-dropbox",
+  "description": "Vector sync with Dropbox (demo stub).",
+  "host": "127.0.0.1",
+  "port": 0
+}

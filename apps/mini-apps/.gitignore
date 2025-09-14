@@ -1,0 +1,23 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Archives & temp
+*.zip
+*.log
+*.tmp
+
+# Node (if you ever add tooling)
+node_modules/
+
+# Keep static_build in repo (Cloudflare Pages serves it)
+# static_build/

@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.7.3
+    restart: unless-stopped
+    environment:
+      QDRANT__SERVICE__HOST: 0.0.0.0
+    volumes:
+      - qdrant_data:/qdrant/storage
+    ports:
+      - "6333:6333"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - qdrant
+    environment:
+      - DATA_ROOT=${DATA_ROOT:-/data}
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-bge-small-en-v1.5}
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.1:8b}
+      - TIER_COLLECTIONS=${TIER_COLLECTIONS:-UNCLASS:q_unclass,CLASSIFIED:q_classified,ULTRA:q_ultra,MEO:q_meo}
+      - FOLDER_TIERS=${FOLDER_TIERS:-unclass:UNCLASS,classified:CLASSIFIED,ultra:ULTRA,meo:MEO}
+      - TIER_POLICIES=${TIER_POLICIES:-"{\"UNCLASS\": true, \"CLASSIFIED\": true, \"ULTRA\": false, \"MEO\": false}"}
+      - CLOUD_ENDPOINT=${CLOUD_ENDPOINT:-}
+      - CHUNK_SIZE=${CHUNK_SIZE:-800}
+      - CHUNK_OVERLAP=${CHUNK_OVERLAP:-100}
+      - TOP_K=${TOP_K:-5}
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - ${DATA_ROOT:-./data}:${DATA_ROOT:-/data}
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+  # Optional: Ollama service for local LLM inference.  Remove if using a remote LLM provider.
+  ollama:
+    image: ollama/ollama:0.1.16
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+volumes:
+  qdrant_data:
+  ollama_data:

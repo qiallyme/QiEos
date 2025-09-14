@@ -1,0 +1,71 @@
+{
+  "name": "qi_rag_private",
+  "version": "1.0.0",
+  "description": "Private RAG (Retrieval-Augmented Generation) service with multimodal capabilities",
+  "mode": "hybrid",
+  "entry_point": "app.py",
+  "dependencies": [
+    "fastapi",
+    "uvicorn",
+    "langchain",
+    "chromadb",
+    "openai",
+    "supabase"
+  ],
+  "exposed_components": [
+    "ChatInterface",
+    "DocumentUploader",
+    "Visualization3D",
+    "ARVisualization"
+  ],
+  "api_endpoints": [
+    "/chat",
+    "/ingest",
+    "/documents",
+    "/visualization",
+    "/health"
+  ],
+  "config_schema": {
+    "type": "object",
+    "properties": {
+      "openai_api_key": {
+        "type": "string",
+        "description": "OpenAI API key for embeddings and LLM"
+      },
+      "gemini_api_key": {
+        "type": "string",
+        "description": "Google Gemini API key for multimodal features"
+      },
+      "chroma_persist_directory": {
+        "type": "string",
+        "default": "./chroma_data",
+        "description": "Directory for ChromaDB persistence"
+      },
+      "max_tokens": {
+        "type": "integer",
+        "default": 1000,
+        "description": "Maximum tokens for LLM responses"
+      },
+      "chunk_size": {
+        "type": "integer",
+        "default": 1000,
+        "description": "Document chunk size for processing"
+      }
+    },
+    "required": ["openai_api_key"]
+  },
+  "permissions": [
+    "read_documents",
+    "write_documents",
+    "delete_documents",
+    "chat",
+    "visualize"
+  ],
+  "metadata": {
+    "category": "ai",
+    "tags": ["rag", "llm", "multimodal", "visualization"],
+    "author": "QiLife-Eos Team",
+    "license": "MIT",
+    "repository": "https://github.com/qilife-eos/qi_rag_private"
+  }
+}

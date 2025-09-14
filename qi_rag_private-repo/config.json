@@ -1,0 +1,6 @@
+{
+  "name": "qi_rag_private",
+  "description": "Private RAG stack (demo stub).",
+  "host": "127.0.0.1",
+  "port": 0
+}

@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>🔱 EmpowerQNow713 — Bilingual Reader</title>
+  <style>
+    :root{--bg:#0b0b10;--panel:#12121a;--ink:#e8e8f0;--muted:#a8a8bb;--accent:#7c5cff;--accent2:#b27cff}
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#0b0b10,#0f0f16);color:var(--ink);font:16px/1.6 system-ui,Segoe UI,Roboto,Arial}
+    .app{display:grid;grid-template-columns:320px 1fr;min-height:100vh}
+    aside{background:var(--panel);border-right:1px solid #202032;padding:16px;position:sticky;top:0;height:100vh;overflow:auto}
+    header{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+    .logo{font-size:20px;font-weight:800}.tag{font-size:12px;color:var(--muted);background:#1a1a26;border:1px solid #26263a;padding:2px 8px;border-radius:999px}
+    .search{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #2a2a3f;background:#0f0f18;color:var(--ink);outline:none;margin:12px 0}
+    .list{display:flex;flex-direction:column;gap:6px}.item{padding:10px 12px;border:1px solid #23233a;border-radius:10px;background:#11111a;cursor:pointer}
+    .item.active{border-color:var(--accent);box-shadow:0 0 0 2px #7c5cff22}
+    main{padding:24px 6vw}
+    .topbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:18px}
+    .switch{display:inline-flex;gap:6px;align-items:center;background:#151522;border:1px solid #26263a;padding:6px 10px;border-radius:999px}
+    .switch button{background:transparent;border:0;color:var(--muted);padding:6px 10px;border-radius:999px;cursor:pointer}
+    .switch button.active{color:#111;background:linear-gradient(90deg,var(--accent),var(--accent2));font-weight:700}
+    h1,h2,h3{line-height:1.25} h1{font-size:28px;margin:6px 0 4px} h2{font-size:20px;margin:18px 0 8px;color:#dcdcff} h3{font-size:18px;margin:14px 0 6px;color:#cfcfee}
+    .meta{color:var(--muted);font-size:14px;margin-bottom:4px}
+    .card{background:#0f0f18;border:1px solid #23233a;border-radius:14px;padding:18px;margin:14px 0}
+    .col{display:grid;gap:12px}
+    .both{grid-template-columns:1fr 1fr}
+    .en{border-left:3px solid var(--accent);padding-left:12px}
+    .es{border-left:3px solid var(--accent2);padding-left:12px}
+    .footer{margin-top:32px;color:var(--muted);font-size:13px}
+    .hidden{display:none}
+    @media(max-width:900px){.app{grid-template-columns:1fr}aside{position:relative;height:auto}}
+  
+  .suggest{padding:8px 10px;border:1px solid #23233a;border-radius:10px;background:#11111a;margin:6px 0}
+  .suggest em{opacity:.8}
+  .hc body, body.hc{filter:contrast(1.2) saturate(1.1)}
+  .light body, body.light{background:#fafafa;color:#111}
+  .light aside{background:#fff;border-color:#eee}
+  .light .item{background:#fff;border-color:#eee}
+  .light .card{background:#fff;border-color:#eee}
+
+  .bottombar{position:fixed;bottom:0;left:0;right:0;background:#12121a;border-top:1px solid #23233a;display:flex;gap:8px;justify-content:space-around;padding:10px}
+  .bottombar button,.bottombar a{min-width:44px;min-height:44px;padding:10px 14px;border-radius:12px;border:1px solid #23233a;background:#0f0f18;color:#e8e8f0;text-decoration:none}
+  @media(max-width:900px){main{padding-bottom:80px}}
+</style>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js">
+document.addEventListener('keydown', (e)=>{
+  if(e.target.matches('input,textarea')) return;
+  if(e.key==='1') setMode('EN');
+  if(e.key==='2') setMode('ES');
+  if(e.key==='3') setMode('BOTH');
+  if(e.key.toLowerCase()==='f'){ document.getElementById('q').focus(); e.preventDefault(); }
+});
+// Daily card = random non-empty line from merged EN
+document.getElementById('daily').onclick = async ()=>{
+  const en = await fetch('/static_build/merged_en.md').then(r=>r.text()).catch(()=>'');
+  const lines = en.split('\n').map(x=>x.trim()).filter(x=>x && !x.startsWith('# Source:'));
+  const pick = lines[Math.floor(Math.random()*lines.length)] || '(no content)';
+  alert('Daily Card:\n\n' + pick);
+};
+// Copy snippet
+document.getElementById('copy').onclick = ()=>{
+  const sel = window.getSelection().toString().trim();
+  if(!sel){ alert('Select some text first.'); return; }
+  navigator.clipboard.writeText(sel).then(()=>alert('Copied!')).catch(()=>alert('Copy failed'));
+};
+
+/* Q-extended features */
+const themeBtn = document.getElementById('themeToggle');
+const shareBtn = document.getElementById('sharecard');
+const suggestBox = document.getElementById('suggestions');
+
+(function(){
+  const saved = localStorage.getItem('theme') || 'dark';
+  setTheme(saved);
+})();
+function setTheme(t){
+  document.body.classList.remove('light','hc');
+  if(t==='light') document.body.classList.add('light');
+  if(t==='hc') document.body.classList.add('hc');
+  localStorage.setItem('theme', t);
+}
+themeBtn?.addEventListener('click', ()=>{
+  const cur = localStorage.getItem('theme') || 'dark';
+  const nxt = cur==='dark' ? 'light' : (cur==='light' ? 'hc' : 'dark');
+  setTheme(nxt);
+});
+
+let SEARCH = [];
+fetch('/static_build/search_index.json').then(r=>r.json()).then(d=>SEARCH=d).catch(()=>{});
+document.getElementById('q').addEventListener('input', e=>{
+  const q = e.target.value.trim().toLowerCase();
+  suggestBox.innerHTML='';
+  if(!q){ return; }
+  const hits = SEARCH.filter(x=> (x.text||'').toLowerCase().includes(q)).slice(0,8);
+  suggestBox.innerHTML = hits.map(h=>`<li class="suggest" data-id="${h.id}"><strong>${h.title||'(untitled)'}</strong><br><em>${h.lang.toUpperCase()}</em> — ${h.snippet}</li>`).join('');
+  suggestBox.querySelectorAll('.suggest').forEach(li=>li.onclick=()=>{
+    const id = li.getAttribute('data-id');
+    const m = id.match(/(en|es)-L(\d+)/);
+    if(!m) return;
+    const line = parseInt(m[2],10);
+    window.open('/static_build/paired.html#L'+line, '_blank');
+  });
+});
+
+(function(){
+  const today = new Date().toISOString().slice(0,10);
+  const data = JSON.parse(localStorage.getItem('streak')||'{"last":"","count":0,"streak":0}');
+  function bump(){
+    if(data.last !== today){
+      data.last = today;
+      data.streak = (data.count>0)? (data.streak+1) : data.streak;
+      data.count = 0;
+    }
+    localStorage.setItem('streak', JSON.stringify(data));
+  }
+  bump();
+  let seen = new Set();
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const id = e.target.id;
+        if(id && !seen.has(id)){
+          seen.add(id);
+          data.count += 1;
+          localStorage.setItem('streak', JSON.stringify(data));
+        }
+      }
+    });
+  }, {rootMargin:'0px 0px -60% 0px'});
+  setInterval(()=>{
+    document.querySelectorAll('[id^="L"]').forEach(el=>obs.observe(el));
+  }, 1000);
+})();
+
+function attachLineTools(){
+  document.querySelectorAll('[id^="L"]').forEach(row=>{
+    if(row.querySelector('.deeplink')) return;
+    const btn = document.createElement('button');
+    btn.textContent='¶';
+    btn.className='deeplink';
+    btn.style.marginLeft='8px';
+    btn.style.fontSize='12px';
+    btn.onclick=()=>{
+      const url = location.origin + '/static_build/paired.html#'+row.id;
+      navigator.clipboard.writeText(url).then(()=>alert('Link copied')).catch(()=>{});
+    };
+    row.firstElementChild?.prepend(btn);
+  });
+}
+setInterval(attachLineTools, 1200);
+
+let NOTES=[];
+fetch('/notes/notes.json').then(r=>r.json()).then(d=>NOTES=d).catch(()=>{});
+document.addEventListener('mouseover', (e)=>{
+  const t = e.target;
+  if(!t) return;
+  const text = (t.textContent||'').trim();
+  if(!text) return;
+  const note = NOTES.find(n=> text.includes(n.match));
+  if(!note) return;
+  let tip = document.getElementById('qtip');
+  if(!tip){
+    tip = document.createElement('div');
+    tip.id='qtip';
+    tip.style.position='fixed';
+    tip.style.zIndex='9999';
+    tip.style.maxWidth='360px';
+    tip.style.background='#0f0f18';
+    tip.style.border='1px solid #23233a';
+    tip.style.borderRadius='10px';
+    tip.style.padding='10px 12px';
+    tip.style.boxShadow='0 6px 20px rgba(0,0,0,.3)';
+    document.body.appendChild(tip);
+  }
+  tip.innerHTML = `<strong>${note.source}</strong><br>${note.context}<hr style="border:0;border-top:1px solid #23233a;margin:8px 0"><em>Apply now:</em> ${note.apply_now}`;
+  const r = t.getBoundingClientRect();
+  tip.style.top = (r.bottom + 8) + 'px';
+  tip.style.left = (Math.min(r.left, window.innerWidth-380)) + 'px';
+  tip.style.display='block';
+});
+document.addEventListener('mouseout', (e)=>{
+  const tip = document.getElementById('qtip');
+  if(tip) tip.style.display='none';
+});
+
+shareBtn?.addEventListener('click', ()=>{
+  const sel = window.getSelection().toString().trim();
+  if(!sel){ alert('Select some text first.'); return; }
+  const W=1200, H=630;
+  const cnv = document.createElement('canvas');
+  cnv.width=W; cnv.height=H;
+  const ctx = cnv.getContext('2d');
+  const g = ctx.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,'#0b0b10'); g.addColorStop(1,'#7c5cff');
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#ffffff';
+  ctx.font='bold 42px system-ui, Segoe UI, Roboto';
+  const words = sel.split(/\s+/);
+  let line='', y=160, lh=52, lines=[];
+  for(const w of words){
+    const test = line? line+' '+w : w;
+    if(ctx.measureText(test).width > W-160){
+      lines.push(line); line=w;
+    } else line=test;
+  }
+  if(line) lines.push(line);
+  lines.slice(0,7).forEach((ln,i)=>{
+    ctx.fillText(ln, 80, y + i*lh);
+  });
+  ctx.font='20px system-ui'; ctx.globalAlpha=0.9;
+  ctx.fillText('EmpowerQNow713 — The Living QiDex™', 80, H-80);
+  ctx.globalAlpha=1;
+  const url = cnv.toDataURL('image/png');
+  const a = document.createElement('a');
+  a.href=url; a.download='empowerqnow-quote.png';
+  a.click();
+});
+
+/* mobile + tts hooks */
+document.getElementById('bb_en')?.addEventListener('click', ()=>setMode('EN'));
+document.getElementById('bb_es')?.addEventListener('click', ()=>setMode('ES'));
+document.getElementById('bb_both')?.addEventListener('click', ()=>setMode('BOTH'));
+document.getElementById('bb_daily')?.addEventListener('click', ()=>document.getElementById('daily')?.click());
+document.getElementById('bb_print')?.addEventListener('click', ()=>{});
+
+// TTS (via Cloudflare Worker proxy). Select text → Play
+document.getElementById('speak')?.addEventListener('click', async ()=>{
+  if(!TTS_ENDPOINT){ alert('TTS not configured yet. Deploy the Worker and set TTS_ENDPOINT.'); return; }
+  const sel = window.getSelection().toString().trim();
+  const text = sel || (document.getElementById('content')?.innerText.slice(0, 800) || '');
+  if(!text){ alert('No text to read.'); return; }
+  const lang = (mode==='ES') ? 'es' : 'en';
+  try{
+    const res = await fetch(TTS_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text, lang}) });
+    if(!res.ok) throw new Error('TTS failed');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    audio.play();
+  }catch(e){
+    alert('Could not play audio.');
+  }
+});
+</script>
+  <link rel="manifest" href="/static/manifest.webmanifest">
+  <meta name="theme-color" content="#7c5cff">
+  <script>
+  // Set this to your Cloudflare Worker URL when ready, e.g. https://tts.empowerqnow.com/speak
+  const TTS_ENDPOINT = ""; // leave blank to disable
+  
+/* mobile + tts hooks */
+document.getElementById('bb_en')?.addEventListener('click', ()=>setMode('EN'));
+document.getElementById('bb_es')?.addEventListener('click', ()=>setMode('ES'));
+document.getElementById('bb_both')?.addEventListener('click', ()=>setMode('BOTH'));
+document.getElementById('bb_daily')?.addEventListener('click', ()=>document.getElementById('daily')?.click());
+document.getElementById('bb_print')?.addEventListener('click', ()=>{});
+
+// TTS (via Cloudflare Worker proxy). Select text → Play
+document.getElementById('speak')?.addEventListener('click', async ()=>{
+  if(!TTS_ENDPOINT){ alert('TTS not configured yet. Deploy the Worker and set TTS_ENDPOINT.'); return; }
+  const sel = window.getSelection().toString().trim();
+  const text = sel || (document.getElementById('content')?.innerText.slice(0, 800) || '');
+  if(!text){ alert('No text to read.'); return; }
+  const lang = (mode==='ES') ? 'es' : 'en';
+  try{
+    const res = await fetch(TTS_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text, lang}) });
+    if(!res.ok) throw new Error('TTS failed');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    audio.play();
+  }catch(e){
+    alert('Could not play audio.');
+  }
+});
+</script>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <header>
+        <div class="logo">🔱 EmpowerQNow713</div>
+        <div class="tag">Bilingual</div>
+      </header>
+      <input id="q" class="search" placeholder="Search (EN/ES)…" />
+<ul id="suggestions" class="list"></ul>
+      <div class="list">
+        <div class="item active" data-section="merged">Merged (auto)</div>
+        <div class="item" data-section="files">Browse Files</div>
+      </div>
+      <div id="files" class="list hidden"></div>
+    </aside>
+    <main>
+      <div class="topbar">
+<button id="speak" class="tag" title="Read selected text aloud">Play</button>
+<button id="themeToggle" class="tag">Theme</button>
+<button id="daily" class="tag" title="Pick a random line">Daily Card</button>
+<button id="copy" class="tag" title="Copy selected snippet">Copy Snippet</button>
+<a class="tag" href="/static_build/paired.html" target="_blank">Print/PDF</a>
+        <div class="switch" role="tablist" aria-label="Language">
+          <button id="showEN" class="active" aria-selected="true">EN</button>
+          <button id="showES" aria-selected="false">ES</button>
+          <button id="showBoth" aria-selected="false">EN + ES</button>
+        </div>
+        <div class="tag">Auto-refresh (F5)</div>
+      </div>
+      <article id="content"></article>
+      <div class="footer">© EmpowerQNow713™ — The Living QiDex™ • Drop new .md files into <code>content/en</code> and <code>content/es</code></div>
+    
+    <nav class="bottombar" aria-label="Quick actions">
+      <button id="bb_en">EN</button>
+      <button id="bb_es">ES</button>
+      <button id="bb_both">EN+ES</button>
+      <button id="bb_daily">Daily</button>
+      <a id="bb_print" href="/static_build/paired.html" target="_blank" rel="noopener">Print</a>
+    </nav>
+  </main>
+  </div>
+  <script>
+    const $ = (s)=>document.querySelector(s);
+    const $$ = (s)=>Array.from(document.querySelectorAll(s));
+    const content = $("#content");
+    const filesList = $("#files");
+    const search = $("#q");
+    const tabs = $$(".item");
+    const showEN = $("#showEN"), showES=$("#showES"), showBoth=$("#showBoth");
+    let mode="EN", section="merged", currentFile=null;
+    function setMode(m){
+      mode=m;
+      [showEN,showES,showBoth].forEach(b=>b.classList.remove("active"));
+      ({EN:showEN,ES:showES,BOTH:showBoth})[m].classList.add("active");
+      render();
+    }
+    showEN.onclick=()=>setMode("EN");
+    showES.onclick=()=>setMode("ES");
+    showBoth.onclick=()=>setMode("BOTH");
+    tabs.forEach(t=>t.onclick=()=>{
+      tabs.forEach(x=>x.classList.remove("active"));
+      t.classList.add("active");
+      section=t.dataset.section;
+      filesList.classList.toggle("hidden", section!=="files");
+      if(section==="files"){loadFiles()}
+      render();
+    });
+    search.addEventListener("input", ()=>render());
+    async function loadFiles(){
+      const en = await (await fetch("/api/files/en")).json();
+      const es = await (await fetch("/api/files/es")).json().catch(()=>[]);
+      filesList.innerHTML = en.map(name=>{
+        const hasES = es.includes(name);
+        return `<div class="item" data-name="${name}">${name} ${hasES? "• ES ✓": ""}</div>`
+      }).join("");
+      $$("#files .item").forEach(el=>el.onclick=()=>{
+        currentFile = el.dataset.name;
+        render();
+      });
+    }
+    async function fetchMD(lang, name){
+  async function staticFallback(){
+    const url = `/static_build/merged_${lang}.md`;
+    try { return await (await fetch(url)).text(); } catch { return ''; }
+  }
+
+      if(section==="merged"){
+        try { return await (await fetch(`/api/merged/${lang}`)).text(); } catch { return await staticFallback(); }
+      } else {
+        if(!name) return "";
+        let res = await fetch(`/raw/${lang}/${name}`);
+if(!res.ok){ res = await fetch(`/static_build/merged_${lang}.md`).catch(()=>({ok:false})) }
+        return res.ok? await res.text() : "";
+      }
+    }
+    function highlight(md, q){
+      if(!q) return md;
+      const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),"gi");
+      return md.replace(re, m=>`<mark>${m}</mark>`);
+    }
+    async function render(){
+      const q = search.value.trim();
+      const en = await fetchMD("en", currentFile);
+      const es = await fetchMD("es", currentFile);
+      const enHTML = marked.parse(highlight(en,q));
+      const esHTML = es? marked.parse(highlight(es,q)) : "<p><em>(No ES version for this file yet.)</em></p>";
+      if(mode==="EN"){
+        content.innerHTML = `<div class="card en">${enHTML}</div>`;
+      } else if(mode==="ES"){
+        content.innerHTML = `<div class="card es">${esHTML}</div>`;
+      } else {
+        content.innerHTML = `<div class="col both"><div class="card en">${enHTML}</div><div class="card es">${esHTML}</div></div>`;
+      }
+    }
+    render();
+  
+document.addEventListener('keydown', (e)=>{
+  if(e.target.matches('input,textarea')) return;
+  if(e.key==='1') setMode('EN');
+  if(e.key==='2') setMode('ES');
+  if(e.key==='3') setMode('BOTH');
+  if(e.key.toLowerCase()==='f'){ document.getElementById('q').focus(); e.preventDefault(); }
+});
+// Daily card = random non-empty line from merged EN
+document.getElementById('daily').onclick = async ()=>{
+  const en = await fetch('/static_build/merged_en.md').then(r=>r.text()).catch(()=>'');
+  const lines = en.split('\n').map(x=>x.trim()).filter(x=>x && !x.startsWith('# Source:'));
+  const pick = lines[Math.floor(Math.random()*lines.length)] || '(no content)';
+  alert('Daily Card:\n\n' + pick);
+};
+// Copy snippet
+document.getElementById('copy').onclick = ()=>{
+  const sel = window.getSelection().toString().trim();
+  if(!sel){ alert('Select some text first.'); return; }
+  navigator.clipboard.writeText(sel).then(()=>alert('Copied!')).catch(()=>alert('Copy failed'));
+};
+
+/* Q-extended features */
+const themeBtn = document.getElementById('themeToggle');
+const shareBtn = document.getElementById('sharecard');
+const suggestBox = document.getElementById('suggestions');
+
+(function(){
+  const saved = localStorage.getItem('theme') || 'dark';
+  setTheme(saved);
+})();
+function setTheme(t){
+  document.body.classList.remove('light','hc');
+  if(t==='light') document.body.classList.add('light');
+  if(t==='hc') document.body.classList.add('hc');
+  localStorage.setItem('theme', t);
+}
+themeBtn?.addEventListener('click', ()=>{
+  const cur = localStorage.getItem('theme') || 'dark';
+  const nxt = cur==='dark' ? 'light' : (cur==='light' ? 'hc' : 'dark');
+  setTheme(nxt);
+});
+
+let SEARCH = [];
+fetch('/static_build/search_index.json').then(r=>r.json()).then(d=>SEARCH=d).catch(()=>{});
+document.getElementById('q').addEventListener('input', e=>{
+  const q = e.target.value.trim().toLowerCase();
+  suggestBox.innerHTML='';
+  if(!q){ return; }
+  const hits = SEARCH.filter(x=> (x.text||'').toLowerCase().includes(q)).slice(0,8);
+  suggestBox.innerHTML = hits.map(h=>`<li class="suggest" data-id="${h.id}"><strong>${h.title||'(untitled)'}</strong><br><em>${h.lang.toUpperCase()}</em> — ${h.snippet}</li>`).join('');
+  suggestBox.querySelectorAll('.suggest').forEach(li=>li.onclick=()=>{
+    const id = li.getAttribute('data-id');
+    const m = id.match(/(en|es)-L(\d+)/);
+    if(!m) return;
+    const line = parseInt(m[2],10);
+    window.open('/static_build/paired.html#L'+line, '_blank');
+  });
+});
+
+(function(){
+  const today = new Date().toISOString().slice(0,10);
+  const data = JSON.parse(localStorage.getItem('streak')||'{"last":"","count":0,"streak":0}');
+  function bump(){
+    if(data.last !== today){
+      data.last = today;
+      data.streak = (data.count>0)? (data.streak+1) : data.streak;
+      data.count = 0;
+    }
+    localStorage.setItem('streak', JSON.stringify(data));
+  }
+  bump();
+  let seen = new Set();
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const id = e.target.id;
+        if(id && !seen.has(id)){
+          seen.add(id);
+          data.count += 1;
+          localStorage.setItem('streak', JSON.stringify(data));
+        }
+      }
+    });
+  }, {rootMargin:'0px 0px -60% 0px'});
+  setInterval(()=>{
+    document.querySelectorAll('[id^="L"]').forEach(el=>obs.observe(el));
+  }, 1000);
+})();
+
+function attachLineTools(){
+  document.querySelectorAll('[id^="L"]').forEach(row=>{
+    if(row.querySelector('.deeplink')) return;
+    const btn = document.createElement('button');
+    btn.textContent='¶';
+    btn.className='deeplink';
+    btn.style.marginLeft='8px';
+    btn.style.fontSize='12px';
+    btn.onclick=()=>{
+      const url = location.origin + '/static_build/paired.html#'+row.id;
+      navigator.clipboard.writeText(url).then(()=>alert('Link copied')).catch(()=>{});
+    };
+    row.firstElementChild?.prepend(btn);
+  });
+}
+setInterval(attachLineTools, 1200);
+
+let NOTES=[];
+fetch('/notes/notes.json').then(r=>r.json()).then(d=>NOTES=d).catch(()=>{});
+document.addEventListener('mouseover', (e)=>{
+  const t = e.target;
+  if(!t) return;
+  const text = (t.textContent||'').trim();
+  if(!text) return;
+  const note = NOTES.find(n=> text.includes(n.match));
+  if(!note) return;
+  let tip = document.getElementById('qtip');
+  if(!tip){
+    tip = document.createElement('div');
+    tip.id='qtip';
+    tip.style.position='fixed';
+    tip.style.zIndex='9999';
+    tip.style.maxWidth='360px';
+    tip.style.background='#0f0f18';
+    tip.style.border='1px solid #23233a';
+    tip.style.borderRadius='10px';
+    tip.style.padding='10px 12px';
+    tip.style.boxShadow='0 6px 20px rgba(0,0,0,.3)';
+    document.body.appendChild(tip);
+  }
+  tip.innerHTML = `<strong>${note.source}</strong><br>${note.context}<hr style="border:0;border-top:1px solid #23233a;margin:8px 0"><em>Apply now:</em> ${note.apply_now}`;
+  const r = t.getBoundingClientRect();
+  tip.style.top = (r.bottom + 8) + 'px';
+  tip.style.left = (Math.min(r.left, window.innerWidth-380)) + 'px';
+  tip.style.display='block';
+});
+document.addEventListener('mouseout', (e)=>{
+  const tip = document.getElementById('qtip');
+  if(tip) tip.style.display='none';
+});
+
+shareBtn?.addEventListener('click', ()=>{
+  const sel = window.getSelection().toString().trim();
+  if(!sel){ alert('Select some text first.'); return; }
+  const W=1200, H=630;
+  const cnv = document.createElement('canvas');
+  cnv.width=W; cnv.height=H;
+  const ctx = cnv.getContext('2d');
+  const g = ctx.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,'#0b0b10'); g.addColorStop(1,'#7c5cff');
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#ffffff';
+  ctx.font='bold 42px system-ui, Segoe UI, Roboto';
+  const words = sel.split(/\s+/);
+  let line='', y=160, lh=52, lines=[];
+  for(const w of words){
+    const test = line? line+' '+w : w;
+    if(ctx.measureText(test).width > W-160){
+      lines.push(line); line=w;
+    } else line=test;
+  }
+  if(line) lines.push(line);
+  lines.slice(0,7).forEach((ln,i)=>{
+    ctx.fillText(ln, 80, y + i*lh);
+  });
+  ctx.font='20px system-ui'; ctx.globalAlpha=0.9;
+  ctx.fillText('EmpowerQNow713 — The Living QiDex™', 80, H-80);
+  ctx.globalAlpha=1;
+  const url = cnv.toDataURL('image/png');
+  const a = document.createElement('a');
+  a.href=url; a.download='empowerqnow-quote.png';
+  a.click();
+});
+
+/* mobile + tts hooks */
+document.getElementById('bb_en')?.addEventListener('click', ()=>setMode('EN'));
+document.getElementById('bb_es')?.addEventListener('click', ()=>setMode('ES'));
+document.getElementById('bb_both')?.addEventListener('click', ()=>setMode('BOTH'));
+document.getElementById('bb_daily')?.addEventListener('click', ()=>document.getElementById('daily')?.click());
+document.getElementById('bb_print')?.addEventListener('click', ()=>{});
+
+// TTS (via Cloudflare Worker proxy). Select text → Play
+document.getElementById('speak')?.addEventListener('click', async ()=>{
+  if(!TTS_ENDPOINT){ alert('TTS not configured yet. Deploy the Worker and set TTS_ENDPOINT.'); return; }
+  const sel = window.getSelection().toString().trim();
+  const text = sel || (document.getElementById('content')?.innerText.slice(0, 800) || '');
+  if(!text){ alert('No text to read.'); return; }
+  const lang = (mode==='ES') ? 'es' : 'en';
+  try{
+    const res = await fetch(TTS_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text, lang}) });
+    if(!res.ok) throw new Error('TTS failed');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    audio.play();
+  }catch(e){
+    alert('Could not play audio.');
+  }
+});
+</script>
+  <script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/static/sw.js').catch(()=>{});
+}
+  
+document.addEventListener('keydown', (e)=>{
+  if(e.target.matches('input,textarea')) return;
+  if(e.key==='1') setMode('EN');
+  if(e.key==='2') setMode('ES');
+  if(e.key==='3') setMode('BOTH');
+  if(e.key.toLowerCase()==='f'){ document.getElementById('q').focus(); e.preventDefault(); }
+});
+// Daily card = random non-empty line from merged EN
+document.getElementById('daily').onclick = async ()=>{
+  const en = await fetch('/static_build/merged_en.md').then(r=>r.text()).catch(()=>'');
+  const lines = en.split('\n').map(x=>x.trim()).filter(x=>x && !x.startsWith('# Source:'));
+  const pick = lines[Math.floor(Math.random()*lines.length)] || '(no content)';
+  alert('Daily Card:\n\n' + pick);
+};
+// Copy snippet
+document.getElementById('copy').onclick = ()=>{
+  const sel = window.getSelection().toString().trim();
+  if(!sel){ alert('Select some text first.'); return; }
+  navigator.clipboard.writeText(sel).then(()=>alert('Copied!')).catch(()=>alert('Copy failed'));
+};
+
+/* Q-extended features */
+const themeBtn = document.getElementById('themeToggle');
+const shareBtn = document.getElementById('sharecard');
+const suggestBox = document.getElementById('suggestions');
+
+(function(){
+  const saved = localStorage.getItem('theme') || 'dark';
+  setTheme(saved);
+})();
+function setTheme(t){
+  document.body.classList.remove('light','hc');
+  if(t==='light') document.body.classList.add('light');
+  if(t==='hc') document.body.classList.add('hc');
+  localStorage.setItem('theme', t);
+}
+themeBtn?.addEventListener('click', ()=>{
+  const cur = localStorage.getItem('theme') || 'dark';
+  const nxt = cur==='dark' ? 'light' : (cur==='light' ? 'hc' : 'dark');
+  setTheme(nxt);
+});
+
+let SEARCH = [];
+fetch('/static_build/search_index.json').then(r=>r.json()).then(d=>SEARCH=d).catch(()=>{});
+document.getElementById('q').addEventListener('input', e=>{
+  const q = e.target.value.trim().toLowerCase();
+  suggestBox.innerHTML='';
+  if(!q){ return; }
+  const hits = SEARCH.filter(x=> (x.text||'').toLowerCase().includes(q)).slice(0,8);
+  suggestBox.innerHTML = hits.map(h=>`<li class="suggest" data-id="${h.id}"><strong>${h.title||'(untitled)'}</strong><br><em>${h.lang.toUpperCase()}</em> — ${h.snippet}</li>`).join('');
+  suggestBox.querySelectorAll('.suggest').forEach(li=>li.onclick=()=>{
+    const id = li.getAttribute('data-id');
+    const m = id.match(/(en|es)-L(\d+)/);
+    if(!m) return;
+    const line = parseInt(m[2],10);
+    window.open('/static_build/paired.html#L'+line, '_blank');
+  });
+});
+
+(function(){
+  const today = new Date().toISOString().slice(0,10);
+  const data = JSON.parse(localStorage.getItem('streak')||'{"last":"","count":0,"streak":0}');
+  function bump(){
+    if(data.last !== today){
+      data.last = today;
+      data.streak = (data.count>0)? (data.streak+1) : data.streak;
+      data.count = 0;
+    }
+    localStorage.setItem('streak', JSON.stringify(data));
+  }
+  bump();
+  let seen = new Set();
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const id = e.target.id;
+        if(id && !seen.has(id)){
+          seen.add(id);
+          data.count += 1;
+          localStorage.setItem('streak', JSON.stringify(data));
+        }
+      }
+    });
+  }, {rootMargin:'0px 0px -60% 0px'});
+  setInterval(()=>{
+    document.querySelectorAll('[id^="L"]').forEach(el=>obs.observe(el));
+  }, 1000);
+})();
+
+function attachLineTools(){
+  document.querySelectorAll('[id^="L"]').forEach(row=>{
+    if(row.querySelector('.deeplink')) return;
+    const btn = document.createElement('button');
+    btn.textContent='¶';
+    btn.className='deeplink';
+    btn.style.marginLeft='8px';
+    btn.style.fontSize='12px';
+    btn.onclick=()=>{
+      const url = location.origin + '/static_build/paired.html#'+row.id;
+      navigator.clipboard.writeText(url).then(()=>alert('Link copied')).catch(()=>{});
+    };
+    row.firstElementChild?.prepend(btn);
+  });
+}
+setInterval(attachLineTools, 1200);
+
+let NOTES=[];
+fetch('/notes/notes.json').then(r=>r.json()).then(d=>NOTES=d).catch(()=>{});
+document.addEventListener('mouseover', (e)=>{
+  const t = e.target;
+  if(!t) return;
+  const text = (t.textContent||'').trim();
+  if(!text) return;
+  const note = NOTES.find(n=> text.includes(n.match));
+  if(!note) return;
+  let tip = document.getElementById('qtip');
+  if(!tip){
+    tip = document.createElement('div');
+    tip.id='qtip';
+    tip.style.position='fixed';
+    tip.style.zIndex='9999';
+    tip.style.maxWidth='360px';
+    tip.style.background='#0f0f18';
+    tip.style.border='1px solid #23233a';
+    tip.style.borderRadius='10px';
+    tip.style.padding='10px 12px';
+    tip.style.boxShadow='0 6px 20px rgba(0,0,0,.3)';
+    document.body.appendChild(tip);
+  }
+  tip.innerHTML = `<strong>${note.source}</strong><br>${note.context}<hr style="border:0;border-top:1px solid #23233a;margin:8px 0"><em>Apply now:</em> ${note.apply_now}`;
+  const r = t.getBoundingClientRect();
+  tip.style.top = (r.bottom + 8) + 'px';
+  tip.style.left = (Math.min(r.left, window.innerWidth-380)) + 'px';
+  tip.style.display='block';
+});
+document.addEventListener('mouseout', (e)=>{
+  const tip = document.getElementById('qtip');
+  if(tip) tip.style.display='none';
+});
+
+shareBtn?.addEventListener('click', ()=>{
+  const sel = window.getSelection().toString().trim();
+  if(!sel){ alert('Select some text first.'); return; }
+  const W=1200, H=630;
+  const cnv = document.createElement('canvas');
+  cnv.width=W; cnv.height=H;
+  const ctx = cnv.getContext('2d');
+  const g = ctx.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,'#0b0b10'); g.addColorStop(1,'#7c5cff');
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#ffffff';
+  ctx.font='bold 42px system-ui, Segoe UI, Roboto';
+  const words = sel.split(/\s+/);
+  let line='', y=160, lh=52, lines=[];
+  for(const w of words){
+    const test = line? line+' '+w : w;
+    if(ctx.measureText(test).width > W-160){
+      lines.push(line); line=w;
+    } else line=test;
+  }
+  if(line) lines.push(line);
+  lines.slice(0,7).forEach((ln,i)=>{
+    ctx.fillText(ln, 80, y + i*lh);
+  });
+  ctx.font='20px system-ui'; ctx.globalAlpha=0.9;
+  ctx.fillText('EmpowerQNow713 — The Living QiDex™', 80, H-80);
+  ctx.globalAlpha=1;
+  const url = cnv.toDataURL('image/png');
+  const a = document.createElement('a');
+  a.href=url; a.download='empowerqnow-quote.png';
+  a.click();
+});
+
+/* mobile + tts hooks */
+document.getElementById('bb_en')?.addEventListener('click', ()=>setMode('EN'));
+document.getElementById('bb_es')?.addEventListener('click', ()=>setMode('ES'));
+document.getElementById('bb_both')?.addEventListener('click', ()=>setMode('BOTH'));
+document.getElementById('bb_daily')?.addEventListener('click', ()=>document.getElementById('daily')?.click());
+document.getElementById('bb_print')?.addEventListener('click', ()=>{});
+
+// TTS (via Cloudflare Worker proxy). Select text → Play
+document.getElementById('speak')?.addEventListener('click', async ()=>{
+  if(!TTS_ENDPOINT){ alert('TTS not configured yet. Deploy the Worker and set TTS_ENDPOINT.'); return; }
+  const sel = window.getSelection().toString().trim();
+  const text = sel || (document.getElementById('content')?.innerText.slice(0, 800) || '');
+  if(!text){ alert('No text to read.'); return; }
+  const lang = (mode==='ES') ? 'es' : 'en';
+  try{
+    const res = await fetch(TTS_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text, lang}) });
+    if(!res.ok) throw new Error('TTS failed');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    audio.play();
+  }catch(e){
+    alert('Could not play audio.');
+  }
+});
+</script>
+</body>
+</html>

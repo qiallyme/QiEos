@@ -1,0 +1,12 @@
+[
+  {
+    "title": "Communication: Quick ESL Lesson",
+    "section": "Basics",
+    "path": "lessons/Basics/communication.md"
+  },
+  {
+    "title": "Sample Lesson",
+    "section": "General",
+    "path": "lessons/sample.md"
+  }
+]

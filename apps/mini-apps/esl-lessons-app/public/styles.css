@@ -1,0 +1,20 @@
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,'Noto Sans',sans-serif;color:#0f172a;background:#0b1220}
+#app{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
+.sidebar{background:#0f172a;border-right:1px solid #1f2937;padding:16px;display:flex;flex-direction:column;gap:12px;position:sticky;top:0;height:100vh}
+.brand{font-weight:800;color:#e2e8f0;font-size:20px;letter-spacing:.5px}
+#search{padding:10px 12px;border-radius:12px;border:1px solid #334155;background:#0b1220;color:#e2e8f0;outline:none}
+#search:focus{border-color:#60a5fa}
+#nav{overflow:auto;flex:1;scrollbar-gutter:stable}
+.section{margin:12px 0}
+.section h3{margin:8px 0;color:#cbd5e1;font-size:13px;text-transform:uppercase;letter-spacing:.08em}
+ul.lessons{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+ul.lessons li a{display:block;padding:8px 10px;border-radius:10px;color:#cbd5e1;text-decoration:none;border:1px solid transparent}
+ul.lessons li a:hover{background:#0b1220;border-color:#334155;color:#e2e8f0}
+ul.lessons li a.active{background:#111827;border-color:#374151;color:#fff}
+.content{padding:24px 24px 64px;max-width:900px}
+.content article{background:#0b1220;border:1px solid #1f2937;border-radius:16px;padding:24px;color:#e5e7eb;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.content h1,.content h2,.content h3{color:#fff}
+.content pre{padding:12px;border-radius:12px;background:#0b0f1a;overflow:auto;border:1px solid #1f2937}
+.content code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace}
+a{color:#93c5fd}
+@media (max-width: 900px){#app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.content{padding:12px}}

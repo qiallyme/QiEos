@@ -1,0 +1,10 @@
+{
+  "name": "QiTaskWorker",
+  "version": "0.2.0",
+  "type": "service",
+  "entry": "app/scripts/run_worker.bat",
+  "entry_unix": "app/scripts/run_worker.sh",
+  "health_url": "http://localhost:7130/health",
+  "port": 7130,
+  "description": "Remote job worker for offloading tasks over LAN/Tailscale."
+}

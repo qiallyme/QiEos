@@ -1,0 +1,14 @@
+[
+  {
+    "name": "qivect-dropbox",
+    "path": "miniapps/qivect-dropbox",
+    "description": "Example miniapp that demonstrates a simple dropbox integration",
+    "entry": "app.py"
+  },
+  {
+    "name": "qi_rag_private",
+    "path": "miniapps/qi_rag_private",
+    "description": "A stub miniapp representing a private RAG service",
+    "entry": "app.py"
+  }
+]

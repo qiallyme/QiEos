@@ -1,0 +1,55 @@
+{
+  "name": "qivect-dropbox",
+  "version": "1.0.0",
+  "description": "Vector sync with Dropbox integration for document management",
+  "mode": "hybrid",
+  "entry_point": "app.py",
+  "dependencies": [
+    "flask",
+    "dropbox",
+    "requests"
+  ],
+  "exposed_components": [
+    "DropboxSync",
+    "FileManager",
+    "SyncStatus"
+  ],
+  "api_endpoints": [
+    "/",
+    "/health",
+    "/sync",
+    "/files"
+  ],
+  "config_schema": {
+    "type": "object",
+    "properties": {
+      "dropbox_access_token": {
+        "type": "string",
+        "description": "Dropbox API access token"
+      },
+      "sync_interval": {
+        "type": "integer",
+        "default": 300,
+        "description": "Sync interval in seconds"
+      },
+      "local_path": {
+        "type": "string",
+        "default": "./dropbox_sync",
+        "description": "Local path for synced files"
+      }
+    },
+    "required": ["dropbox_access_token"]
+  },
+  "permissions": [
+    "read_files",
+    "write_files",
+    "sync_dropbox"
+  ],
+  "metadata": {
+    "category": "storage",
+    "tags": ["dropbox", "sync", "file-management"],
+    "author": "QiLife-Eos Team",
+    "license": "MIT",
+    "repository": "https://github.com/qilife-eos/qivect-dropbox"
+  }
+}

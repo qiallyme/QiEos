@@ -1,0 +1,11 @@
+{
+  "name": "esl-lessons-app",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/generate-index.mjs",
+    "start": "npx http-server public -p 8080 -c-1"
+  },
+  "devDependencies": {}
+}

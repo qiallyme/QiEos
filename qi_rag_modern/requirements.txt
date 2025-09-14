@@ -1,0 +1,32 @@
+# Core RAG Framework
+langchain==0.2.0
+langchain-community==0.2.0
+langchain-openai==0.1.0
+langchain-chroma==0.1.0
+
+# Vector Database
+chromadb==0.4.22
+
+# Document Processing
+pypdf==4.0.2
+python-docx==1.1.0
+markdown==3.5.2
+
+# Web Framework
+fastapi==0.110.0
+uvicorn[standard]==0.27.1
+python-multipart==0.0.9
+
+# Authentication & Database
+supabase==2.3.4
+python-jose[cryptography]==3.3.0
+
+# Utilities
+python-dotenv==1.0.1
+pydantic==2.6.0
+pydantic-settings==2.2.0
+
+# Development
+pytest==8.0.0
+black==24.1.0
+ruff==0.2.0

@@ -1,0 +1,5 @@
+# Optional configuration. Env vars override.
+port: 7130
+bind_host: 0.0.0.0
+workdir: jobs
+# Set QITASK_PORT, QITASK_BIND, QITASK_WORKDIR to override

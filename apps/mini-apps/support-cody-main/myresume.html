@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cody Rice-Velasquez – Resume</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        /* Custom styles for the Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Remove margin from body to allow the resume content to fill the iframe */
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            /* Light background for the resume */
+            color: #333;
+        }
+
+        /* Specific styles for resume layout to match the image */
+        .section-title {
+            border-bottom: 2px solid #e2e8f0;
+            /* Light border under section titles */
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .experience-item,
+        .education-item {
+            border-left: 4px solid #3b82f6;
+            /* Blue accent bar on the left */
+            padding-left: 1.5rem;
+            margin-bottom: 2rem;
+            background-color: white;
+            /* Card background */
+            border-radius: 8px;
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            /* Soft shadow */
+        }
+
+        .bullet-point::before {
+            content: "•";
+            color: #3b82f6;
+            /* Blue bullet point */
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .icon {
+            /* Base styles for icons/logos in sections */
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            /* Light background for placeholder icons */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            /* Prevent shrinking */
+            margin-right: 1rem;
+            color: #64748b;
+            /* Icon color */
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+
+        /* Responsive adjustments for icons */
+        @media (min-width: 640px) {
+            .icon {
+                width: 64px;
+                height: 64px;
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Styling for skill/language cards */
+        .skill-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body class="p-4 sm:p-6 lg:p-8">
+    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+        <!-- Header Section -->
+        <header class="p-6 sm:p-8 bg-blue-700 text-white flex flex-col sm:flex-row items-center sm:items-start gap-6 rounded-t-lg">
+            <div class="flex-shrink-0">
+                <img src="https://placehold.co/120x120/007bff/ffffff?text=Cody" alt="Cody Profile Picture" class="rounded-full w-28 h-28 sm:w-32 sm:h-32 object-cover border-4 border-white shadow-md" />
+            </div>
+            <div class="text-center sm:text-left flex-grow">
+                <h1 class="text-4xl sm:text-5xl font-extrabold mb-2">
+                    Cody Rice–Velasquez
+                </h1>
+                <p class="text-2xl font-semibold text-blue-200">
+                    Multidisciplinary Consultant | Tech & People | Immigration | HR |
+                    Strategy
+                </p>
+                <div class="mt-4 text-lg">
+                    <p class="mb-1">
+                        📧
+                        <a href="mailto:crice4485@gmail.com" class="text-blue-100 hover:underline">crice4485@gmail.com</a>
+                    </p>
+                    <p class="mb-1">📞 (317) 205-4383</p>
+                    <p class="mb-1">📍 Indianapolis, IN</p>
+                    <p>
+                        🔗
+                        <a href="https://www.linkedin.com/in/cody-rice-velasquez-qially/" target="_blank" class="text-blue-100 hover:underline">linkedin.com/in/cody-rice-velasquez-qially</a>
+                    </p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Sections -->
+        <main class="p-6 sm:p-8 md:p-10">
+            <!-- Summary/About Section -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 section-title">
+                    Summary
+                </h2>
+                <blockquote class="italic text-gray-600 mb-4 pl-4 border-l-4 border-blue-500">
+                    “I believe in the power of mutual growth—when we support each other,
+                    we all succeed.”
+                </blockquote>
+                <p class="text-gray-700 leading-relaxed">
+                    Visionary business consultant with experience in operations, HR,
+                    innovation, and tech integration. I help people and organizations
+                    thrive by bridging systems and solving what others won’t touch.
+                </p>
+            </section>
+
+            <!-- Skills Section -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 section-title">Skills</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-center">
+                    <div class="skill-card">Innovation</div>
+                    <div class="skill-card">Finance</div>
+                    <div class="skill-card">Recruitment</div>
+                    <div class="skill-card">HR</div>
+                    <div class="skill-card">Tools in Business</div>
+                    <div class="skill-card">Accounting</div>
+                    <div class="skill-card">Employment Law</div>
+                    <div class="skill-card">Strategy</div>
+                    <div class="skill-card">Project Management</div>
+                    <div class="skill-card">Tax Prep</div>
+                </div>
+            </section>
+
+            <!-- Languages Section -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 section-title">
+                    Languages
+                </h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 text-center">
+                    <div class="skill-card">English (Fluent)</div>
+                    <div class="skill-card">Spanish (Fluent)</div>
+                    <div class="skill-card">
+                        ASL - American Sign Language (Basic Lv. 1-2)
+                    </div>
+                    <div class="skill-card">French (Very-Basic Reading)</div>
+                    <div class="skill-card">Portuguese (Learning)</div>
+                    <div class="skill-card">Italian (Learning)</div>
+                    <div class="skill-card">Pashto (Learning)</div>
+                    <div class="skill-card">Hindi (Learning)</div>
+                    <div class="skill-card">Urdu (Learning)</div>
+                    <div class="skill-card">Arabic (Learning)</div>
+                </div>
+            </section>
+
+            <!-- Education Section -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 section-title">
+                    Education
+                </h2>
+
+                <div class="education-item flex items-start gap-4">
+                    <div class="icon">WGU</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            Western Governors University
+                        </h3>
+                        <p class="text-lg text-gray-700">Ongoing, Business & HR</p>
+                    </div>
+                </div>
+
+                <div class="education-item flex items-start gap-4">
+                    <div class="icon">IUPUI</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">IUPUI</h3>
+                        <p class="text-lg text-gray-700">Business/Legal Studies</p>
+                    </div>
+                </div>
+
+                <div class="education-item flex items-start gap-4">
+                    <div class="icon">IVY</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            Ivy Tech Community College
+                        </h3>
+                        <p class="text-lg text-gray-700">
+                            Associate in Networking, System Security, Networking Security,
+                            and Program Management Certificate
+                        </p>
+                    </div>
+                </div>
+
+                <div class="education-item flex items-start gap-4">
+                    <div class="icon">SITC</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            Southern Indiana Career and Technical Center of Evansville
+                        </h3>
+                        <p class="text-lg text-gray-700">
+                            Cisco Academy (Years 3-4): Networking & System Security
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Experience Section -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 section-title">
+                    Experience
+                </h2>
+
+                <div class="experience-item flex items-start gap-4">
+                    <div class="icon">QHR</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">CEO & Partner</h3>
+                        <p class="text-lg text-gray-700">
+                            <strong>QuantumHR</strong> (2024–Present)
+                        </p>
+                        <ul class="list-none pl-0 mt-2 text-gray-700 text-sm">
+                            <li class="mb-1 bullet-point">
+                                Leading strategic innovation in human resource management
+                                systems and processes for small businesses, ensuring agility
+                                and scalability.
+                            </li>
+                            <li class="mb-1 bullet-point">
+                                Overseeing comprehensive compliance initiatives to navigate
+                                complex employment laws and industry regulations, minimizing
+                                organizational risk.
+                            </li>
+                            <li class="mb-1 bullet-point">
+                                Cultivating positive employee relations and developing
+                                proactive strategies to enhance workforce engagement and
+                                retention.
+                            </li>
+                            <li class="bullet-point">
+                                Providing executive leadership and guidance in business
+                                development, partnership cultivation, and long-term
+                                organizational strategy.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="experience-item flex items-start gap-4">
+                    <div class="icon">INV</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            Business Consultant
+                        </h3>
+                        <p class="text-lg text-gray-700">
+                            <strong>InnovaFlow LLC</strong> (2021–Current)
+                        </p>
+                        <ul class="list-none pl-0 mt-2 text-gray-700 text-sm">
+                            <li class="mb-1 bullet-point">
+                                Developed and implemented multi-industry strategies to
+                                optimize operational efficiency and market positioning for
+                                self-employed professionals.
+                            </li>
+                            <li class="mb-1 bullet-point">
+                                Guided clients through digital transformation initiatives,
+                                integrating cutting-edge technologies to streamline workflows
+                                and enhance productivity.
+                            </li>
+                            <li class="mb-1 bullet-point">
+                                Provided expert accounting services, including financial
+                                analysis, budgeting, and tax preparation, ensuring robust
+                                fiscal health.
+                            </li>
+                            <li class="bullet-point">
+                                Acted as a trusted advisor, solving complex business
+                                challenges and fostering sustainable growth through tailored
+                                solutions.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="experience-item flex items-start gap-4">
+                    <div class="icon">MSI</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            HR Business Partner
+                        </h3>
+                        <p class="text-lg text-gray-700">
+                            <strong>MSI Staffing</strong> (2020)
+                        </p>
+                        <ul class="list-none pl-0 mt-2 text-gray-700 text-sm">
+                            <li class="mb-1 bullet-point">
+                                Managed end-to-end recruitment processes, from talent sourcing
+                                and candidate screening to interview coordination and offer
+                                management for healthcare staffing.
+                            </li>
+                            <li class="mb-1 bullet-point">
+                                Oversaw comprehensive onboarding programs to ensure seamless
+                                integration and accelerated productivity for new hires.
+                            </li>
+                            <li class="mb-1 bullet-point">
+                                Ensured strict adherence to employment laws and company
+                                policies, maintaining compliance across all HR functions.
+                            </li>
+                            <li class="bullet-point">
+                                Provided strategic HR guidance and support to management and
+                                employees on various human capital matters.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="experience-item flex items-start gap-4">
+                    <div class="icon">WFL</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">Unit Manager</h3>
+                        <p class="text-lg text-gray-700">
+                            <strong>Waffle House</strong> (2019–2020)
+                        </p>
+                        <ul class="list-none pl-0 mt-2 text-gray-700 text-sm">
+                            <li class="mb-1 bullet-point">
+                                Managed all aspects of daily restaurant operations, ensuring
+                                smooth service flow and high customer satisfaction.
+                            </li>
+                            <li class="mb-1 bullet-point">
+                                Supervised and trained a team of staff, fostering a productive
+                                and positive work environment.
+                            </li>
+                            <li class="bullet-point">
+                                Oversaw inventory management, ensured adherence to food safety
+                                standards, and managed cash handling procedures.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="experience-item flex items-start gap-4">
+                    <div class="icon">IHP</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">Assistant GM</h3>
+                        <p class="text-lg text-gray-700">
+                            <strong>IHOP</strong> (2018–2019)
+                        </p>
+                        <ul class="list-none pl-0 mt-2 text-gray-700 text-sm">
+                            <li class="mb-1 bullet-point">
+                                Supported the General Manager in overseeing all restaurant
+                                operations, including front-of-house and back-of-house
+                                activities.
+                            </li>
+                            <li class="mb-1 bullet-point">
+                                Assisted with staff scheduling, training, and performance
+                                management to optimize team efficiency.
+                            </li>
+                            <li class="bullet-point">
+                                Handled customer inquiries and resolved issues to ensure a
+                                positive dining experience.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="experience-item flex items-start gap-4">
+                    <div class="icon">EMKE</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">VDH Operator</h3>
+                        <p class="text-lg text-gray-700">
+                            <strong>EMKE</strong> (2016–2018)
+                        </p>
+                        <ul class="list-none pl-0 mt-2 text-gray-700 text-sm">
+                            <li class="mb-1 bullet-point">
+                                Operated and monitored Vacuum Degassing Heat Treatment (VDH)
+                                machinery, ensuring precise material processing.
+                            </li>
+                            <li class="bullet-point">
+                                Performed routine maintenance and troubleshooting on equipment
+                                to minimize downtime and optimize production.
+                            </li>
+                            <li class="bullet-point">
+                                Adhered to strict safety protocols and quality control
+                                standards in all operational tasks.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="experience-item flex items-start gap-4">
+                    <div class="icon">MCD</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">Swing Manager</h3>
+                        <p class="text-lg text-gray-700">
+                            <strong>McDonald’s</strong> (2015–2016)
+                        </p>
+                        <ul class="list-none pl-0 mt-2 text-gray-700 text-sm">
+                            <li class="mb-1 bullet-point">
+                                Directed and managed daily restaurant shifts, overseeing crew
+                                performance and customer service.
+                            </li>
+                            <li class="bullet-point">
+                                Trained new employees on operational procedures, food
+                                preparation, and customer interaction standards.
+                            </li>
+                            <li class="bullet-point">
+                                Managed inventory and ensured product availability,
+                                contributing to efficient service delivery.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Foundational Background Section -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 section-title">
+                    Foundational Background
+                </h2>
+                <p class="text-gray-700 leading-relaxed mb-6">
+                    This section highlights the early experiences that shaped my
+                    personal and professional foundation.
+                </p>
+
+                <div class="experience-item flex items-start gap-4">
+                    <div class="icon">C&P</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            Newspaper Delivery
+                        </h3>
+                        <p class="text-lg text-gray-700">
+                            <strong>Courier & Press</strong> (Freshman Year)
+                        </p>
+                        <ul class="list-none pl-0 mt-2 text-gray-700 text-sm">
+                            <li class="mb-1 bullet-point">
+                                Delivered newspapers with my mother, contributing to family
+                                income and developing early work ethic.
+                            </li>
+                            <li class="bullet-point">
+                                Cultivated a habit of daily reading by reviewing entire
+                                newspapers, enhancing vocabulary and general knowledge.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="experience-item flex items-start gap-4">
+                    <div class="icon">TSA</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            Youth Engagement & Leadership
+                        </h3>
+                        <p class="text-lg text-gray-700">
+                            <strong>Tri-State Alliance</strong> (2011–2015)
+                        </p>
+                        <ul class="list-none pl-0 mt-2 text-gray-700 text-sm">
+                            <li class="mb-1 bullet-point">
+                                Served as a community advocate and youth leader, promoting
+                                equality and inclusion across southern Indiana.
+                            </li>
+                            <li class="mb-1 bullet-point">
+                                Organized and facilitated educational panels, fundraisers, and
+                                peer support initiatives to address community needs.
+                            </li>
+                            <li class="bullet-point">
+                                Developed strong public speaking and organizational skills
+                                through leading various community outreach programs.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="experience-item flex items-start gap-4">
+                    <div class="icon">DNY</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            Server / Host / Crew Trainer
+                        </h3>
+                        <p class="text-lg text-gray-700">
+                            <strong>Denny’s & McDonald's</strong> (2012–2015)
+                        </p>
+                        <ul class="list-none pl-0 mt-2 text-gray-700 text-sm">
+                            <li class="mb-1 bullet-point">
+                                Gained foundational customer service and operational
+                                experience in fast-paced dining environments.
+                            </li>
+                            <li class="mb-1 bullet-point">
+                                Quickly promoted to Crew Trainer due to demonstrated
+                                reliability, strong work ethic, and emerging leadership
+                                skills.
+                            </li>
+                            <li class="bullet-point">
+                                Trained new team members on service standards, operational
+                                procedures, and customer engagement.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="education-item flex items-start gap-4">
+                    <div class="icon">HHS</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            High School Activities
+                        </h3>
+                        <p class="text-lg text-gray-700">
+                            <strong>Harrison High School</strong> (2009–2013)
+                        </p>
+                        <ul class="list-none pl-0 mt-2 text-gray-700 text-sm">
+                            <li class="mb-1 bullet-point">
+                                Participated in National Honor Society, Business Professionals
+                                of America, and Theater Tech Crew.
+                            </li>
+                            <li class="mb-1 bullet-point">
+                                Member of Spanish Club and Swim Team, fostering teamwork and
+                                diverse interests.
+                            </li>
+                            <li class="bullet-point">
+                                Selected for advanced college-readiness tracks and early
+                                admission programs, demonstrating academic excellence and
+                                leadership potential.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="education-item flex items-start gap-4">
+                    <div class="icon">MDS</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            Middle School Activities
+                        </h3>
+                        <p class="text-lg text-gray-700">
+                            <strong>Middle School</strong>
+                        </p>
+                        <ul class="list-none pl-0 mt-2 text-gray-700 text-sm">
+                            <li class="mb-1 bullet-point">
+                                Engaged in Chess Club, Dance Team, and Choir, developing
+                                diverse skills and teamwork.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer for Resume -->
+        <footer class="text-center py-8 bg-gray-800 text-gray-300 rounded-b-lg">
+            <p class="text-sm">
+                &copy; 2025 Cody Rice-Velasquez. Built with passion and purpose.
+            </p>
+        </footer>
+    </div>
+</body>
+
+</html>

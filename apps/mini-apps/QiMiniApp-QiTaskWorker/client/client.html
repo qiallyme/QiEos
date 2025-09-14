@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>QiTaskWorker Client</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
+    textarea { width: 100%; height: 120px; }
+    pre { background: #111; color: #ddd; padding: 1rem; overflow: auto; }
+    .row { display: flex; gap: 8px; }
+    .row > * { flex: 1; }
+    button { padding: .6rem 1rem; }
+    label { display: block; margin-top: .5rem; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>QiTaskWorker — Client</h1>
+  <p>Submit a command to a worker and watch the tail.</p>
+
+  <label>Worker URL</label>
+  <input id="worker" placeholder="http://100.x.y.z:7130" />
+
+  <label>Command</label>
+  <textarea id="cmd" placeholder='ffmpeg -i "\\SERVER\media\in.mkv" -c:v libx264 "\\SERVER\media\out.mp4"'></textarea>
+
+  <div class="row">
+    <div>
+      <label>Workdir (optional)</label>
+      <input id="workdir" placeholder="" />
+    </div>
+    <div>
+      <label>Timeout (sec)</label>
+      <input id="timeout" type="number" value="0" />
+    </div>
+    <div>
+      <label>Nice</label>
+      <input id="nice" type="number" value="5" />
+    </div>
+  </div>
+
+  <p>
+    <button onclick="submitJob()">Submit</button>
+    <span id="status"></span>
+  </p>
+
+  <pre id="log"></pre>
+
+<script>
+let jobId = null;
+let timer = null;
+
+async function submitJob() {
+  clearInterval(timer);
+  jobId = null;
+  document.getElementById('log').textContent = '';
+  const worker = document.getElementById('worker').value.trim();
+  const cmd = document.getElementById('cmd').value;
+  const workdir = document.getElementById('workdir').value || null;
+  const timeout = parseInt(document.getElementById('timeout').value || '0', 10);
+  const nice = parseInt(document.getElementById('nice').value || '5', 10);
+
+  const payload = { cmd, workdir, timeout, nice };
+  const res = await fetch(worker + '/submit', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+  const data = await res.json();
+  jobId = data.job_id;
+  document.getElementById('status').textContent = 'Job: ' + jobId;
+  timer = setInterval(() => poll(worker, jobId), 1500);
+}
+
+async function poll(worker, job) {
+  try {
+    const res = await fetch(worker + '/status/' + job);
+    const data = await res.json();
+    const tail = data.tail || '';
+    document.getElementById('log').textContent = '[' + new Date().toLocaleTimeString() + '] ' + data.status + '\n\n' + tail;
+    if (!['queued','running'].includes(data.status)) {
+      clearInterval(timer);
+    }
+  } catch (e) {
+    document.getElementById('log').textContent += '\n[poll error] ' + e;
+  }
+}
+</script>
+</body>
+</html>

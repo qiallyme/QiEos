@@ -1,0 +1,25 @@
+{
+  "name": "directory-mapper",
+  "displayName": "Directory Mapper",
+  "version": "1.0.0",
+  "type": "hybrid",
+  "description": "Generate a directory tree text from any folder and save the log to Downloads.",
+  "ui": {
+    "entry": "static/index.html"
+  },
+  "backend": {
+    "runtime": "python",
+    "entry": "server.py",
+    "args": [
+      "--port",
+      "8750"
+    ]
+  },
+  "commands": [
+    {
+      "id": "dir.run",
+      "title": "Run Mapping",
+      "kind": "ui"
+    }
+  ]
+}

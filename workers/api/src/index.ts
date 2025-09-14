@@ -1,65 +1,206 @@
-import { Hono } from "hono";
-import { cors } from "hono/cors";
-import { authRoutes } from "./routes/auth";
-import { taskRoutes } from "./routes/tasks";
-import { fileRoutes } from "./routes/files";
-import { kbRoutes } from "./routes/kb";
-import { profileRoutes } from "./routes/profile";
-import { authMiddleware } from "./middleware/auth";
-import { contactRoutes } from "./routes/contact";
-import { waitlistRoutes } from "./routes/waitlist";
+import { createClient } from "@supabase/supabase-js";
 
-// Define the bindings we expect from wrangler.toml
 export interface Env {
   SUPABASE_URL: string;
   SUPABASE_SERVICE_ROLE_KEY: string;
-  OPENAI_API_KEY?: string;
-  STRIPE_SECRET_KEY?: string;
-  JWT_ISSUER?: string;
-  EMBEDDING_DIM?: string;
-  CORS_ORIGINS?: string;
-  R2: R2Bucket;
-  WAITLIST_KV_NAMESPACE?: any; // Using `any` for KV Namespace binding
-  [key: string]: any;
+  JWT_ISSUER: string;
+  JWT_SECRET: string;
 }
 
-const app = new Hono<{ Bindings: Env; Variables: { claims: any } }>();
+export default {
+  async fetch(
+    request: Request,
+    env: Env,
+    ctx: ExecutionContext
+  ): Promise<Response> {
+    const url = new URL(request.url);
+    const path = url.pathname;
 
-// CORS middleware
-app.use("*", async (c, next) => {
-  const corsOrigins = c.env?.CORS_ORIGINS?.split(",") || [
-    "http://localhost:5173",
-    "https://qieos.pages.dev",
-  ];
+    // CORS headers
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    };
 
-  return cors({
-    origin: corsOrigins,
-    credentials: true,
-  })(c, next);
-});
+    // Handle preflight requests
+    if (request.method === "OPTIONS") {
+      return new Response(null, { status: 200, headers: corsHeaders });
+    }
 
-// Health check
-app.get("/health", (c) => {
-  return c.json({ status: "ok", timestamp: new Date().toISOString() });
-});
+    try {
+      // Initialize Supabase client
+      const supabase = createClient(
+        env.SUPABASE_URL,
+        env.SUPABASE_SERVICE_ROLE_KEY
+      );
 
-// Public API routes
-app.route("/contact", contactRoutes);
-app.route("/waitlist", waitlistRoutes);
+      // Route: POST /auth/session
+      if (path === "/auth/session" && request.method === "POST") {
+        const { token } = await request.json();
 
-// Auth routes (no middleware needed)
-app.route("/auth", authRoutes);
+        if (!token) {
+          return new Response(
+            JSON.stringify({ success: false, error: "Token required" }),
+            {
+              status: 400,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            }
+          );
+        }
 
-// Protected routes (require auth middleware)
-app.use("/tasks", authMiddleware);
-app.use("/files", authMiddleware);
-app.use("/kb", authMiddleware);
-app.use("/me", authMiddleware);
+        // Verify the JWT token with Supabase
+        const {
+          data: { user },
+          error: authError,
+        } = await supabase.auth.getUser(token);
 
-// Route handlers
-app.route("/tasks", taskRoutes);
-app.route("/files", fileRoutes);
-app.route("/kb", kbRoutes);
-app.route("/me", profileRoutes);
+        if (authError || !user) {
+          return new Response(
+            JSON.stringify({ success: false, error: "Invalid token" }),
+            {
+              status: 401,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            }
+          );
+        }
 
-export default app;
+        // Get user profile and client slug with JOIN query
+        const { data: profileData, error: profileError } = await supabase
+          .from("profiles")
+          .select(
+            `
+            id,
+            email,
+            full_name,
+            role,
+            avatar_url,
+            is_active,
+            onboarding_complete,
+            preferred_locale,
+            timezone,
+            metadata,
+            sms_opt_in,
+            email_opt_in,
+            last_sign_in_at,
+            mfa_enabled,
+            tos_version,
+            privacy_version,
+            consent_at,
+            created_at,
+            updated_at,
+            memberships!inner(
+              client_id,
+              role,
+              clients!inner(
+                id,
+                name,
+                status,
+                slugs!inner(
+                  slug
+                )
+              )
+            )
+          `
+          )
+          .eq("id", user.id)
+          .single();
+
+        if (profileError) {
+          console.error("Profile fetch error:", profileError);
+          return new Response(
+            JSON.stringify({ success: false, error: "Profile not found" }),
+            {
+              status: 404,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            }
+          );
+        }
+
+        // Extract client slug from the nested data
+        let clientSlug: string | undefined;
+        if (profileData.memberships && profileData.memberships.length > 0) {
+          const membership = profileData.memberships[0];
+          if (
+            membership.clients &&
+            membership.clients.slugs &&
+            membership.clients.slugs.length > 0
+          ) {
+            clientSlug = membership.clients.slugs[0].slug;
+          }
+        }
+
+        // Build claims object
+        const claims = {
+          user_id: user.id,
+          email: profileData.email,
+          role: profileData.role,
+          org_id: profileData.memberships?.[0]?.client_id || null,
+          company_ids:
+            profileData.memberships?.map((m: any) => m.client_id) || [],
+          department: profileData.role === "admin" ? "internal" : "external",
+          features: {
+            // Default features - you can customize this based on your needs
+            crm: true,
+            projects: true,
+            tasks: true,
+            messaging: true,
+            kb: true,
+            ai_rag: true,
+            billing: true,
+            lms: false,
+            client_tools: true,
+            voice_assistant: false,
+            vision_tools: false,
+            client_sites: true,
+            public_drops: true,
+          },
+          client_slug: clientSlug,
+        };
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            claims,
+          }),
+          {
+            status: 200,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+
+      // Route: GET /health
+      if (path === "/health" && request.method === "GET") {
+        return new Response(
+          JSON.stringify({
+            status: "ok",
+            timestamp: new Date().toISOString(),
+          }),
+          {
+            status: 200,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          }
+        );
+      }
+
+      // 404 for unmatched routes
+      return new Response(JSON.stringify({ error: "Not found" }), {
+        status: 404,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    } catch (error) {
+      console.error("Worker error:", error);
+      return new Response(
+        JSON.stringify({
+          error: "Internal server error",
+          message: error instanceof Error ? error.message : "Unknown error",
+        }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+  },
+};

@@ -8,6 +8,7 @@ import {
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Login } from "./routes/auth/Login";
+import { AuthCallback } from "./routes/auth/Callback";
 import { TaskList } from "./modules/tasks/List";
 import { CreateTask } from "./modules/tasks/CreateTask";
 import { ClientDashboard } from "./routes/client/Dashboard";
@@ -53,6 +54,7 @@ function App() {
           {/* App routes */}
           <Route path="/kb" element={<PublicKBPage />} />
           <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
 
           {/* Protected routes */}
           <Route

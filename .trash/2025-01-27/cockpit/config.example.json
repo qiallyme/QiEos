@@ -1,0 +1,6 @@
+{
+  "apps_dir": "../miniapps",
+  "manifest": "../miniapps.json",
+  "python_unix": "../.venv/bin/python",
+  "python_win": "..\\.venv\\Scripts\\python.exe"
+}

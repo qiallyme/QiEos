@@ -1,0 +1,5 @@
+# Requirements for local dev (optional)
+# The static build uses only Python stdlib.
+# Uncomment FastAPI/Uvicorn if you use the backend locally.
+# fastapi==0.115.0
+# uvicorn[standard]==0.30.6
