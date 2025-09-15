@@ -1,14 +1,78 @@
+/* FileUpload component styles */
+.uploadArea {
+  @apply border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors;
+}
+
 .progressBar {
-  width: 100%;
-  background-color: #e5e7eb;
-  border-radius: 9999px;
-  height: 0.5rem;
+  @apply w-full bg-gray-200 rounded-full h-2;
 }
 
 .progressFill {
-  background-color: #4f46e5;
-  height: 0.5rem;
-  border-radius: 9999px;
-  transition: all 0.3s;
-  width: var(--progress, 0%);
+  @apply bg-blue-600 h-2 rounded-full transition-all duration-300 ease-in-out;
+}
+
+.fileList {
+  @apply mt-4 space-y-2;
+}
+
+.fileItem {
+  @apply flex items-center justify-between p-3 bg-gray-50 rounded-lg;
+}
+
+.fileInfo {
+  @apply flex items-center space-x-3;
+}
+
+.fileIcon {
+  @apply w-8 h-8 text-gray-500;
+}
+
+.fileDetails {
+  @apply flex-1;
+}
+
+.fileName {
+  @apply text-sm font-medium text-gray-900;
+}
+
+.fileSize {
+  @apply text-xs text-gray-500;
+}
+
+.fileActions {
+  @apply flex items-center space-x-2;
+}
+
+.removeButton {
+  @apply text-red-600 hover:text-red-800 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded-md p-1;
+}
+
+.uploadButton {
+  @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+}
+
+.errorMessage {
+  @apply text-red-600 text-sm mt-2;
+}
+
+.successMessage {
+  @apply text-green-600 text-sm mt-2;
+}
+
+/* Accessibility improvements */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus styles */
+.focus-visible {
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
 }

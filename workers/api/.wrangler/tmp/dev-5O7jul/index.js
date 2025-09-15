@@ -33,14 +33,14 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// .wrangler/tmp/bundle-NM8nJY/strip-cf-connecting-ip-header.js
+// .wrangler/tmp/bundle-slfWCK/strip-cf-connecting-ip-header.js
 function stripCfConnectingIPHeader(input, init) {
   const request = new Request(input, init);
   request.headers.delete("CF-Connecting-IP");
   return request;
 }
 var init_strip_cf_connecting_ip_header = __esm({
-  ".wrangler/tmp/bundle-NM8nJY/strip-cf-connecting-ip-header.js"() {
+  ".wrangler/tmp/bundle-slfWCK/strip-cf-connecting-ip-header.js"() {
     "use strict";
     __name(stripCfConnectingIPHeader, "stripCfConnectingIPHeader");
     globalThis.fetch = new Proxy(globalThis.fetch, {
@@ -1323,11 +1323,11 @@ var require_cjs = __commonJS({
   }
 });
 
-// .wrangler/tmp/bundle-NM8nJY/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-slfWCK/middleware-loader.entry.ts
 init_strip_cf_connecting_ip_header();
 init_modules_watch_stub();
 
-// .wrangler/tmp/bundle-NM8nJY/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-slfWCK/middleware-insertion-facade.js
 init_strip_cf_connecting_ip_header();
 init_modules_watch_stub();
 
@@ -9619,13 +9619,13 @@ var auth_default = {
             role,
             org_id,
             company_id,
-            companies!inner(
+            companies(
               id,
               name,
               slug,
               org_id
             ),
-            orgs!inner(
+            orgs(
               id,
               name,
               slug
@@ -9656,12 +9656,12 @@ var auth_default = {
           phone: contact.phone,
           role: contact.role || "external",
           org_id: contact.org_id,
-          org_name: contact.orgs.name,
-          org_slug: contact.orgs.slug,
+          org_name: contact.orgs?.[0]?.name,
+          org_slug: contact.orgs?.[0]?.slug,
           company_ids: companyIds,
           company_id: contact.company_id,
-          company_name: contact.companies?.name,
-          company_slug: contact.companies?.slug,
+          company_name: contact.companies?.[0]?.name,
+          company_slug: contact.companies?.[0]?.slug,
           features,
           scopes: ["read", "write"]
           // Basic scopes
@@ -9798,10 +9798,7 @@ async function signUpload(supabase, env, orgId, companyId, contactId, request) {
   }
   const fileId = crypto.randomUUID();
   const fileKey = `files/${orgId}/${fileId}/${filename}`;
-  const signedUrl = await env.R2.getSignedUrl("PUT", fileKey, {
-    expiresIn: 3600
-    // 1 hour
-  });
+  const uploadUrl = `https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/r2/buckets/${env.R2_BUCKET_NAME}/objects/${fileKey}`;
   const { data: fileRecord, error } = await supabase.from("files").insert({
     id: fileId,
     org_id: orgId,
@@ -9827,7 +9824,7 @@ async function signUpload(supabase, env, orgId, companyId, contactId, request) {
     JSON.stringify({
       success: true,
       file_id: fileId,
-      signed_url: signedUrl,
+      signed_url: uploadUrl,
       file_record: fileRecord
     }),
     {
@@ -9937,18 +9934,659 @@ async function deleteFile(supabase, env, orgId, fileId) {
 }
 __name(deleteFile, "deleteFile");
 
+// src/routes/kb.ts
+init_strip_cf_connecting_ip_header();
+init_modules_watch_stub();
+var corsHeaders10 = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization"
+};
+var kb_default = {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const path = url.pathname;
+    const method = request.method;
+    if (method === "OPTIONS") {
+      return new Response(null, { status: 200, headers: corsHeaders10 });
+    }
+    try {
+      const supabase = createClient(
+        env.SUPABASE_URL,
+        env.SUPABASE_SERVICE_ROLE_KEY
+      );
+      switch (true) {
+        case (path === "/kb/public" && method === "GET"):
+          return await getPublicKB();
+        case (path === "/kb/private" && method === "GET"):
+          return await getPrivateKB(supabase, request);
+        default:
+          return new Response(JSON.stringify({ error: "Not found" }), {
+            status: 404,
+            headers: { ...corsHeaders10, "Content-Type": "application/json" }
+          });
+      }
+    } catch (error) {
+      console.error("KB API error:", error);
+      return new Response(JSON.stringify({ error: "Internal server error" }), {
+        status: 500,
+        headers: { ...corsHeaders10, "Content-Type": "application/json" }
+      });
+    }
+  }
+};
+async function getPublicKB() {
+  const publicKB = {
+    docs: [
+      {
+        id: "getting-started",
+        title: "Getting Started",
+        content: "Welcome to QiEOS! This is a public knowledge base document.",
+        slug: "getting-started",
+        updated_at: (/* @__PURE__ */ new Date()).toISOString()
+      }
+    ]
+  };
+  return new Response(JSON.stringify(publicKB), {
+    headers: { ...corsHeaders10, "Content-Type": "application/json" }
+  });
+}
+__name(getPublicKB, "getPublicKB");
+async function getPrivateKB(supabase, request) {
+  const authHeader = request.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    return new Response(
+      JSON.stringify({ error: "Missing or invalid authorization" }),
+      {
+        status: 401,
+        headers: { ...corsHeaders10, "Content-Type": "application/json" }
+      }
+    );
+  }
+  const token = authHeader.substring(7);
+  if (token.includes("service_role")) {
+    const serviceSupabase = createClient(
+      process.env.SUPABASE_URL || "https://vwqkhjnkummwtvfxgqml.supabase.co",
+      token
+    );
+    const { data: kbDocs2, error: kbError2 } = await serviceSupabase.from("kb_docs").select(
+      `
+        id,
+        slug,
+        title,
+        content,
+        tags,
+        audiences,
+        created_at,
+        updated_at,
+        kb_collections (
+          name,
+          path
+        )
+      `
+    ).order("updated_at", { ascending: false });
+    if (kbError2) {
+      console.error("KB fetch error:", kbError2);
+      return new Response(JSON.stringify({ error: "Failed to fetch KB" }), {
+        status: 500,
+        headers: { ...corsHeaders10, "Content-Type": "application/json" }
+      });
+    }
+    return new Response(JSON.stringify({ docs: kbDocs2 || [] }), {
+      headers: { ...corsHeaders10, "Content-Type": "application/json" }
+    });
+  }
+  const {
+    data: { user },
+    error: authError
+  } = await supabase.auth.getUser(token);
+  if (authError || !user) {
+    return new Response(JSON.stringify({ error: "Invalid token" }), {
+      status: 401,
+      headers: { ...corsHeaders10, "Content-Type": "application/json" }
+    });
+  }
+  const { data: contact } = await supabase.from("contacts").select("org_id").eq("supabase_user_id", user.id).single();
+  if (!contact) {
+    return new Response(JSON.stringify({ error: "User not found" }), {
+      status: 404,
+      headers: { ...corsHeaders10, "Content-Type": "application/json" }
+    });
+  }
+  const { data: kbDocs, error: kbError } = await supabase.from("kb_docs").select(
+    `
+      id,
+      slug,
+      title,
+      content,
+      tags,
+      audiences,
+      created_at,
+      updated_at,
+      kb_collections (
+        name,
+        path
+      )
+    `
+  ).eq("org_id", contact.org_id).order("updated_at", { ascending: false });
+  if (kbError) {
+    console.error("KB fetch error:", kbError);
+    return new Response(JSON.stringify({ error: "Failed to fetch KB" }), {
+      status: 500,
+      headers: { ...corsHeaders10, "Content-Type": "application/json" }
+    });
+  }
+  return new Response(JSON.stringify({ docs: kbDocs || [] }), {
+    headers: { ...corsHeaders10, "Content-Type": "application/json" }
+  });
+}
+__name(getPrivateKB, "getPrivateKB");
+
+// src/routes/apps.ts
+init_strip_cf_connecting_ip_header();
+init_modules_watch_stub();
+var corsHeaders11 = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization"
+};
+var apps_default = {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const path = url.pathname;
+    const method = request.method;
+    if (method === "OPTIONS") {
+      return new Response(null, { status: 200, headers: corsHeaders11 });
+    }
+    try {
+      const supabase = createClient(
+        env.SUPABASE_URL,
+        env.SUPABASE_SERVICE_ROLE_KEY
+      );
+      switch (true) {
+        case (path === "/api/apps" && method === "GET"):
+          return await getApps(supabase, request);
+        default:
+          return new Response(JSON.stringify({ error: "Not found" }), {
+            status: 404,
+            headers: { ...corsHeaders11, "Content-Type": "application/json" }
+          });
+      }
+    } catch (error) {
+      console.error("Apps API error:", error);
+      return new Response(JSON.stringify({ error: "Internal server error" }), {
+        status: 500,
+        headers: { ...corsHeaders11, "Content-Type": "application/json" }
+      });
+    }
+  }
+};
+async function getApps(supabase, request) {
+  const apps = [
+    {
+      id: "duplicate-cleaner",
+      name: "Duplicate File Cleaner",
+      description: "Find and remove duplicate files from your system",
+      icon: "\u{1F5C2}\uFE0F",
+      status: "available"
+    },
+    {
+      id: "file-flow",
+      name: "File Flow Manager",
+      description: "Organize and manage your file workflows",
+      icon: "\u{1F4C1}",
+      status: "available"
+    },
+    {
+      id: "quick-receipt",
+      name: "Quick Receipt Scanner",
+      description: "Scan and process receipts quickly",
+      icon: "\u{1F9FE}",
+      status: "available"
+    },
+    {
+      id: "task-manager",
+      name: "Task Manager",
+      description: "Manage your tasks and projects",
+      icon: "\u2705",
+      status: "available"
+    }
+  ];
+  return new Response(JSON.stringify(apps), {
+    headers: { ...corsHeaders11, "Content-Type": "application/json" }
+  });
+}
+__name(getApps, "getApps");
+
+// src/routes/orgs.ts
+init_strip_cf_connecting_ip_header();
+init_modules_watch_stub();
+var corsHeaders12 = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization"
+};
+var orgs_default = {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const path = url.pathname;
+    const method = request.method;
+    if (method === "OPTIONS") {
+      return new Response(null, { status: 200, headers: corsHeaders12 });
+    }
+    try {
+      const supabase = createClient(
+        env.SUPABASE_URL,
+        env.SUPABASE_SERVICE_ROLE_KEY
+      );
+      switch (true) {
+        case (path === "/orgs" && method === "GET"):
+          return await getOrgs(supabase, request);
+        case (path === "/orgs" && method === "POST"):
+          return await createOrg(supabase, request);
+        case (path.match(/^\/orgs\/[^\/]+$/) && method === "GET"):
+          const orgId = path.split("/")[2];
+          return await getOrg(supabase, orgId, request);
+        default:
+          return new Response(JSON.stringify({ error: "Not found" }), {
+            status: 404,
+            headers: { ...corsHeaders12, "Content-Type": "application/json" }
+          });
+      }
+    } catch (error) {
+      console.error("Orgs API error:", error);
+      return new Response(JSON.stringify({ error: "Internal server error" }), {
+        status: 500,
+        headers: { ...corsHeaders12, "Content-Type": "application/json" }
+      });
+    }
+  }
+};
+async function getOrgs(supabase, request) {
+  const authHeader = request.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    return new Response(
+      JSON.stringify({ error: "Missing or invalid authorization" }),
+      {
+        status: 401,
+        headers: { ...corsHeaders12, "Content-Type": "application/json" }
+      }
+    );
+  }
+  const token = authHeader.substring(7);
+  const {
+    data: { user },
+    error: authError
+  } = await supabase.auth.getUser(token);
+  if (authError || !user) {
+    return new Response(JSON.stringify({ error: "Invalid token" }), {
+      status: 401,
+      headers: { ...corsHeaders12, "Content-Type": "application/json" }
+    });
+  }
+  const { data: contact } = await supabase.from("contacts").select("role").eq("supabase_user_id", user.id).single();
+  if (!contact || contact.role !== "admin") {
+    return new Response(JSON.stringify({ error: "Admin access required" }), {
+      status: 403,
+      headers: { ...corsHeaders12, "Content-Type": "application/json" }
+    });
+  }
+  const { data: orgs, error: orgsError } = await supabase.from("orgs").select(
+    `
+      id,
+      slug,
+      name,
+      created_at,
+      updated_at,
+      companies (
+        id,
+        name,
+        slug
+      )
+    `
+  ).order("created_at", { ascending: false });
+  if (orgsError) {
+    console.error("Orgs fetch error:", orgsError);
+    return new Response(
+      JSON.stringify({ error: "Failed to fetch organizations" }),
+      {
+        status: 500,
+        headers: { ...corsHeaders12, "Content-Type": "application/json" }
+      }
+    );
+  }
+  return new Response(JSON.stringify({ orgs: orgs || [] }), {
+    headers: { ...corsHeaders12, "Content-Type": "application/json" }
+  });
+}
+__name(getOrgs, "getOrgs");
+async function createOrg(supabase, request) {
+  const authHeader = request.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    return new Response(
+      JSON.stringify({ error: "Missing or invalid authorization" }),
+      {
+        status: 401,
+        headers: { ...corsHeaders12, "Content-Type": "application/json" }
+      }
+    );
+  }
+  const token = authHeader.substring(7);
+  const {
+    data: { user },
+    error: authError
+  } = await supabase.auth.getUser(token);
+  if (authError || !user) {
+    return new Response(JSON.stringify({ error: "Invalid token" }), {
+      status: 401,
+      headers: { ...corsHeaders12, "Content-Type": "application/json" }
+    });
+  }
+  const { data: contact } = await supabase.from("contacts").select("role").eq("supabase_user_id", user.id).single();
+  if (!contact || contact.role !== "admin") {
+    return new Response(JSON.stringify({ error: "Admin access required" }), {
+      status: 403,
+      headers: { ...corsHeaders12, "Content-Type": "application/json" }
+    });
+  }
+  const body = await request.json();
+  const { name, slug } = body;
+  if (!name || !slug) {
+    return new Response(
+      JSON.stringify({ error: "Name and slug are required" }),
+      {
+        status: 400,
+        headers: { ...corsHeaders12, "Content-Type": "application/json" }
+      }
+    );
+  }
+  const { data: org, error: orgError } = await supabase.from("orgs").insert({ name, slug }).select().single();
+  if (orgError) {
+    console.error("Org creation error:", orgError);
+    return new Response(
+      JSON.stringify({ error: "Failed to create organization" }),
+      {
+        status: 500,
+        headers: { ...corsHeaders12, "Content-Type": "application/json" }
+      }
+    );
+  }
+  return new Response(JSON.stringify({ org }), {
+    status: 201,
+    headers: { ...corsHeaders12, "Content-Type": "application/json" }
+  });
+}
+__name(createOrg, "createOrg");
+async function getOrg(supabase, orgId, request) {
+  const authHeader = request.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    return new Response(
+      JSON.stringify({ error: "Missing or invalid authorization" }),
+      {
+        status: 401,
+        headers: { ...corsHeaders12, "Content-Type": "application/json" }
+      }
+    );
+  }
+  const token = authHeader.substring(7);
+  const {
+    data: { user },
+    error: authError
+  } = await supabase.auth.getUser(token);
+  if (authError || !user) {
+    return new Response(JSON.stringify({ error: "Invalid token" }), {
+      status: 401,
+      headers: { ...corsHeaders12, "Content-Type": "application/json" }
+    });
+  }
+  const { data: contact } = await supabase.from("contacts").select("org_id, role").eq("supabase_user_id", user.id).single();
+  if (!contact) {
+    return new Response(JSON.stringify({ error: "User not found" }), {
+      status: 404,
+      headers: { ...corsHeaders12, "Content-Type": "application/json" }
+    });
+  }
+  if (contact.role !== "admin" && contact.org_id !== orgId) {
+    return new Response(JSON.stringify({ error: "Access denied" }), {
+      status: 403,
+      headers: { ...corsHeaders12, "Content-Type": "application/json" }
+    });
+  }
+  const { data: org, error: orgError } = await supabase.from("orgs").select(
+    `
+      id,
+      slug,
+      name,
+      created_at,
+      updated_at,
+      companies (
+        id,
+        name,
+        slug
+      )
+    `
+  ).eq("id", orgId).single();
+  if (orgError) {
+    console.error("Org fetch error:", orgError);
+    return new Response(JSON.stringify({ error: "Organization not found" }), {
+      status: 404,
+      headers: { ...corsHeaders12, "Content-Type": "application/json" }
+    });
+  }
+  return new Response(JSON.stringify({ org }), {
+    headers: { ...corsHeaders12, "Content-Type": "application/json" }
+  });
+}
+__name(getOrg, "getOrg");
+
+// src/routes/admin-test.ts
+init_strip_cf_connecting_ip_header();
+init_modules_watch_stub();
+var corsHeaders13 = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization"
+};
+var admin_test_default = {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const path = url.pathname;
+    const method = request.method;
+    if (method === "OPTIONS") {
+      return new Response(null, { status: 200, headers: corsHeaders13 });
+    }
+    try {
+      const supabase = createClient(
+        env.SUPABASE_URL,
+        env.SUPABASE_SERVICE_ROLE_KEY
+      );
+      switch (true) {
+        case (path === "/admin-test/kb" && method === "GET"):
+          return await getAllKB(supabase);
+        case (path === "/admin-test/orgs" && method === "GET"):
+          return await getAllOrgs(supabase);
+        case (path === "/admin-test/contacts" && method === "GET"):
+          return await getAllContacts(supabase);
+        default:
+          return new Response(JSON.stringify({ error: "Not found" }), {
+            status: 404,
+            headers: { ...corsHeaders13, "Content-Type": "application/json" }
+          });
+      }
+    } catch (error) {
+      console.error("Admin test API error:", error);
+      return new Response(JSON.stringify({ error: "Internal server error" }), {
+        status: 500,
+        headers: { ...corsHeaders13, "Content-Type": "application/json" }
+      });
+    }
+  }
+};
+async function getAllKB(supabase) {
+  const { data: kbDocs, error: kbError } = await supabase.from("kb_docs").select(`
+      id,
+      slug,
+      title,
+      content,
+      tags,
+      audiences,
+      created_at,
+      updated_at,
+      kb_collections (
+        name,
+        path
+      )
+    `).order("updated_at", { ascending: false });
+  if (kbError) {
+    console.error("KB fetch error:", kbError);
+    return new Response(JSON.stringify({ error: "Failed to fetch KB" }), {
+      status: 500,
+      headers: { ...corsHeaders13, "Content-Type": "application/json" }
+    });
+  }
+  return new Response(JSON.stringify({ docs: kbDocs || [] }), {
+    headers: { ...corsHeaders13, "Content-Type": "application/json" }
+  });
+}
+__name(getAllKB, "getAllKB");
+async function getAllOrgs(supabase) {
+  const { data: orgs, error: orgsError } = await supabase.from("orgs").select(`
+      id,
+      slug,
+      name,
+      created_at,
+      updated_at,
+      companies (
+        id,
+        name,
+        slug
+      )
+    `).order("created_at", { ascending: false });
+  if (orgsError) {
+    console.error("Orgs fetch error:", orgsError);
+    return new Response(JSON.stringify({ error: "Failed to fetch organizations" }), {
+      status: 500,
+      headers: { ...corsHeaders13, "Content-Type": "application/json" }
+    });
+  }
+  return new Response(JSON.stringify({ orgs: orgs || [] }), {
+    headers: { ...corsHeaders13, "Content-Type": "application/json" }
+  });
+}
+__name(getAllOrgs, "getAllOrgs");
+async function getAllContacts(supabase) {
+  const { data: contacts, error: contactsError } = await supabase.from("contacts").select(`
+      id,
+      email,
+      full_name,
+      role,
+      created_at,
+      updated_at,
+      orgs (
+        name,
+        slug
+      ),
+      companies (
+        name,
+        slug
+      )
+    `).order("created_at", { ascending: false });
+  if (contactsError) {
+    console.error("Contacts fetch error:", contactsError);
+    return new Response(JSON.stringify({ error: "Failed to fetch contacts" }), {
+      status: 500,
+      headers: { ...corsHeaders13, "Content-Type": "application/json" }
+    });
+  }
+  return new Response(JSON.stringify({ contacts: contacts || [] }), {
+    headers: { ...corsHeaders13, "Content-Type": "application/json" }
+  });
+}
+__name(getAllContacts, "getAllContacts");
+
+// src/routes/test.ts
+init_strip_cf_connecting_ip_header();
+init_modules_watch_stub();
+var corsHeaders14 = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization"
+};
+var test_default = {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const path = url.pathname;
+    const method = request.method;
+    if (method === "OPTIONS") {
+      return new Response(null, { status: 200, headers: corsHeaders14 });
+    }
+    try {
+      const supabase = createClient(
+        env.SUPABASE_URL,
+        env.SUPABASE_SERVICE_ROLE_KEY
+      );
+      switch (true) {
+        case (path === "/test/kb" && method === "GET"):
+          const { data: kbDocs, error: kbError } = await supabase.from("kb_docs").select("*").order("updated_at", { ascending: false });
+          if (kbError) {
+            return new Response(JSON.stringify({ error: kbError.message }), {
+              status: 500,
+              headers: { ...corsHeaders14, "Content-Type": "application/json" }
+            });
+          }
+          return new Response(JSON.stringify({ docs: kbDocs || [] }), {
+            headers: { ...corsHeaders14, "Content-Type": "application/json" }
+          });
+        case (path === "/test/orgs" && method === "GET"):
+          const { data: orgs, error: orgsError } = await supabase.from("orgs").select("*").order("created_at", { ascending: false });
+          if (orgsError) {
+            return new Response(JSON.stringify({ error: orgsError.message }), {
+              status: 500,
+              headers: { ...corsHeaders14, "Content-Type": "application/json" }
+            });
+          }
+          return new Response(JSON.stringify({ orgs: orgs || [] }), {
+            headers: { ...corsHeaders14, "Content-Type": "application/json" }
+          });
+        case (path === "/test/contacts" && method === "GET"):
+          const { data: contacts, error: contactsError } = await supabase.from("contacts").select("*").order("created_at", { ascending: false });
+          if (contactsError) {
+            return new Response(JSON.stringify({ error: contactsError.message }), {
+              status: 500,
+              headers: { ...corsHeaders14, "Content-Type": "application/json" }
+            });
+          }
+          return new Response(JSON.stringify({ contacts: contacts || [] }), {
+            headers: { ...corsHeaders14, "Content-Type": "application/json" }
+          });
+        default:
+          return new Response(JSON.stringify({ error: "Not found" }), {
+            status: 404,
+            headers: { ...corsHeaders14, "Content-Type": "application/json" }
+          });
+      }
+    } catch (error) {
+      console.error("Test API error:", error);
+      return new Response(JSON.stringify({ error: "Internal server error" }), {
+        status: 500,
+        headers: { ...corsHeaders14, "Content-Type": "application/json" }
+      });
+    }
+  }
+};
+
 // src/index.ts
 var src_default = {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = url.pathname;
-    const corsHeaders10 = {
+    const corsHeaders15 = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization"
     };
     if (request.method === "OPTIONS") {
-      return new Response(null, { status: 200, headers: corsHeaders10 });
+      return new Response(null, { status: 200, headers: corsHeaders15 });
     }
     try {
       const supabase = createClient(
@@ -9982,9 +10620,24 @@ var src_default = {
       if (path.startsWith("/files")) {
         return await files_default.fetch(request, env);
       }
+      if (path.startsWith("/kb")) {
+        return await kb_default.fetch(request, env);
+      }
+      if (path.startsWith("/api/apps")) {
+        return await apps_default.fetch(request, env);
+      }
+      if (path.startsWith("/orgs")) {
+        return await orgs_default.fetch(request, env);
+      }
+      if (path.startsWith("/admin-test")) {
+        return await admin_test_default.fetch(request, env);
+      }
+      if (path.startsWith("/test")) {
+        return await test_default.fetch(request, env);
+      }
       return new Response(JSON.stringify({ error: "Not found" }), {
         status: 404,
-        headers: { ...corsHeaders10, "Content-Type": "application/json" }
+        headers: { ...corsHeaders15, "Content-Type": "application/json" }
       });
     } catch (error) {
       console.error("Worker error:", error);
@@ -9995,7 +10648,7 @@ var src_default = {
         }),
         {
           status: 500,
-          headers: { ...corsHeaders10, "Content-Type": "application/json" }
+          headers: { ...corsHeaders15, "Content-Type": "application/json" }
         }
       );
     }
@@ -10047,7 +10700,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-NM8nJY/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-slfWCK/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -10081,7 +10734,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-NM8nJY/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-slfWCK/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

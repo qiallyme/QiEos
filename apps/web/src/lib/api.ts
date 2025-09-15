@@ -1,5 +1,5 @@
 // API client for QiEOS Worker
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8787";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://qieos-api.qilife.workers.dev";
 
 class ApiClient {
   private baseUrl: string;

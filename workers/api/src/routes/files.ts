@@ -4,6 +4,8 @@ export interface Env {
   SUPABASE_URL: string;
   SUPABASE_SERVICE_ROLE_KEY: string;
   R2: R2Bucket;
+  CLOUDFLARE_ACCOUNT_ID: string;
+  R2_BUCKET_NAME: string;
 }
 
 // CORS headers
@@ -144,10 +146,8 @@ async function signUpload(
   const fileId = crypto.randomUUID();
   const fileKey = `files/${orgId}/${fileId}/${filename}`;
 
-  // Create signed upload URL
-  const signedUrl = await env.R2.getSignedUrl("PUT", fileKey, {
-    expiresIn: 3600, // 1 hour
-  });
+  // Create signed upload URL (R2 doesn't have getSignedUrl, we'll use direct upload)
+  const uploadUrl = `https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/r2/buckets/${env.R2_BUCKET_NAME}/objects/${fileKey}`;
 
   // Store file metadata in database
   const { data: fileRecord, error } = await supabase
@@ -181,7 +181,7 @@ async function signUpload(
     JSON.stringify({
       success: true,
       file_id: fileId,
-      signed_url: signedUrl,
+      signed_url: uploadUrl,
       file_record: fileRecord,
     }),
     {

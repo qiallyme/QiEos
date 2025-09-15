@@ -8,6 +8,11 @@ import adminRouter from "./routes/admin";
 import clientRouter from "./routes/client";
 import authRouter from "./routes/auth";
 import filesRouter from "./routes/files";
+import kbRouter from "./routes/kb";
+import appsRouter from "./routes/apps";
+import orgsRouter from "./routes/orgs";
+import adminTestRouter from "./routes/admin-test";
+import testRouter from "./routes/test";
 
 export interface Env {
   SUPABASE_URL: string;
@@ -17,6 +22,8 @@ export interface Env {
   OPENAI_API_KEY: string;
   STRIPE_SECRET_KEY: string;
   R2: R2Bucket;
+  CLOUDFLARE_ACCOUNT_ID: string;
+  R2_BUCKET_NAME: string;
 }
 
 export default {
@@ -82,6 +89,26 @@ export default {
 
       if (path.startsWith("/files")) {
         return await filesRouter.fetch(request, env);
+      }
+
+      if (path.startsWith("/kb")) {
+        return await kbRouter.fetch(request, env);
+      }
+
+      if (path.startsWith("/api/apps")) {
+        return await appsRouter.fetch(request, env);
+      }
+
+      if (path.startsWith("/orgs")) {
+        return await orgsRouter.fetch(request, env);
+      }
+
+      if (path.startsWith("/admin-test")) {
+        return await adminTestRouter.fetch(request, env);
+      }
+
+      if (path.startsWith("/test")) {
+        return await testRouter.fetch(request, env);
       }
 
       // 404 for unmatched routes

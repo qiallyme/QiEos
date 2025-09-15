@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { api } from "../../lib/api";
 import { AIQuickAdd } from "./AIQuickAdd";
+import styles from "./TaskList.module.css";
 
 interface Task {
   id: string;
@@ -101,16 +102,32 @@ export function TaskList() {
   const getPriorityColor = (priority: number) => {
     switch (priority) {
       case 1:
-        return "text-red-600 bg-red-100";
+        return styles.priorityHigh;
       case 2:
         return "text-orange-600 bg-orange-100";
       case 3:
-        return "text-yellow-600 bg-yellow-100";
+        return styles.priorityMedium;
       case 4:
-        return "text-gray-600 bg-gray-100";
+        return styles.priorityLow;
       default:
-        return "text-gray-600 bg-gray-100";
+        return styles.priorityLow;
     }
+  };
+
+  const getProjectBadgeClass = (color: string) => {
+    // Map common colors to CSS classes
+    const colorMap: Record<string, string> = {
+      "#ef4444": styles.projectBadgeRed,
+      "#3b82f6": styles.projectBadgeBlue,
+      "#22c55e": styles.projectBadgeGreen,
+      "#eab308": styles.projectBadgeYellow,
+      "#a855f7": styles.projectBadgePurple,
+      "#ec4899": styles.projectBadgePink,
+      "#6366f1": styles.projectBadgeIndigo,
+      "#6b7280": styles.projectBadgeGray,
+    };
+
+    return colorMap[color] || styles.projectBadgeGray;
   };
 
   const getStatusColor = (status: string) => {
@@ -208,8 +225,9 @@ export function TaskList() {
       {/* Project Filter */}
       <div className="mb-6">
         <div className="flex items-center space-x-4">
-          <label className="text-sm font-medium text-gray-700">Project:</label>
+          <label htmlFor="project-filter" className="text-sm font-medium text-gray-700">Project:</label>
           <select
+            id="project-filter"
             value={selectedProject}
             onChange={(e) => setSelectedProject(e.target.value)}
             className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -248,6 +266,7 @@ export function TaskList() {
           onStatusChange={updateTaskStatus}
           getPriorityColor={getPriorityColor}
           getStatusColor={getStatusColor}
+          getProjectBadgeClass={getProjectBadgeClass}
         />
       ) : (
         <BoardView
@@ -255,6 +274,7 @@ export function TaskList() {
           onStatusChange={updateTaskStatus}
           getPriorityColor={getPriorityColor}
           getStatusColor={getStatusColor}
+          getProjectBadgeClass={getProjectBadgeClass}
         />
       )}
     </div>
@@ -267,11 +287,13 @@ function ListView({
   onStatusChange,
   getPriorityColor,
   getStatusColor,
+  getProjectBadgeClass,
 }: {
   tasks: Task[];
   onStatusChange: (taskId: string, status: string) => void;
   getPriorityColor: (priority: number) => string;
   getStatusColor: (status: string) => string;
+  getProjectBadgeClass: (color: string) => string;
 }) {
   return (
     <div className="bg-white rounded-lg shadow">
@@ -284,17 +306,23 @@ function ListView({
           <div key={task.id} className="px-6 py-4 hover:bg-gray-50">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <input
-                  type="checkbox"
-                  checked={task.status === "completed"}
-                  onChange={(e) =>
-                    onStatusChange(
-                      task.id,
-                      e.target.checked ? "completed" : "todo"
-                    )
-                  }
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={task.status === "completed"}
+                    onChange={(e) =>
+                      onStatusChange(
+                        task.id,
+                        e.target.checked ? "completed" : "todo"
+                      )
+                    }
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    aria-label={`Mark task "${task.title}" as ${
+                      task.status === "completed" ? "incomplete" : "completed"
+                    }`}
+                  />
+                  <span className="sr-only">Toggle task completion</span>
+                </label>
 
                 <div className="flex-1">
                   <h4
@@ -315,13 +343,9 @@ function ListView({
                   <div className="flex items-center space-x-4 mt-2">
                     {task.project && (
                       <span
-                        className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
-                        style={
-                          {
-                            backgroundColor: `${task.project.color}20`,
-                            color: task.project.color,
-                          } as React.CSSProperties
-                        }
+                        className={`${
+                          styles.projectBadge
+                        } ${getProjectBadgeClass(task.project.color)}`}
                       >
                         {task.project.name}
                       </span>
@@ -384,11 +408,13 @@ function BoardView({
   onStatusChange,
   getPriorityColor,
   getStatusColor,
+  getProjectBadgeClass,
 }: {
   tasks: Task[];
   onStatusChange: (taskId: string, status: string) => void;
   getPriorityColor: (priority: number) => string;
   getStatusColor: (status: string) => string;
+  getProjectBadgeClass: (color: string) => string;
 }) {
   const columns = [
     { id: "todo", title: "To Do", color: "bg-gray-100" },
@@ -438,13 +464,9 @@ function BoardView({
 
                     {task.project && (
                       <span
-                        className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium"
-                        style={
-                          {
-                            backgroundColor: `${task.project.color}20`,
-                            color: task.project.color,
-                          } as React.CSSProperties
-                        }
+                        className={`${
+                          styles.projectBadgeSmall
+                        } ${getProjectBadgeClass(task.project.color)}`}
                       >
                         {task.project.name}
                       </span>

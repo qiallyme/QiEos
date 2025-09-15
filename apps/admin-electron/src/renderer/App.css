@@ -22,14 +22,14 @@
 }
 
 /* Reset */
-* { 
-  box-sizing: border-box; 
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html, body, #root { 
-  height: 100%; 
+html, body, #root {
+  height: 100%;
   background: linear-gradient(135deg, #0a0e1a 0%, #1a1f2e 50%, #0a0e1a 100%);
   overflow: hidden;
 }
@@ -217,7 +217,7 @@ html, body, #root {
   padding: 12px 24px;
   background: var(--gradient-accent);
   color: white;
-  box-shadow: 
+  box-shadow:
     0 4px 15px rgba(59, 130, 246, 0.3),
     0 2px 4px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
@@ -226,7 +226,7 @@ html, body, #root {
 
 .btn.connect:hover {
   transform: translateY(-2px);
-  box-shadow: 
+  box-shadow:
     0 8px 25px rgba(59, 130, 246, 0.4),
     0 4px 8px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
@@ -234,14 +234,14 @@ html, body, #root {
 
 .btn.connect:active {
   transform: translateY(0);
-  box-shadow: 
+  box-shadow:
     0 2px 8px rgba(59, 130, 246, 0.3),
     inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .btn.connect.on {
   background: var(--gradient-success);
-  box-shadow: 
+  box-shadow:
     0 4px 15px rgba(16, 185, 129, 0.3),
     0 2px 4px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
@@ -391,7 +391,7 @@ html, body, #root {
 .tab-btn.active {
   background: var(--gradient-accent);
   color: white;
-  box-shadow: 
+  box-shadow:
     0 4px 15px rgba(59, 130, 246, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
@@ -666,11 +666,11 @@ html, body, #root {
   .sidebar {
     width: 240px;
   }
-  
+
   .content {
     padding: 24px;
   }
-  
+
   .stats-grid {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
@@ -680,39 +680,39 @@ html, body, #root {
   .app {
     flex-direction: column;
   }
-  
+
   .sidebar {
     width: 100%;
     height: auto;
     flex-direction: row;
     overflow-x: auto;
   }
-  
+
   .sidebar-nav {
     display: flex;
     flex-direction: row;
     padding: 0;
   }
-  
+
   .nav-item {
     white-space: nowrap;
     border-left: none;
     border-bottom: 3px solid transparent;
   }
-  
+
   .nav-item.active {
     border-left: none;
     border-bottom-color: var(--accent);
   }
-  
+
   .tab-navigation {
     flex-direction: column;
   }
-  
+
   .stats-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .action-grid {
     grid-template-columns: 1fr;
   }

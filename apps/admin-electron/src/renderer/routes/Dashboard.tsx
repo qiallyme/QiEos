@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AdminQuicklinks from "../components/AdminQuicklinks";
 
 const Dashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
   const [stats, setStats] = useState({
     totalUsers: 0,
     activeProjects: 0,
@@ -85,10 +85,10 @@ const Dashboard: React.FC = () => {
   };
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: '📊' },
-    { id: 'analytics', label: 'Analytics', icon: '📈' },
-    { id: 'actions', label: 'Quick Actions', icon: '⚡' },
-    { id: 'system', label: 'System', icon: '🔧' }
+    { id: "overview", label: "Overview", icon: "📊" },
+    { id: "analytics", label: "Analytics", icon: "📈" },
+    { id: "actions", label: "Quick Actions", icon: "⚡" },
+    { id: "system", label: "System", icon: "🔧" },
   ];
 
   return (
@@ -98,7 +98,7 @@ const Dashboard: React.FC = () => {
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
+            className={`tab-btn ${activeTab === tab.id ? "active" : ""}`}
             onClick={() => setActiveTab(tab.id)}
           >
             <span className="tab-icon">{tab.icon}</span>
@@ -109,7 +109,7 @@ const Dashboard: React.FC = () => {
 
       {/* Tab Content */}
       <div className="tab-content">
-        {activeTab === 'overview' && (
+        {activeTab === "overview" && (
           <div className="dashboard-overview">
             <div className="stats-grid">
               <div className="stat-card primary">
@@ -144,7 +144,7 @@ const Dashboard: React.FC = () => {
           </div>
         )}
 
-        {activeTab === 'analytics' && (
+        {activeTab === "analytics" && (
           <div className="dashboard-analytics">
             <div className="card">
               <h2>System Analytics</h2>
@@ -164,7 +164,7 @@ const Dashboard: React.FC = () => {
           </div>
         )}
 
-        {activeTab === 'actions' && (
+        {activeTab === "actions" && (
           <div className="dashboard-actions">
             <div className="card">
               <h2>Quick Actions</h2>
@@ -199,7 +199,7 @@ const Dashboard: React.FC = () => {
           </div>
         )}
 
-        {activeTab === 'system' && (
+        {activeTab === "system" && (
           <div className="dashboard-system">
             <div className="card">
               <h2>System Information</h2>

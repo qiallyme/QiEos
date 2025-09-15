@@ -108,6 +108,7 @@ export function FileUpload({ onUploadComplete, companyId }: FileUploadProps) {
           onChange={handleFileSelect}
           className="hidden"
           accept="*/*"
+          aria-label="Select files to upload"
         />
 
         <div className="space-y-2">
@@ -149,7 +150,7 @@ export function FileUpload({ onUploadComplete, companyId }: FileUploadProps) {
           <div className={styles.progressBar}>
             <div
               className={styles.progressFill}
-              style={{ '--progress': `${progress}%` } as React.CSSProperties}
+              style={{ width: `${progress}%` }}
             />
           </div>
         </div>

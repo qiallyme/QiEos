@@ -175,6 +175,8 @@ export function ProjectManager() {
                           ? "border-gray-400"
                           : "border-gray-200"
                       } bg-[${color}]`}
+                      aria-label={`Select color ${color}`}
+                      title={`Select color ${color}`}
                     />
                   ))}
                 </div>

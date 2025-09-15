@@ -75,13 +75,13 @@ export default {
             role,
             org_id,
             company_id,
-            companies!inner(
+            companies(
               id,
               name,
               slug,
               org_id
             ),
-            orgs!inner(
+            orgs(
               id,
               name,
               slug
@@ -138,12 +138,12 @@ export default {
           phone: contact.phone,
           role: contact.role || "external",
           org_id: contact.org_id,
-          org_name: contact.orgs.name,
-          org_slug: contact.orgs.slug,
+          org_name: contact.orgs?.[0]?.name,
+          org_slug: contact.orgs?.[0]?.slug,
           company_ids: companyIds,
           company_id: contact.company_id,
-          company_name: contact.companies?.name,
-          company_slug: contact.companies?.slug,
+          company_name: contact.companies?.[0]?.name,
+          company_slug: contact.companies?.[0]?.slug,
           features,
           scopes: ["read", "write"], // Basic scopes
         };

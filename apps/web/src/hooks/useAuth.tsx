@@ -49,7 +49,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<any>(null);
   const [claims, setClaims] = useState<Claims | null>(null);
   const [loading, setLoading] = useState(true);
@@ -87,7 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const enrichClaims = async (token: string) => {
     try {
-      const response = await api.post("/auth/session", { token });
+      const response = await api.post("/auth/session", { token }) as { success: boolean; claims: Claims };
       if (response.success) {
         setClaims(response.claims);
       }
@@ -137,7 +137,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-export { AuthProvider };
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
@@ -145,4 +144,6 @@ export function useAuth() {
   }
   return context;
 }
+
+export { AuthProvider };
 
