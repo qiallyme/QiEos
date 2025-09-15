@@ -9609,7 +9609,8 @@ var auth_default = {
             }
           );
         }
-        const { data: contact, error: contactError } = await supabase.from("contacts").select(`
+        const { data: contact, error: contactError } = await supabase.from("contacts").select(
+          `
             id,
             email,
             first_name,
@@ -9629,7 +9630,8 @@ var auth_default = {
               name,
               slug
             )
-          `).eq("supabase_user_id", user.id).single();
+          `
+        ).eq("supabase_user_id", user.id).single();
         if (contactError || !contact) {
           return new Response(
             JSON.stringify({ success: false, error: "User profile not found" }),
@@ -9695,18 +9697,258 @@ var auth_default = {
   }
 };
 
+// src/routes/files.ts
+init_strip_cf_connecting_ip_header();
+init_modules_watch_stub();
+var corsHeaders9 = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization"
+};
+var files_default = {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const path = url.pathname;
+    const method = request.method;
+    if (method === "OPTIONS") {
+      return new Response(null, { status: 200, headers: corsHeaders9 });
+    }
+    try {
+      const supabase = createClient(
+        env.SUPABASE_URL,
+        env.SUPABASE_SERVICE_ROLE_KEY
+      );
+      const authHeader = request.headers.get("Authorization");
+      if (!authHeader?.startsWith("Bearer ")) {
+        return new Response(
+          JSON.stringify({ error: "Missing or invalid authorization" }),
+          {
+            status: 401,
+            headers: { ...corsHeaders9, "Content-Type": "application/json" }
+          }
+        );
+      }
+      const token = authHeader.substring(7);
+      const {
+        data: { user },
+        error: authError
+      } = await supabase.auth.getUser(token);
+      if (authError || !user) {
+        return new Response(JSON.stringify({ error: "Invalid token" }), {
+          status: 401,
+          headers: { ...corsHeaders9, "Content-Type": "application/json" }
+        });
+      }
+      const { data: contact } = await supabase.from("contacts").select("org_id, id, company_id").eq("supabase_user_id", user.id).single();
+      if (!contact) {
+        return new Response(JSON.stringify({ error: "User not found" }), {
+          status: 404,
+          headers: { ...corsHeaders9, "Content-Type": "application/json" }
+        });
+      }
+      const orgId = contact.org_id;
+      const contactId = contact.id;
+      const companyId = contact.company_id;
+      switch (true) {
+        case (path === "/files/sign-upload" && method === "POST"):
+          return await signUpload(
+            supabase,
+            env,
+            orgId,
+            companyId,
+            contactId,
+            request
+          );
+        case (path === "/files/complete" && method === "POST"):
+          return await completeUpload(
+            supabase,
+            orgId,
+            companyId,
+            contactId,
+            request
+          );
+        case (path === "/files" && method === "GET"):
+          return await listFiles(supabase, orgId, companyId, url.searchParams);
+        case (path.match(/^\/files\/[^\/]+$/) && method === "DELETE"):
+          const fileId = path.split("/")[2];
+          return await deleteFile(supabase, env, orgId, fileId);
+        default:
+          return new Response(JSON.stringify({ error: "Not found" }), {
+            status: 404,
+            headers: { ...corsHeaders9, "Content-Type": "application/json" }
+          });
+      }
+    } catch (error) {
+      console.error("Files API error:", error);
+      return new Response(JSON.stringify({ error: "Internal server error" }), {
+        status: 500,
+        headers: { ...corsHeaders9, "Content-Type": "application/json" }
+      });
+    }
+  }
+};
+async function signUpload(supabase, env, orgId, companyId, contactId, request) {
+  const body = await request.json();
+  const { filename, content_type, size } = body;
+  if (!filename || !content_type || !size) {
+    return new Response(JSON.stringify({ error: "Missing required fields" }), {
+      status: 400,
+      headers: { ...corsHeaders9, "Content-Type": "application/json" }
+    });
+  }
+  const fileId = crypto.randomUUID();
+  const fileKey = `files/${orgId}/${fileId}/${filename}`;
+  const signedUrl = await env.R2.getSignedUrl("PUT", fileKey, {
+    expiresIn: 3600
+    // 1 hour
+  });
+  const { data: fileRecord, error } = await supabase.from("files").insert({
+    id: fileId,
+    org_id: orgId,
+    company_id: companyId,
+    uploaded_by: contactId,
+    filename,
+    content_type,
+    size,
+    file_key: fileKey,
+    status: "uploading"
+  }).select().single();
+  if (error) {
+    console.error("Error creating file record:", error);
+    return new Response(
+      JSON.stringify({ error: "Failed to create file record" }),
+      {
+        status: 500,
+        headers: { ...corsHeaders9, "Content-Type": "application/json" }
+      }
+    );
+  }
+  return new Response(
+    JSON.stringify({
+      success: true,
+      file_id: fileId,
+      signed_url: signedUrl,
+      file_record: fileRecord
+    }),
+    {
+      status: 200,
+      headers: { ...corsHeaders9, "Content-Type": "application/json" }
+    }
+  );
+}
+__name(signUpload, "signUpload");
+async function completeUpload(supabase, orgId, companyId, contactId, request) {
+  const body = await request.json();
+  const { file_id } = body;
+  if (!file_id) {
+    return new Response(JSON.stringify({ error: "File ID required" }), {
+      status: 400,
+      headers: { ...corsHeaders9, "Content-Type": "application/json" }
+    });
+  }
+  const { data, error } = await supabase.from("files").update({
+    status: "completed",
+    uploaded_at: (/* @__PURE__ */ new Date()).toISOString()
+  }).eq("id", file_id).eq("org_id", orgId).select().single();
+  if (error) {
+    console.error("Error completing upload:", error);
+    return new Response(
+      JSON.stringify({ error: "Failed to complete upload" }),
+      {
+        status: 500,
+        headers: { ...corsHeaders9, "Content-Type": "application/json" }
+      }
+    );
+  }
+  return new Response(
+    JSON.stringify({
+      success: true,
+      file: data
+    }),
+    {
+      status: 200,
+      headers: { ...corsHeaders9, "Content-Type": "application/json" }
+    }
+  );
+}
+__name(completeUpload, "completeUpload");
+async function listFiles(supabase, orgId, companyId, searchParams) {
+  const limit = parseInt(searchParams.get("limit") || "50");
+  const offset = parseInt(searchParams.get("offset") || "0");
+  let query = supabase.from("files").select(
+    `
+      *,
+      uploader:contacts!files_uploaded_by_fkey(first_name, last_name, email)
+    `
+  ).eq("org_id", orgId).eq("status", "completed").order("uploaded_at", { ascending: false }).range(offset, offset + limit - 1);
+  if (companyId) {
+    query = query.eq("company_id", companyId);
+  }
+  const { data, error } = await query;
+  if (error) {
+    console.error("Error listing files:", error);
+    return new Response(JSON.stringify({ error: "Failed to list files" }), {
+      status: 500,
+      headers: { ...corsHeaders9, "Content-Type": "application/json" }
+    });
+  }
+  return new Response(
+    JSON.stringify({
+      files: data || []
+    }),
+    {
+      status: 200,
+      headers: { ...corsHeaders9, "Content-Type": "application/json" }
+    }
+  );
+}
+__name(listFiles, "listFiles");
+async function deleteFile(supabase, env, orgId, fileId) {
+  const { data: file, error: fetchError } = await supabase.from("files").select("*").eq("id", fileId).eq("org_id", orgId).single();
+  if (fetchError || !file) {
+    return new Response(JSON.stringify({ error: "File not found" }), {
+      status: 404,
+      headers: { ...corsHeaders9, "Content-Type": "application/json" }
+    });
+  }
+  try {
+    await env.R2.delete(file.file_key);
+  } catch (r2Error) {
+    console.error("Error deleting from R2:", r2Error);
+  }
+  const { error: deleteError } = await supabase.from("files").delete().eq("id", fileId).eq("org_id", orgId);
+  if (deleteError) {
+    console.error("Error deleting file record:", deleteError);
+    return new Response(JSON.stringify({ error: "Failed to delete file" }), {
+      status: 500,
+      headers: { ...corsHeaders9, "Content-Type": "application/json" }
+    });
+  }
+  return new Response(
+    JSON.stringify({
+      success: true,
+      message: "File deleted successfully"
+    }),
+    {
+      status: 200,
+      headers: { ...corsHeaders9, "Content-Type": "application/json" }
+    }
+  );
+}
+__name(deleteFile, "deleteFile");
+
 // src/index.ts
 var src_default = {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = url.pathname;
-    const corsHeaders9 = {
+    const corsHeaders10 = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization"
     };
     if (request.method === "OPTIONS") {
-      return new Response(null, { status: 200, headers: corsHeaders9 });
+      return new Response(null, { status: 200, headers: corsHeaders10 });
     }
     try {
       const supabase = createClient(
@@ -9737,9 +9979,12 @@ var src_default = {
       if (path.startsWith("/auth")) {
         return await auth_default.fetch(request, env);
       }
+      if (path.startsWith("/files")) {
+        return await files_default.fetch(request, env);
+      }
       return new Response(JSON.stringify({ error: "Not found" }), {
         status: 404,
-        headers: { ...corsHeaders9, "Content-Type": "application/json" }
+        headers: { ...corsHeaders10, "Content-Type": "application/json" }
       });
     } catch (error) {
       console.error("Worker error:", error);
@@ -9750,7 +9995,7 @@ var src_default = {
         }),
         {
           status: 500,
-          headers: { ...corsHeaders9, "Content-Type": "application/json" }
+          headers: { ...corsHeaders10, "Content-Type": "application/json" }
         }
       );
     }

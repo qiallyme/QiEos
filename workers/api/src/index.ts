@@ -7,6 +7,7 @@ import crmRouter from "./routes/crm";
 import adminRouter from "./routes/admin";
 import clientRouter from "./routes/client";
 import authRouter from "./routes/auth";
+import filesRouter from "./routes/files";
 
 export interface Env {
   SUPABASE_URL: string;
@@ -15,6 +16,7 @@ export interface Env {
   JWT_SECRET: string;
   OPENAI_API_KEY: string;
   STRIPE_SECRET_KEY: string;
+  R2: R2Bucket;
 }
 
 export default {
@@ -78,6 +80,9 @@ export default {
         return await authRouter.fetch(request, env);
       }
 
+      if (path.startsWith("/files")) {
+        return await filesRouter.fetch(request, env);
+      }
 
       // 404 for unmatched routes
       return new Response(JSON.stringify({ error: "Not found" }), {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import AdminQuicklinks from "../components/AdminQuicklinks";
 
 const Dashboard: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('overview');
   const [stats, setStats] = useState({
     totalUsers: 0,
     activeProjects: 0,
@@ -83,79 +84,149 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: '📊' },
+    { id: 'analytics', label: 'Analytics', icon: '📈' },
+    { id: 'actions', label: 'Quick Actions', icon: '⚡' },
+    { id: 'system', label: 'System', icon: '🔧' }
+  ];
+
   return (
     <div className="content">
-      <div className="card">
-        <h2>System Overview</h2>
-        {loading ? (
-          <div className="loading">Loading dashboard stats...</div>
-        ) : (
-          <div className="dashboard-grid">
-            <div className="card">
-              <h3>Total Users</h3>
-              <p className="stat-number primary">{stats.totalUsers}</p>
+      {/* Tab Navigation */}
+      <div className="tab-navigation">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            <span className="tab-icon">{tab.icon}</span>
+            <span className="tab-label">{tab.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Tab Content */}
+      <div className="tab-content">
+        {activeTab === 'overview' && (
+          <div className="dashboard-overview">
+            <div className="stats-grid">
+              <div className="stat-card primary">
+                <div className="stat-icon">👥</div>
+                <div className="stat-content">
+                  <div className="stat-number">{stats.totalUsers}</div>
+                  <div className="stat-label">Total Users</div>
+                </div>
+              </div>
+              <div className="stat-card secondary">
+                <div className="stat-icon">📋</div>
+                <div className="stat-content">
+                  <div className="stat-number">{stats.activeProjects}</div>
+                  <div className="stat-label">Active Projects</div>
+                </div>
+              </div>
+              <div className="stat-card warning">
+                <div className="stat-icon">✅</div>
+                <div className="stat-content">
+                  <div className="stat-number">{stats.pendingTasks}</div>
+                  <div className="stat-label">Pending Tasks</div>
+                </div>
+              </div>
+              <div className="stat-card success">
+                <div className="stat-icon">🏢</div>
+                <div className="stat-content">
+                  <div className="stat-number">{stats.totalOrgs}</div>
+                  <div className="stat-label">Organizations</div>
+                </div>
+              </div>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'analytics' && (
+          <div className="dashboard-analytics">
             <div className="card">
-              <h3>Active Projects</h3>
-              <p className="stat-number success">{stats.activeProjects}</p>
+              <h2>System Analytics</h2>
+              <div className="analytics-grid">
+                <div className="analytics-item">
+                  <h3>Recent Activity</h3>
+                  <p className="analytics-value">{stats.recentActivity}</p>
+                </div>
+                <div className="analytics-item">
+                  <h3>System Health</h3>
+                  <div className={`health-status ${stats.systemHealth}`}>
+                    {stats.systemHealth}
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'actions' && (
+          <div className="dashboard-actions">
             <div className="card">
-              <h3>Pending Tasks</h3>
-              <p className="stat-number warning">{stats.pendingTasks}</p>
+              <h2>Quick Actions</h2>
+              <div className="action-grid">
+                <button
+                  className="action-btn primary"
+                  onClick={handleCreateTenant}
+                  disabled={loading}
+                >
+                  <span className="action-icon">🏢</span>
+                  <span className="action-label">Create New Tenant</span>
+                </button>
+                <button
+                  className="action-btn secondary"
+                  onClick={handleSystemCheck}
+                  disabled={loading}
+                >
+                  <span className="action-icon">🔍</span>
+                  <span className="action-label">System Check</span>
+                </button>
+                <button
+                  className="action-btn secondary"
+                  onClick={handleViewLogs}
+                  disabled={loading}
+                >
+                  <span className="action-icon">📋</span>
+                  <span className="action-label">View Logs</span>
+                </button>
+              </div>
             </div>
+            <AdminQuicklinks />
+          </div>
+        )}
+
+        {activeTab === 'system' && (
+          <div className="dashboard-system">
             <div className="card">
-              <h3>Organizations</h3>
-              <p className="stat-number info">{stats.totalOrgs}</p>
-            </div>
-            <div className="card">
-              <h3>Recent Activity</h3>
-              <p className="stat-number secondary">{stats.recentActivity}</p>
-            </div>
-            <div className="card">
-              <h3>System Health</h3>
-              <p
-                className={`stat-number ${
-                  stats.systemHealth === "online" ? "success" : "danger"
-                }`}
-              >
-                {stats.systemHealth === "online" ? "🟢" : "🔴"}
-              </p>
+              <h2>System Information</h2>
+              <div className="system-info">
+                <div className="info-item">
+                  <label>Status:</label>
+                  <span className={`status-indicator ${stats.systemHealth}`}>
+                    {stats.systemHealth}
+                  </span>
+                </div>
+                <div className="info-item">
+                  <label>Total Users:</label>
+                  <span>{stats.totalUsers}</span>
+                </div>
+                <div className="info-item">
+                  <label>Active Projects:</label>
+                  <span>{stats.activeProjects}</span>
+                </div>
+                <div className="info-item">
+                  <label>Pending Tasks:</label>
+                  <span>{stats.pendingTasks}</span>
+                </div>
+              </div>
             </div>
           </div>
         )}
       </div>
-
-      <div className="card card-spacing">
-        <h2>Quick Actions</h2>
-        <div className="flex-gap">
-          <button className="btn btn-primary" onClick={handleCreateTenant}>
-            Create New Tenant
-          </button>
-          <button className="btn btn-secondary" onClick={handleSystemCheck}>
-            Run System Check
-          </button>
-          <button className="btn btn-secondary" onClick={handleViewLogs}>
-            View Logs
-          </button>
-        </div>
-      </div>
-
-      <div className="card card-spacing">
-        <h2>Recent Activity</h2>
-        {loading ? (
-          <p className="text-muted">Loading recent activity...</p>
-        ) : stats.recentActivity > 0 ? (
-          <p className="text-success">
-            {stats.recentActivity} new tasks created in the last 24 hours
-          </p>
-        ) : (
-          <p className="text-muted">
-            No recent activity to display. System is ready for new tasks.
-          </p>
-        )}
-      </div>
-
-      <AdminQuicklinks />
     </div>
   );
 };

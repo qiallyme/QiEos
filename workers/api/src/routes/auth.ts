@@ -65,7 +65,8 @@ export default {
         // Get user profile from contacts table (not profiles)
         const { data: contact, error: contactError } = await supabase
           .from("contacts")
-          .select(`
+          .select(
+            `
             id,
             email,
             first_name,
@@ -85,7 +86,8 @@ export default {
               name,
               slug
             )
-          `)
+          `
+          )
           .eq("supabase_user_id", user.id)
           .single();
 
@@ -106,7 +108,7 @@ export default {
           .eq("supabase_user_id", user.id)
           .not("company_id", "is", null);
 
-        const companyIds = userCompanies?.map(c => c.company_id) || [];
+        const companyIds = userCompanies?.map((c) => c.company_id) || [];
 
         // Get feature flags for the user's org and companies
         const { data: orgFeatures } = await supabase
@@ -122,10 +124,10 @@ export default {
           .eq("is_enabled", true);
 
         const features: Record<string, boolean> = {};
-        
+
         // Merge org and company features
-        orgFeatures?.forEach(f => features[f.feature_key] = true);
-        companyFeatures?.forEach(f => features[f.feature_key] = true);
+        orgFeatures?.forEach((f) => (features[f.feature_key] = true));
+        companyFeatures?.forEach((f) => (features[f.feature_key] = true));
 
         // Build enriched claims
         const claims = {
@@ -134,7 +136,7 @@ export default {
           first_name: contact.first_name,
           last_name: contact.last_name,
           phone: contact.phone,
-          role: contact.role || 'external',
+          role: contact.role || "external",
           org_id: contact.org_id,
           org_name: contact.orgs.name,
           org_slug: contact.orgs.slug,
@@ -143,7 +145,7 @@ export default {
           company_name: contact.companies?.name,
           company_slug: contact.companies?.slug,
           features,
-          scopes: ['read', 'write'], // Basic scopes
+          scopes: ["read", "write"], // Basic scopes
         };
 
         return new Response(
