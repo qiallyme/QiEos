@@ -1,0 +1,6 @@
+packages:
+  - "apps/*"
+  - "workers/*"
+  - "packages/*"
+  - "sites/*"
+  - "sites/clients/_qsites/*"

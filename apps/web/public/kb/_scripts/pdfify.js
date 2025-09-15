@@ -1,31 +1,31 @@
-﻿const puppeteer = require('puppeteer');
-const fs = require('fs');
-const path = require('path');
-const { glob } = require('glob');
+﻿const puppeteer = require("puppeteer");
+const fs = require("fs");
+const path = require("path");
+const { glob } = require("glob");
 
 async function pdfify() {
-  console.log(' Starting PDF generation...');
+  console.log(" Starting PDF generation...");
   
   // Find all HTML files in kb/assets/html/
-  const htmlFiles = await glob('kb/assets/html/*.html');
+  const htmlFiles = await glob("public/kb/assets/html/*.html");
   
   if (htmlFiles.length === 0) {
-    console.log(' No HTML files found in kb/assets/html/');
+    console.log(" No HTML files found in public/kb/assets/html/");
     return;
   }
   
-  console.log( Found  HTML file(s) to process);
+  console.log(` Found ${htmlFiles.length} HTML file(s) to process`);
   
   // Launch Puppeteer
   const browser = await puppeteer.launch({
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: ["--no-sandbox", "--disable-setuid-sandbox"]
   });
   
   try {
     for (const htmlFile of htmlFiles) {
-      const basename = path.basename(htmlFile, '.html');
-      const pdfPath = kb/assets/pdf/.pdf;
+      const basename = path.basename(htmlFile, ".html");
+      const pdfPath = `public/kb/assets/pdf/${basename}.pdf`;
       
       // Check if PDF exists and if HTML is newer
       const htmlStats = fs.statSync(htmlFile);
@@ -37,42 +37,42 @@ async function pdfify() {
       }
       
       if (!shouldGenerate) {
-        console.log(  Skipping .pdf (up to date));
+        console.log(`  Skipping ${basename}.pdf (up to date)`);
         continue;
       }
       
-      console.log( Generating .pdf...);
+      console.log(` Generating ${basename}.pdf...`);
       
       const page = await browser.newPage();
       
       // Load the HTML file
-      const fileUrl = ile://;
+      const fileUrl = `file://${path.resolve(htmlFile)}`;
       await page.goto(fileUrl, { 
-        waitUntil: 'networkidle0',
+        waitUntil: "networkidle0",
         timeout: 30000 
       });
       
       // Generate PDF
       await page.pdf({
         path: pdfPath,
-        format: 'Letter',
+        format: "Letter",
         printBackground: true,
         margin: {
-          top: '0.5in',
-          right: '0.5in',
-          bottom: '0.5in',
-          left: '0.5in'
+          top: "0.5in",
+          right: "0.5in",
+          bottom: "0.5in",
+          left: "0.5in"
         }
       });
       
       await page.close();
-      console.log( Generated .pdf);
+      console.log(` Generated ${basename}.pdf`);
     }
   } finally {
     await browser.close();
   }
   
-  console.log(' PDF generation complete!');
+  console.log(" PDF generation complete!");
 }
 
 // Run if called directly

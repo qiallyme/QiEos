@@ -31,7 +31,7 @@ export const CrmPage: React.FC = () => {
     try {
       setLoading(true);
       const response = await api.get("/crm/contacts");
-      setContacts(response.contacts || []);
+      setContacts((response as any).contacts || []);
     } catch (error) {
       console.error("Failed to load contacts:", error);
     } finally {

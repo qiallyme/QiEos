@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import AdminQuicklinks from "../components/AdminQuicklinks";
 
 const Dashboard: React.FC = () => {
   const [stats, setStats] = useState({
@@ -153,6 +154,8 @@ const Dashboard: React.FC = () => {
           </p>
         )}
       </div>
+
+      <AdminQuicklinks />
     </div>
   );
 };

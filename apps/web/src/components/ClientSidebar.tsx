@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { cn } from "../../lib/utils";
+// import { cn } from "../../lib/utils";
 
 interface SidebarItem {
   href: string;
@@ -51,11 +51,9 @@ export function ClientSidebar({ className, items }: ClientSidebarProps) {
       </button>
 
       <aside
-        className={cn(
-          "flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1 h-[85vh] py-3 overflow-hidden transition-all lg:-translate-x-0 bg-white border border-slate-200 rounded-xl flex-col justify-between px-4 lg:transition-none ease-linear md:sticky fixed top-[60px] mt-6 z-50",
-          isSidebarOpen ? "translate-x-0" : "-translate-x-[110%]",
-          className
-        )}
+        className={`flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1 h-[85vh] py-3 overflow-hidden transition-all lg:-translate-x-0 bg-white border border-slate-200 rounded-xl flex-col justify-between px-4 lg:transition-none ease-linear md:sticky fixed top-[60px] mt-6 z-50 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-[110%]"
+        } ${className || ""}`}
       >
         <div className="min-h-max py-2 border-b border-b-gray-100 dark:border-b-gray-900">
           <Link
@@ -86,22 +84,20 @@ export function ClientSidebar({ className, items }: ClientSidebarProps) {
           <ul className="text-gray-700 dark:text-gray-300 space-y-3">
             {items.map((item) => (
               <li
-                className={cn(
+                className={`${
                   location.pathname === item.href
                     ? "before:bg-[#00aeef]"
-                    : "hover:bg-transparent hover:bg-slate-100",
-                  "relative before:absolute before:-left-4 before:w-1.5 before:h-4/5 before:rounded-r-md before:top-1/2 before:-translate-y-1/2 "
-                )}
+                    : "hover:bg-transparent hover:bg-slate-100"
+                } relative before:absolute before:-left-4 before:w-1.5 before:h-4/5 before:rounded-r-md before:top-1/2 before:-translate-y-1/2`}
                 key={item.href}
               >
                 <Link
                   to={item.href}
-                  className={cn(
+                  className={`${
                     location.pathname === item.href
                       ? "text-[#00aeef] bg-gray-50 dark:bg-gray-900/80"
-                      : "hover:bg-transparent hover:bg-slate-100",
-                    "justify-start flex items-center px-4 py-2.5 gap-x-3 rounded-md"
-                  )}
+                      : "hover:bg-transparent hover:bg-slate-100"
+                  } justify-start flex items-center px-4 py-2.5 gap-x-3 rounded-md`}
                   onClick={closeSidebar}
                 >
                   {item.icon}

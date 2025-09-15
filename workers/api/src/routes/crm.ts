@@ -160,12 +160,12 @@ async function createContact(supabase: any, orgId: string, request: Request) {
     .from("contacts")
     .insert({
       org_id: orgId,
-      company_id: body.company_id,
-      email: body.email,
-      first_name: body.first_name,
-      last_name: body.last_name,
-      phone: body.phone,
-      role: body.role || "external",
+      company_id: (body as any).company_id,
+      email: (body as any).email,
+      first_name: (body as any).first_name,
+      last_name: (body as any).last_name,
+      phone: (body as any).phone,
+      role: (body as any).role || "external",
     })
     .select()
     .single();
@@ -252,9 +252,9 @@ async function createCompany(supabase: any, orgId: string, request: Request) {
     .from("companies")
     .insert({
       org_id: orgId,
-      department_id: body.department_id,
-      name: body.name,
-      slug: body.slug,
+      department_id: (body as any).department_id,
+      name: (body as any).name,
+      slug: (body as any).slug,
     })
     .select()
     .single();

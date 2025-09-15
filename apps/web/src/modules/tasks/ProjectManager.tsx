@@ -32,7 +32,7 @@ export function ProjectManager() {
     try {
       setLoading(true);
       const response = await api.get("/projects");
-      setProjects(response.projects || []);
+      setProjects((response as any).projects || []);
     } catch (error) {
       console.error("Failed to load projects:", error);
     } finally {
@@ -44,7 +44,7 @@ export function ProjectManager() {
     e.preventDefault();
     try {
       const response = await api.post("/projects", newProject);
-      setProjects((prev) => [response.project, ...prev]);
+      setProjects((prev) => [(response as any).project, ...prev]);
       setNewProject({
         name: "",
         description: "",

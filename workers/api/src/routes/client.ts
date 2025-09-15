@@ -247,12 +247,12 @@ async function createClientTask(
       .insert({
         org_id: orgId,
         company_id: companyId,
-        project_id: body.project_id,
-        title: body.title,
-        description: body.description,
+        project_id: (body as any).project_id,
+        title: (body as any).title,
+        description: (body as any).description,
         status: "pending",
-        priority: body.priority || "medium",
-        assigned_to: body.assigned_to,
+        priority: (body as any).priority || "medium",
+        assigned_to: (body as any).assigned_to,
         created_by: userId,
       })
       .select()
@@ -385,10 +385,10 @@ async function updateClientProfile(
     const { data, error } = await supabase
       .from("contacts")
       .update({
-        first_name: body.first_name,
-        last_name: body.last_name,
-        phone: body.phone,
-        settings: body.settings,
+        first_name: (body as any).first_name,
+        last_name: (body as any).last_name,
+        phone: (body as any).phone,
+        settings: (body as any).settings,
       })
       .eq("org_id", orgId)
       .eq("supabase_user_id", userId)

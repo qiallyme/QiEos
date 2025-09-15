@@ -183,9 +183,9 @@ async function createTenant(supabase: any, request: Request) {
     const { data, error } = await supabase
       .from("orgs")
       .insert({
-        name: body.name,
-        slug: body.slug,
-        settings: body.settings || {},
+        name: (body as any).name,
+        slug: (body as any).slug,
+        settings: (body as any).settings || {},
       })
       .select()
       .single();

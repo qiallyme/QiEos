@@ -12,6 +12,8 @@ export interface Env {
   SUPABASE_SERVICE_ROLE_KEY: string;
   JWT_ISSUER: string;
   JWT_SECRET: string;
+  OPENAI_API_KEY: string;
+  STRIPE_SECRET_KEY: string;
 }
 
 export default {

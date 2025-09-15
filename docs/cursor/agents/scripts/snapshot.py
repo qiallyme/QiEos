@@ -2,8 +2,16 @@
 import argparse, os, sys, json, hashlib, subprocess, datetime, zipfile
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[4] / "QiEos"
-SNAPDIR = Path(__file__).resolve().parents[4] / "snapshots"
+# Get the git root directory dynamically
+import subprocess
+try:
+    git_root = subprocess.run(["git", "rev-parse", "--show-toplevel"],
+                             capture_output=True, text=True, cwd=Path(__file__).parent).stdout.strip()
+    ROOT = Path(git_root)
+except:
+    # Fallback to relative path if git command fails
+    ROOT = Path(__file__).resolve().parents[4] / "QiEOS"
+SNAPDIR = ROOT.parent / "snapshots"
 DEFAULT_IGNORE = [
     ".git/", "node_modules/", "dist/", "build/", ".cache/", ".turbo/",
     ".next/", ".DS_Store", "*.log", "*.tmp", "*.lock", "*.env", ".trash/",
@@ -26,13 +34,13 @@ def sha256_file(p: Path, max_bytes=None):
 def should_ignore(path: Path, patterns):
     try:
         s = str(path).replace("\\","/") + ("/" if path.is_dir() else "")
-        
+
         # Check for Windows system directories and files
         if any(part.startswith('$') for part in path.parts):
             return True
         if any(part in ['System Volume Information', 'RECYCLER', 'RECYCLED'] for part in path.parts):
             return True
-        
+
         for pat in patterns:
             # simple glob-ish check
             if pat.endswith("/"):
@@ -83,7 +91,7 @@ def collect_files(root: Path, patterns):
         except (PermissionError, FileNotFoundError, OSError) as e:
             print(f"[warn] Cannot access directory {path}: {e}")
             return
-    
+
     try:
         print(f"[info] Starting file collection from {root}")
         yield from walk_dir(root)

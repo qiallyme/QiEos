@@ -31,7 +31,7 @@ export function AIQuickAdd({
         },
       });
 
-      onTaskCreated(response.task);
+      onTaskCreated((response as any).task);
       setText("");
       onClose();
     } catch (error) {
@@ -42,7 +42,7 @@ export function AIQuickAdd({
           title: text.trim(),
           priority: 3,
         });
-        onTaskCreated(response.task);
+        onTaskCreated((response as any).task);
         setText("");
         onClose();
       } catch (fallbackError) {
@@ -65,7 +65,7 @@ export function AIQuickAdd({
         limit: 3,
       });
 
-      setSuggestions(response.suggestions || []);
+      setSuggestions((response as any).suggestions || []);
       setShowSuggestions(true);
     } catch (error) {
       console.error("Failed to load suggestions:", error);

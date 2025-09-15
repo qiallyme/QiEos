@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { marked } from 'marked';
-import DOMPurify from 'dompurify';
+import React, { useState, useEffect } from "react";
+import { marked } from "marked";
+import DOMPurify from "dompurify";
+import { Download, FileText, Eye } from "lucide-react";
+import { Circular230Notice } from "./NoticeInline";
 
 interface DocProps {
   path: string;
@@ -13,54 +15,58 @@ interface DocContent {
   isHtml: boolean;
 }
 
-export const Doc: React.FC<DocProps> = ({ path, className = '' }) => {
+export const Doc: React.FC<DocProps> = ({ path, className = "" }) => {
   const [docContent, setDocContent] = useState<DocContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasPdf, setHasPdf] = useState(false);
+  const [hasHtml, setHasHtml] = useState(false);
 
   useEffect(() => {
     loadDocument();
+    checkAssetAvailability();
   }, [path]);
 
   const loadDocument = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       // Determine if this is an HTML file or markdown
-      const isHtml = path.endsWith('.html');
+      const isHtml = path.endsWith(".html");
       const fullPath = isHtml ? `/kb/assets/html/${path}` : `/kb${path}`;
-      
+
       const response = await fetch(fullPath);
-      
+
       if (!response.ok) {
         throw new Error(`Failed to load document: ${response.statusText}`);
       }
-      
+
       const content = await response.text();
-      
+
       if (isHtml) {
         // For HTML files, return as-is
         setDocContent({
           frontmatter: {},
           content,
-          isHtml: true
+          isHtml: true,
         });
       } else {
         // Parse markdown with frontmatter
-        const { data: frontmatter, content: markdownContent } = parseFrontmatter(content);
-        
+        const { data: frontmatter, content: markdownContent } =
+          parseFrontmatter(content);
+
         // Convert markdown to HTML
         const htmlContent = marked(markdownContent);
-        
+
         setDocContent({
           frontmatter,
           content: htmlContent,
-          isHtml: false
+          isHtml: false,
         });
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load document');
+      setError(err instanceof Error ? err.message : "Failed to load document");
     } finally {
       setIsLoading(false);
     }
@@ -69,42 +75,74 @@ export const Doc: React.FC<DocProps> = ({ path, className = '' }) => {
   const parseFrontmatter = (content: string) => {
     const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
     const match = content.match(frontmatterRegex);
-    
+
     if (match) {
       const frontmatterText = match[1];
       const markdownContent = match[2];
-      
+
       // Simple YAML parsing for basic frontmatter
       const frontmatter: Record<string, any> = {};
-      const lines = frontmatterText.split('\n');
-      
+      const lines = frontmatterText.split("\n");
+
       for (const line of lines) {
-        const colonIndex = line.indexOf(':');
+        const colonIndex = line.indexOf(":");
         if (colonIndex > 0) {
           const key = line.substring(0, colonIndex).trim();
           let value = line.substring(colonIndex + 1).trim();
-          
+
           // Remove quotes
-          if ((value.startsWith('"') && value.endsWith('"')) || 
-              (value.startsWith("'") && value.endsWith("'"))) {
+          if (
+            (value.startsWith('"') && value.endsWith('"')) ||
+            (value.startsWith("'") && value.endsWith("'"))
+          ) {
             value = value.slice(1, -1);
           }
-          
+
           // Handle arrays
-          if (value.startsWith('[') && value.endsWith(']')) {
-            value = value.slice(1, -1).split(',').map(item => 
-              item.trim().replace(/^["']|["']$/g, '')
-            );
+          if (value.startsWith("[") && value.endsWith("]")) {
+            const arrayValue = value
+              .slice(1, -1)
+              .split(",")
+              .map((item) => item.trim().replace(/^["']|["']$/g, ""));
+            frontmatter[key] = arrayValue;
+            continue;
           }
-          
+
           frontmatter[key] = value;
         }
       }
-      
+
       return { data: frontmatter, content: markdownContent };
     }
-    
+
     return { data: {}, content };
+  };
+
+  const checkAssetAvailability = async () => {
+    // Check if this is a policy page
+    if (path.includes("/kb/policies/")) {
+      const slug = path.split("/").pop()?.replace(".md", "") || "";
+
+      // Check for PDF
+      try {
+        const pdfResponse = await fetch(`/kb/assets/pdf/${slug}.pdf`, {
+          method: "HEAD",
+        });
+        setHasPdf(pdfResponse.ok);
+      } catch {
+        setHasPdf(false);
+      }
+
+      // Check for HTML
+      try {
+        const htmlResponse = await fetch(`/kb/assets/html/${slug}.html`, {
+          method: "HEAD",
+        });
+        setHasHtml(htmlResponse.ok);
+      } catch {
+        setHasHtml(false);
+      }
+    }
   };
 
   if (isLoading) {
@@ -119,7 +157,9 @@ export const Doc: React.FC<DocProps> = ({ path, className = '' }) => {
     return (
       <div className={`p-8 ${className}`}>
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <h3 className="text-red-800 font-medium mb-2">Error Loading Document</h3>
+          <h3 className="text-red-800 font-medium mb-2">
+            Error Loading Document
+          </h3>
           <p className="text-red-700">{error}</p>
         </div>
       </div>
@@ -142,47 +182,88 @@ export const Doc: React.FC<DocProps> = ({ path, className = '' }) => {
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
             {docContent.frontmatter.title}
           </h1>
-          
+
           {docContent.frontmatter.summary && (
             <p className="text-lg text-gray-600 mb-4">
               {docContent.frontmatter.summary}
             </p>
           )}
-          
-          <div className="flex items-center gap-4 text-sm text-gray-500">
-            {docContent.frontmatter.updated && (
-              <span>Updated: {docContent.frontmatter.updated}</span>
-            )}
-            {docContent.frontmatter.tags && Array.isArray(docContent.frontmatter.tags) && (
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4 text-sm text-gray-500">
+              {docContent.frontmatter.updated && (
+                <span>Updated: {docContent.frontmatter.updated}</span>
+              )}
+              {docContent.frontmatter.tags &&
+                Array.isArray(docContent.frontmatter.tags) && (
+                  <div className="flex gap-2">
+                    {docContent.frontmatter.tags.map(
+                      (tag: string, index: number) => (
+                        <span
+                          key={index}
+                          className="px-2 py-1 bg-gray-100 rounded text-gray-600"
+                        >
+                          {tag}
+                        </span>
+                      )
+                    )}
+                  </div>
+                )}
+            </div>
+
+            {/* Download buttons for policy pages */}
+            {(hasPdf || hasHtml) && (
               <div className="flex gap-2">
-                {docContent.frontmatter.tags.map((tag: string, index: number) => (
-                  <span
-                    key={index}
-                    className="px-2 py-1 bg-gray-100 rounded text-gray-600"
+                {hasPdf && (
+                  <a
+                    href={`/kb/assets/pdf/${path
+                      .split("/")
+                      .pop()
+                      ?.replace(".md", "")}.pdf`}
+                    download
+                    className="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
                   >
-                    {tag}
-                  </span>
-                ))}
+                    <Download className="w-4 h-4" />
+                    Download PDF
+                  </a>
+                )}
+                {hasHtml && (
+                  <a
+                    href={`/kb/assets/html/${path
+                      .split("/")
+                      .pop()
+                      ?.replace(".md", "")}.html`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
+                  >
+                    <Eye className="w-4 h-4" />
+                    View HTML
+                  </a>
+                )}
               </div>
             )}
           </div>
         </div>
       )}
 
+      {/* Compliance notice for policy pages */}
+      {path.includes("/kb/policies/") && <Circular230Notice />}
+
       {/* Document content */}
-      <div className="prose prose-lg max-w-none">
+      <div className="prose prose-lg max-w-none dark:prose-invert">
         {docContent.isHtml ? (
           // For HTML files, render in iframe for security
           <iframe
             src={`/kb/assets/html/${path}`}
             className="w-full h-screen border border-gray-200 rounded-lg"
-            title={docContent.frontmatter.title || 'Document'}
+            title={docContent.frontmatter.title || "Document"}
           />
         ) : (
           // For markdown, render sanitized HTML
           <div
             dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(docContent.content)
+              __html: DOMPurify.sanitize(docContent.content),
             }}
           />
         )}

@@ -154,10 +154,10 @@ async function createInvoice(supabase: any, orgId: string, request: Request) {
     .from("invoices")
     .insert({
       org_id: orgId,
-      company_id: body.company_id,
-      description: body.description,
-      due_date: body.due_date,
-      line_items: body.line_items || [],
+      company_id: (body as any).company_id,
+      description: (body as any).description,
+      due_date: (body as any).due_date,
+      line_items: (body as any).line_items || [],
     })
     .select()
     .single();

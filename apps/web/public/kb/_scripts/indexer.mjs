@@ -1,20 +1,20 @@
-﻿import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
-import { remark } from 'remark';
-import remarkParse from 'remark-parse';
-import remarkStringify from 'remark-stringify';
-import { glob } from 'glob';
+﻿import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import { remark } from "remark";
+import remarkParse from "remark-parse";
+import remarkStringify from "remark-stringify";
+import { glob } from "glob";
 
 async function indexKB() {
-  console.log(' Building search index...');
+  console.log(" Building search index...");
   
   const searchIndex = [];
   const contentDirs = [
-    'public/kb/articles',
-    'public/kb/policies', 
-    'public/kb/templates',
-    'public/kb/playbooks'
+    "public/kb/articles",
+    "public/kb/policies", 
+    "public/kb/templates",
+    "public/kb/playbooks"
   ];
   
   // Process each content directory
@@ -29,7 +29,7 @@ async function indexKB() {
     
     for (const file of files) {
       try {
-        const content = fs.readFileSync(file, 'utf8');
+        const content = fs.readFileSync(file, "utf8");
         const { data: frontmatter, content: body } = matter(content);
         
         // Strip markdown to plain text
@@ -43,14 +43,14 @@ async function indexKB() {
         const truncatedBody = textBody.substring(0, 2000);
         
         // Determine path relative to kb root
-        const relativePath = path.relative('public/kb', file);
+        const relativePath = path.relative("public/kb", file);
         
         const indexEntry = {
           title: frontmatter.title || path.basename(file, path.extname(file)),
           slug: frontmatter.slug || path.basename(file, path.extname(file)),
-          summary: frontmatter.summary || '',
+          summary: frontmatter.summary || "",
           tags: frontmatter.tags || [],
-          updated: frontmatter.updated || new Date().toISOString().split('T')[0],
+          updated: frontmatter.updated || new Date().toISOString().split("T")[0],
           path: `/${relativePath}`,
           body: truncatedBody
         };
@@ -65,16 +65,12 @@ async function indexKB() {
   }
   
   // Write search index
-  const indexPath = 'public/kb/_meta/search-index.json';
+  const indexPath = "public/kb/_meta/search-index.json";
   fs.writeFileSync(indexPath, JSON.stringify(searchIndex, null, 2));
   
   console.log(` Search index created with ${searchIndex.length} entries`);
   console.log(` Written to: ${indexPath}`);
 }
 
-// Run if called directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  indexKB().catch(console.error);
-}
-
-export { indexKB };
+// Run the function
+indexKB().catch(console.error);

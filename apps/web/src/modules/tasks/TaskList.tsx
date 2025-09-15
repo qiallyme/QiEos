@@ -50,12 +50,12 @@ export function TaskList() {
 
       // Load projects
       const projectsResponse = await api.get("/projects");
-      setProjects(projectsResponse.projects || []);
+      setProjects((projectsResponse as any).projects || []);
 
       // Load tasks
       const params = selectedProject ? `?project_id=${selectedProject}` : "";
       const tasksResponse = await api.get(`/tasks${params}`);
-      setTasks(tasksResponse.tasks || []);
+      setTasks((tasksResponse as any).tasks || []);
     } catch (error) {
       console.error("Failed to load tasks:", error);
     } finally {
@@ -72,7 +72,7 @@ export function TaskList() {
         priority: 3,
       });
 
-      setTasks((prev) => [response.task, ...prev]);
+      setTasks((prev) => [(response as any).task, ...prev]);
       setShowQuickAdd(false);
     } catch (error) {
       console.error("Failed to create task:", error);

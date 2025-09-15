@@ -5,7 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { AuthProvider } from "./hooks/useAuth";
+// import { AuthProvider } from "./hooks/useAuth";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Guarded } from "./components/Guarded";
 import { Login } from "./routes/auth/Login";
@@ -27,8 +27,8 @@ import HomePage from "./pages/index";
 import AboutPage from "./pages/about";
 import ServicesPage from "./pages/services";
 import ContactPage from "./pages/contact";
-import TasksPage from "./pages/tasks";
-import ProjectsPage from "./pages/projects";
+import TasksPagePublic from "./pages/tasks";
+import ProjectsPagePublic from "./pages/projects";
 import NotFoundPage from "./pages/404";
 import TermsPage from "./pages/terms";
 import PrivacyPage from "./pages/privacy";
@@ -39,9 +39,9 @@ import { Footer } from "./components/Footer";
 
 // Admin pages
 import { DashboardPage } from "./routes/admin/dashboard";
-import { ProjectsPage } from "./routes/admin/projects";
+import { ProjectsPage as AdminProjectsPage } from "./routes/admin/projects";
 import { ProjectDetailsPage } from "./routes/admin/projects/details";
-import { TasksPage } from "./routes/admin/tasks";
+import { TasksPage as AdminTasksPage } from "./routes/admin/tasks";
 import { TenantsPage } from "./routes/admin/tenants";
 import { CrmPage } from "./routes/admin/crm";
 import { BillingPage } from "./routes/admin/billing-desk";
@@ -49,7 +49,7 @@ import { AuditorPage } from "./routes/admin/auditor";
 
 function App() {
   return (
-    <AuthProvider>
+    <div>
       <Router>
         <div className="min-h-screen bg-background">
           <Nav />
@@ -68,8 +68,8 @@ function App() {
               <Route path="/kb/*" element={<KB />} />
               <Route path="/auth/login" element={<Login />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
-              <Route path="/tasks" element={<TasksPage />} />
-              <Route path="/projects" element={<ProjectsPage />} />
+              <Route path="/tasks" element={<TasksPagePublic />} />
+              <Route path="/projects" element={<ProjectsPagePublic />} />
 
               {/* Slugged routes */}
               <Route path="/:slug/login" element={<SluggedLogin />} />
@@ -170,12 +170,12 @@ function App() {
                   <ProtectedRoute requiredRole="admin">
                     <Routes>
                       <Route path="dashboard" element={<DashboardPage />} />
-                      <Route path="projects" element={<ProjectsPage />} />
+                      <Route path="projects" element={<AdminProjectsPage />} />
                       <Route
                         path="projects/:id"
                         element={<ProjectDetailsPage />}
                       />
-                      <Route path="tasks" element={<TasksPage />} />
+                      <Route path="tasks" element={<AdminTasksPage />} />
                       <Route path="tenants" element={<TenantsPage />} />
                       <Route path="crm" element={<CrmPage />} />
                       <Route path="billing" element={<BillingPage />} />
@@ -196,7 +196,7 @@ function App() {
           <Footer />
         </div>
       </Router>
-    </AuthProvider>
+    </div>
   );
 }
 

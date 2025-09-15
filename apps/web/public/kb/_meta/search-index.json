@@ -1,0 +1,51 @@
+[
+  {
+    "title": "Welcome to the QiAlly Knowledge Base",
+    "slug": "welcome",
+    "summary": "How this KB is organized and how to use it.",
+    "tags": [
+      "onboarding"
+    ],
+    "updated": "2025-09-15",
+    "path": "/articles\\welcome.md",
+    "body": "# Welcome to the QiAlly Knowledge Base\n\nThis KB keeps client-facing resources clean and consistent.\n\n## Structure\n\n* **Articles**: walkthroughs and FAQs.\n* **Policies**: engagement letters, terms, and compliance.\n* **Templates**: checklists and docs you can duplicate.\n* **Playbooks**: step-by-step flows for tasks.\n* **Releases**: change log.\n\n> Tip: Look for the **Download PDF** on policy pages for a locked copy.\n"
+  },
+  {
+    "title": "Tax Engagement Letter",
+    "slug": "tax-engagement-letter",
+    "summary": "The official QiAlly tax engagement terms.",
+    "tags": [
+      "tax",
+      "compliance",
+      "policy"
+    ],
+    "updated": "2025-09-15",
+    "path": "/policies\\tax-engagement-letter.md",
+    "body": "# Tax Engagement Letter\n\nUse this page to review the current engagement letter. For a locked copy, use the PDF link.\n\n* **Live HTML**: /kb/assets/html/tax-engagement-letter.html\n* **PDF (official)**: /kb/assets/pdf/tax-engagement-letter.pdf *(generated at build; see Releases)*\n\n<iframe src=\"/kb/assets/html/tax-engagement-letter.html\" style=\"width:100%; height:80vh; border:1px solid #e5e7eb; border-radius:12px;\"></iframe>\n"
+  },
+  {
+    "title": "Tax Intake Checklist",
+    "slug": "tax-intake-checklist",
+    "summary": "",
+    "tags": [
+      "tax",
+      "onboarding",
+      "template"
+    ],
+    "updated": "2025-09-15",
+    "path": "/templates\\tax-intake-checklist.md",
+    "body": "# Tax Intake Checklist\n\nThis template provides a systematic approach to gathering all necessary information from clients during the tax preparation intake process. Use this checklist to ensure no critical information is missed and to maintain consistency across all client engagements.\n\n## Personal Information\n\n* \\[ ] Full legal name and any name changes during tax year\n* \\[ ] Social Security Number (SSN) or Individual Taxpayer Identification Number (ITIN)\n* \\[ ] Date of birth\n* \\[ ] Current address and mailing address (if different)\n* \\[ ] Phone numbers (home, work, mobile)\n* \\[ ] Email address\n* \\[ ] Marital status and date of marriage/divorce (if applicable)\n* \\[ ] Dependents' information (names, SSNs, dates of birth, relationship)\n\n## Income Documentation\n\n* \\[ ] W-2 forms from all employers\n* \\[ ] 1099 forms (various types: NEC, INT, DIV, etc.)\n* \\[ ] Self-employment income records\n* \\[ ] Rental income and expenses\n* \\[ ] Investment income statements\n* \\[ ] Retirement account distributions (1099-R)\n* \\[ ] Social Security benefits statements\n* \\[ ] Unemployment compensation\n* \\[ ] Other income sources\n\n## Deductions and Credits\n\n* \\[ ] Mortgage interest statements (1098)\n* \\[ ] Property tax records\n* \\[ ] Charitable contribution receipts\n* \\[ ] Medical expense documentation\n* \\[ ] Business expense receipts\n* \\[ ] Education expense records\n* \\[ ] Child care expenses\n* \\[ ] Estimated tax payments made\n* \\[ ] Prior year tax return for reference\n\n## Special Circumstances\n\n* \\[ ] Home purchase or sale during tax year\n* \\[ ] Business start-up or closure\n* \\[ ] Major life events (birth, death, marriage, divorce)\n* \\[ ] Relocation for work\n* \\[ ] Disaster losses\n* \\[ ] Foreign income or assets\n* \\[ ] Cryptocurrency transactions\n\n## Review and Sign-off\n\n* \\[ ] All documents reviewed for completeness\n* \\[ ] Client questions answered\n* \\[ ] Engagement terms discussed and agreed upon\n* \\[ ] Timeline for completion established\n* \\[ ] Communication preferences confirmed\n* \\[ ]"
+  },
+  {
+    "title": "Annual Tax Filing Flow",
+    "slug": "annual-tax-filing-flow",
+    "summary": "",
+    "tags": [
+      "tax",
+      "playbook"
+    ],
+    "updated": "2025-09-15",
+    "path": "/playbooks\\annual-tax-filing-flow.md",
+    "body": "# Annual Tax Filing Flow\n\nThis playbook outlines the complete process for managing annual tax filing from initial client contact through final delivery and follow-up. Follow these steps to ensure consistent, high-quality service delivery and client satisfaction.\n\n## Pre-Season Preparation (October - December)\n\n### Client Communication\n\n* \\[ ] Send annual tax planning letters to all clients\n* \\[ ] Schedule year-end tax planning meetings\n* \\[ ] Review and update client information in CRM\n* \\[ ] Send reminder about gathering tax documents\n* \\[ ] Update engagement letters and fee schedules\n\n### System Preparation\n\n* \\[ ] Update tax software to latest version\n* \\[ ] Review and update client portal access\n* \\[ ] Prepare tax organizers and checklists\n* \\[ ] Set up file organization system for new tax year\n* \\[ ] Train staff on any software updates or process changes\n\n## Tax Season Execution (January - April)\n\n### Initial Client Contact\n\n* \\[ ] Send tax organizers to clients\n* \\[ ] Schedule intake appointments\n* \\[ ] Collect and organize client documents\n* \\[ ] Verify client information accuracy\n* \\[ ] Review engagement terms and fees\n\n### Tax Preparation\n\n* \\[ ] Input client data into tax software\n* \\[ ] Perform initial calculations and review\n* \\[ ] Identify potential issues or opportunities\n* \\[ ] Prepare draft returns for client review\n* \\[ ] Schedule review meetings with clients\n\n### Quality Control\n\n* \\[ ] Perform internal review of all returns\n* \\[ ] Check for common errors and omissions\n* \\[ ] Verify calculations and data entry\n* \\[ ] Review for potential audit triggers\n* \\[ ] Obtain second reviewer approval for complex returns\n\n### Client Delivery\n\n* \\[ ] Schedule final review meetings\n* \\[ ] Present completed returns to clients\n* \\[ ] Explain key items and answer questions\n* \\[ ] Obtain client signatures and authorization\n* \\[ ] File returns electronically or by mail\n* \\[ ] Provide copies of filed returns\n\n## Post-Season Follow-up (May - September)\n\n### Client Ser"
+  }
+]

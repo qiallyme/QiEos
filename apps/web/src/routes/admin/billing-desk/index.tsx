@@ -30,7 +30,7 @@ export const BillingPage: React.FC = () => {
     try {
       setLoading(true);
       const response = await api.get("/billing/invoices");
-      setInvoices(response.invoices || []);
+      setInvoices((response as any).invoices || []);
     } catch (error) {
       console.error("Failed to load invoices:", error);
     } finally {

@@ -188,7 +188,7 @@ Examples:
     }
 
     const openaiData = await openaiResponse.json();
-    const aiParsed = JSON.parse(openaiData.choices[0].message.content);
+    const aiParsed = JSON.parse((openaiData as any).choices[0].message.content);
 
     // Create the task
     const { data: task, error } = await supabase
@@ -232,8 +232,8 @@ Examples:
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
-  } catch (error) {
-    console.error("AI Quick Add error:", error);
+  } catch (err) {
+    console.error("AI Quick Add error:", err);
 
     // Fallback to simple parsing if AI fails
     const fallbackParsed = parseQuickAddText(text);
@@ -354,7 +354,7 @@ Return max ${limit} suggestions.`,
     }
 
     const openaiData = await openaiResponse.json();
-    const suggestions = JSON.parse(openaiData.choices[0].message.content);
+    const suggestions = JSON.parse((openaiData as any).choices[0].message.content);
 
     return new Response(JSON.stringify({ suggestions }), {
       status: 200,
