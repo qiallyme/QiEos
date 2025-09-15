@@ -92,6 +92,7 @@ export function AIQuickAdd({
             type="button"
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600"
+            aria-label="Close dialog"
           >
             <svg
               className="w-6 h-6"

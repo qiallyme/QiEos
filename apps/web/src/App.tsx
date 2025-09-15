@@ -5,7 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-// import { AuthProvider } from "./hooks/useAuth";
+import { AuthProvider } from "./hooks/useAuth";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Guarded } from "./components/Guarded";
 import { Login } from "./routes/auth/Login";
@@ -49,7 +49,7 @@ import { AuditorPage } from "./routes/admin/auditor";
 
 function App() {
   return (
-    <div>
+    <AuthProvider>
       <Router>
         <div className="min-h-screen bg-background">
           <Nav />
@@ -196,7 +196,7 @@ function App() {
           <Footer />
         </div>
       </Router>
-    </div>
+    </AuthProvider>
   );
 }
 

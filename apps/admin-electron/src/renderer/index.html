@@ -1,13 +1,200 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="QiEOS — Admin Cockpit. Manage tenants, KB, tasks, and system integrations." />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="color-scheme" content="dark light" />
+
     <title>QiEOS Admin Cockpit</title>
+
+    <!-- favicon: replace /vite.svg with your brand SVG if available -->
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+
+    <!-- Vite module preload for faster startup -->
+    <link rel="modulepreload" href="/main.tsx" />
+
+    <!-- Minimal, tasteful critical CSS so page looks good before React loads -->
+    <style>
+      :root {
+        --bg: #0b1220;
+        --surface: #0f172a;
+        --muted: #94a3b8;
+        --accent: #06b6d4;
+        --glass: rgba(255,255,255,0.03);
+        color-scheme: dark light;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+          Roboto, "Helvetica Neue", Arial;
+      }
+
+      html, body {
+        height: 100%;
+        margin: 0;
+        background: linear-gradient(180deg, #071226 0%, var(--bg) 100%);
+        color: #e6eef8;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* App root */
+      #root {
+        min-height: 100vh;
+        display: grid;
+        grid-template-rows: auto 1fr;
+      }
+
+      /* Top bar placeholder for initial paint */
+      .shell-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 20px;
+        background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+        border-bottom: 1px solid rgba(255,255,255,0.02);
+            }
+      .logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: linear-gradient(135deg,#0ea5a4,#06b6d4);
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        font-weight:700;
+        font-size:14px;
+        color:#041022;
+      }
+      .brand {
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+      }
+      .brand-sub {
+        font-size: 12px;
+        color: var(--muted);
+        margin-left: 8px;
+      }
+
+      /* Centered card while React loads */
+      .init-stage {
+        display: grid;
+        place-items: center;
+        padding: 48px 16px;
+      }
+      .card {
+        width: min(980px, 94%);
+        background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+        border-radius: 12px;
+        padding: 36px;
+        box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+        border: 1px solid rgba(255,255,255,0.02);
+        display: grid;
+        gap: 14px;
+        text-align: center;
+      }
+
+      .h1 {
+        font-size: 20px;
+        margin: 0;
+        font-weight: 700;
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      /* Spinner */
+      .spinner {
+        width: 64px;
+        height: 64px;
+        margin: 18px auto 6px;
+        border-radius: 50%;
+        position: relative;
+        box-sizing: border-box;
+        border: 6px solid rgba(255,255,255,0.06);
+        border-top-color: var(--accent);
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      /* small foot */
+      .foot {
+        display:flex;
+        justify-content:center;
+        gap:12px;
+        color:var(--muted);
+        font-size:12px;
+      }
+
+      /* Accessibility helpers */
+      .visually-hidden {
+        position: absolute !important;
+        height: 1px; width: 1px;
+        overflow: hidden;
+        clip: rect(1px, 1px, 1px, 1px);
+        white-space: nowrap;
+      }
+
+      /* Light-mode support */
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg: #f6f8fb;
+          --surface: #ffffff;
+          --muted: #475569;
+          --accent: #0ea5a4;
+          color-scheme: light;
+          color: #0b1220;
+        }
+        body {
+          background: linear-gradient(180deg, #fbfdff 0%, #f6f8fb 100%);
+        }
+        .card { box-shadow: 0 6px 20px rgba(9,30,66,0.06); border: 1px solid rgba(2,6,23,0.03); }
+      }
+    </style>
   </head>
+
   <body>
-    <div id="root"></div>
+    <!-- Primary app mount. React will hydrate/replace this content on mount. -->
+    <div id="root" role="application" aria-labelledby="app-title">
+      <header class="shell-header" role="banner" aria-hidden="false">
+        <div class="logo" aria-hidden="true">Qi</div>
+        <div>
+          <div class="brand" id="app-title">QiEOS Admin Cockpit</div>
+          <div class="brand-sub">Admin control plane · Tenant-safe · RLS-first</div>
+        </div>
+      </header>
+
+      <main class="init-stage" role="main" aria-live="polite">
+        <section class="card" aria-describedby="loading-desc">
+          <div class="spinner" aria-hidden="true"></div>
+          <h1 class="h1">Starting QiEOS Cockpit…</h1>
+          <p id="loading-desc" class="muted">
+            Loading interface, fetching local services, and preparing the cockpit. This may take a moment.
+          </p>
+          <div class="foot">
+            <span>Backend health: <strong id="health-indicator">unknown</strong></span>
+            <span>•</span>
+            <span>Search index: <strong>4 documents</strong></span>
+          </div>
+          <p class="muted" style="margin-top: 14px; font-size: 12px;">
+            If this screen persists longer than 20s, open the developer console for logs.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <noscript>
+      <div role="alert" style="padding:12px; background:#ffe9e9; color:#6b0a0a; text-align:center;">
+        JavaScript is required for the QiEOS cockpit. Please enable JavaScript or open the app through the Electron desktop launcher.
+      </div>
+    </noscript>
+
+    <!-- App entry (Vite/Electron friendly) -->
     <script type="module" src="/main.tsx"></script>
   </body>
 </html>

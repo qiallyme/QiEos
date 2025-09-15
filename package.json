@@ -7,7 +7,8 @@
     "apps/*",
     "apps/*/Neurite",
     "packages/*",
-    "sites/*"
+    "sites/*",
+    "workers/*"
   ],
   "scripts": {
     "dev": "concurrently -n WORKER,WEB -c magenta,cyan \"npm run dev --workspace=workers/api\" \"npm run dev --workspace=apps/web\"",

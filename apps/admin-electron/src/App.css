@@ -1,0 +1,29 @@
+.app-header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    background: linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+  }
+  .title-group h1 { margin: 0; font-size: 18px; }
+  .app-info { display:flex; gap:10px; color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+  .header-actions { display:flex; align-items:center; gap:12px; }
+  .health-pill {
+    display:flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
+    background: rgba(255,255,255,0.01); color: var(--muted); font-size: 13px;
+  }
+  .health-pill .dot { width:10px; height:10px; border-radius:50%; background:#94a3b8; box-shadow:0 0 6px rgba(0,0,0,0.5); }
+  .health-pill.healthy .dot { background: #34d399; box-shadow: 0 0 8px rgba(52,211,153,0.12); color: #bbf7d0; }
+  .health-pill.unhealthy .dot { background: #fb7185; box-shadow: 0 0 8px rgba(251,113,133,0.12); color:#ffd6dc; }
+  .health-pill.unknown .dot { background: #9ca3af; }
+
+  .btn.connect {
+    padding: 8px 12px; border-radius: 8px; border:none; cursor:pointer; font-weight:600;
+    background: linear-gradient(180deg, var(--accent), #0891b2); color: #041022;
+  }
+  .btn.connect.on { background: linear-gradient(180deg,#e6fff9,#c8f7f3); color:#041022; }
+  .alert.error { margin: 12px 0; padding: 10px; background: rgba(251,113,133,0.06); border-radius:8px; color:#ffb4c0; }
+  .miniapps { margin-top: 18px; padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.01); }
+  .app-list { list-style:none; padding-left:0; margin: 8px 0 0 0; display:flex; flex-direction:column; gap:6px; }
