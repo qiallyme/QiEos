@@ -1,5 +1,5 @@
 name = "qieos-api"
-main = "src/index.ts"
+main = "workers/api/src/index.ts"
 compatibility_date = "2025-01-27"
 
 [vars]

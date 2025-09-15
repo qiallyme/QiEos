@@ -5,13 +5,13 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./hooks/useAuth";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Guarded } from "./components/Guarded";
 import { Login } from "./routes/auth/Login";
 import { SluggedLogin } from "./routes/auth/SluggedLogin";
 import { AuthCallback } from "./routes/auth/Callback";
-import { TaskList } from "./modules/tasks/List";
+import { TaskList } from "./modules/tasks/TaskList";
 import { CreateTask } from "./modules/tasks/CreateTask";
 import { ClientDashboard } from "./routes/client/Dashboard";
 import { SluggedDashboard } from "./routes/client/SluggedDashboard";
@@ -26,6 +26,8 @@ import HomePage from "./pages/index";
 import AboutPage from "./pages/about";
 import ServicesPage from "./pages/services";
 import ContactPage from "./pages/contact";
+import TasksPage from "./pages/tasks";
+import ProjectsPage from "./pages/projects";
 import NotFoundPage from "./pages/404";
 import TermsPage from "./pages/terms";
 import PrivacyPage from "./pages/privacy";
@@ -65,6 +67,8 @@ function App() {
               <Route path="/kb" element={<PublicKBPage />} />
               <Route path="/auth/login" element={<Login />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
+              <Route path="/tasks" element={<TasksPage />} />
+              <Route path="/projects" element={<ProjectsPage />} />
 
               {/* Slugged routes */}
               <Route path="/:slug/login" element={<SluggedLogin />} />
@@ -140,7 +144,10 @@ function App() {
                       <Route path="files" element={<Files />} />
                       <Route path="kb" element={<KnowledgeBase />} />
                       <Route path="profile" element={<Profile />} />
-                      <Route path="/" element={<Navigate to="dashboard" replace />} />
+                      <Route
+                        path="/"
+                        element={<Navigate to="dashboard" replace />}
+                      />
                       <Route path="*" element={<div>Page not found</div>} />
                     </Routes>
                   </Guarded>

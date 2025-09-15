@@ -18,29 +18,5 @@
   },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "typescript.preferences.importModuleSpecifier": "relative",
-  "typescript.suggest.autoImports": true,
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "emmet.includeLanguages": {
-    "typescript": "html",
-    "typescriptreact": "html"
-  },
-  "files.associations": {
-    "*.css": "tailwindcss"
-  },
-  "tailwindCSS.includeLanguages": {
-    "typescript": "html",
-    "typescriptreact": "html"
-  },
-  "tailwindCSS.experimental.classRegex": [
-    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
-    ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
-  ]
+  }
 }

@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
+import tasksRouter from "./routes/tasks";
+import aiRouter from "./routes/ai-quick-add";
 
 export interface Env {
   SUPABASE_URL: string;
@@ -35,9 +37,18 @@ export default {
         env.SUPABASE_SERVICE_ROLE_KEY
       );
 
+      // Route to appropriate handler
+      if (path.startsWith("/tasks") || path.startsWith("/projects")) {
+        return await tasksRouter.fetch(request, env);
+      }
+
+      if (path.startsWith("/ai")) {
+        return await aiRouter.fetch(request, env);
+      }
+
       // Route: POST /auth/session
       if (path === "/auth/session" && request.method === "POST") {
-        const body = await request.json() as { token: string };
+        const body = (await request.json()) as { token: string };
         const { token } = body;
 
         if (!token) {
@@ -121,7 +132,7 @@ export default {
         // Extract client slug from the nested data
         let clientSlug: string | undefined;
         if (profileData.memberships && profileData.memberships.length > 0) {
-          const membership = profileData.memberships[0];
+          const membership = profileData.memberships[0] as any;
           if (
             membership.clients &&
             Array.isArray(membership.clients.slugs) &&

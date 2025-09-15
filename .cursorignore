@@ -9,29 +9,12 @@ coverage/
 
 # Dependencies
 node_modules/
-pnpm-lock.yaml
-
-# repos & vcs
-.git/
-.snapshots/
-snapshots/*.zip
-snapshots/*.bundle
-snapshots/*.manifest.json
-snapshots/*code_extraction*.txt
-
-# trash/archive
-.trash/
 
 # Env & secrets
 .env
 .env.*
 **/*.pem
 **/*.key
-*.local
-
-# OS noise
-.DS_Store
-Thumbs.db
 
 # Generated assets / binaries
 **/*.pdf
@@ -46,19 +29,3 @@ blueprints/
 templates/
 apps/web/public/
 workers/api/wrangler.toml
-
-# QiEOS specific exclusions
-# CRM export files (contain sensitive data)
-qiallycrmexport/
-**/qiallycrmexport/
-
-# Secret files and exports
-**/*.csv
-**/*.eml
-**/*.xlsx
-**/*.zdoc
-
-# Additional sensitive file patterns
-**/ZohoVault_export_*
-**/export_*
-**/vault_*
