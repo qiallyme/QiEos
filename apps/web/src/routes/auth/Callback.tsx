@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, useParams } from "react-router-dom";
 
 export function AuthCallback() {
   const [loading, setLoading] = useState(true);
@@ -8,6 +8,7 @@ export function AuthCallback() {
   const { claims } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { slug } = useParams<{ slug: string }>();
 
   useEffect(() => {
     const handleAuthCallback = async () => {
@@ -19,21 +20,13 @@ export function AuthCallback() {
         if (accessToken && refreshToken) {
           // Wait for claims to be loaded
           if (claims) {
-            // Determine redirect URL based on user's client slug
-            let redirectUrl: string;
-            if (claims.client_slug) {
-              redirectUrl = `https://${claims.client_slug}.qially.com`;
-            } else {
-              // Fallback to main site for users without a specific client slug
-              redirectUrl = "https://qially.com";
-            }
-
-            // Redirect to the appropriate domain
-            window.location.href = redirectUrl;
+            // Get the next parameter or default to dashboard
+            const next = searchParams.get("next") || `/${slug}/dashboard`;
+            navigate(next, { replace: true });
           }
         } else {
           // No tokens in URL, redirect to login
-          navigate("/auth/login");
+          navigate(`/${slug}/login`);
         }
       } catch (err: any) {
         setError(err.message || "Authentication failed");
@@ -42,7 +35,7 @@ export function AuthCallback() {
     };
 
     handleAuthCallback();
-  }, [claims, searchParams, navigate]);
+  }, [claims, searchParams, navigate, slug]);
 
   if (loading) {
     return (
@@ -66,7 +59,7 @@ export function AuthCallback() {
             <p className="mt-2 text-gray-600">{error}</p>
           </div>
           <button
-            onClick={() => navigate("/auth/login")}
+            onClick={() => navigate(`/${slug}/login`)}
             className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md"
           >
             Back to Login

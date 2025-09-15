@@ -20,7 +20,8 @@
     "predev:stack": "pnpm build:kb",
     "dev:stack": "concurrently -n WORKER,WEB,NEURITE -c magenta,cyan,green \"pnpm --filter qieos-api dev\" \"pnpm --filter qieos-web dev\" \"pnpm --dir apps/Nuerite/Neurite start\"",
     "setup": "node scripts/setup-dev.mjs",
-    "migrate": "echo 'Run scripts/create-migrations.sql in your Supabase SQL editor'",
+    "migrate": "node scripts/run-migration.mjs",
+    "test:db": "cd infra/supabase && tsx test-connection.ts",
     "deploy:web": "pnpm --filter qieos-web build && wrangler pages deploy apps/web/dist --project-name=qieos-web",
     "deploy:worker": "pnpm --filter qieos-api deploy",
     "deploy:sites": "echo 'Use GitHub Actions or run wrangler pages deploy for each site'"
@@ -28,7 +29,9 @@
   "devDependencies": {
     "concurrently": "^9.0.0",
     "typescript": "^5.0.0",
-    "wrangler": "4.35.0"
+    "wrangler": "4.35.0",
+    "dotenv": "^16.0.0",
+    "tsx": "^4.0.0"
   },
   "dependencies": {
     "rimraf": "^5.0.0"

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { cn } from "@qieos/ui";
+import { cn } from "../../lib/utils";
 
 interface SidebarItem {
   href: string;
@@ -17,11 +17,11 @@ interface ClientSidebarProps {
 export function ClientSidebar({ className, items }: ClientSidebarProps) {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-  
+
   const closeSidebar = () => {
     setIsSidebarOpen(false);
   };
@@ -49,7 +49,7 @@ export function ClientSidebar({ className, items }: ClientSidebarProps) {
           />
         </svg>
       </button>
-      
+
       <aside
         className={cn(
           "flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1 h-[85vh] py-3 overflow-hidden transition-all lg:-translate-x-0 bg-white border border-slate-200 rounded-xl flex-col justify-between px-4 lg:transition-none ease-linear md:sticky fixed top-[60px] mt-6 z-50",
@@ -81,7 +81,7 @@ export function ClientSidebar({ className, items }: ClientSidebarProps) {
             QiEOS Portal
           </Link>
         </div>
-        
+
         <nav className="flex-1 pt-6">
           <ul className="text-gray-700 dark:text-gray-300 space-y-3">
             {items.map((item) => (

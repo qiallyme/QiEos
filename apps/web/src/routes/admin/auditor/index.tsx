@@ -1,6 +1,6 @@
 import React from "react";
 import { MainLayout } from "../../../components/admin/layout/MainLayout";
-import { Card } from "@qieos/ui";
+import { Card } from "../../../components/admin/ui/card";
 
 export const AuditorPage: React.FC = () => {
   return (

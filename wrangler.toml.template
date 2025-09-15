@@ -1,0 +1,58 @@
+name = "qieos-api"
+main = "src/index.ts"
+compatibility_date = "2025-01-27"
+
+[env.production]
+vars = { ENVIRONMENT = "production" }
+
+[env.staging]
+vars = { ENVIRONMENT = "staging" }
+
+[env.development]
+vars = { ENVIRONMENT = "development" }
+
+# Environment variables (secrets stored via wrangler secret put)
+[vars]
+SUPABASE_URL = ""
+SUPABASE_SERVICE_ROLE_KEY = ""
+OPENAI_API_KEY = ""
+STRIPE_SECRET_KEY = ""
+JWT_ISSUER = "qieos"
+EMBEDDING_DIM = "1536"
+
+# R2 buckets for file storage
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "qieos-files"
+preview_bucket_name = "qieos-files-dev"
+
+# KV namespace for caching and temporary data
+[[kv_namespaces]]
+binding = "CACHE"
+id = ""
+preview_id = ""
+
+# Durable Objects for real-time features (optional)
+# [[durable_objects.bindings]]
+# name = "WEBSOCKET"
+# class_name = "WebSocketHandler"
+
+# Routes configuration
+routes = [
+  { pattern = "api.qieos.com/*", zone_name = "qieos.com" },
+  { pattern = "qieos-api.workers.dev/*" }
+]
+
+# Build configuration
+[build]
+command = "npm run build"
+
+# Development configuration
+[dev]
+ip = "127.0.0.1"
+port = 8787
+local_protocol = "http"
+
+# Limits
+[limits]
+cpu_ms = 50000

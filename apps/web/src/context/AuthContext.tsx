@@ -19,7 +19,7 @@ interface AuthContextType {
   claims: Claims | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signInWithMagicLink: (email: string) => Promise<void>;
+  signInWithMagicLink: (email: string, clientSlug?: string, next?: string) => Promise<void>;
   signOut: () => Promise<void>;
   refreshClaims: () => Promise<void>;
 }
@@ -68,11 +68,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Send magic link to email
-  const signInWithMagicLink = async (email: string, clientSlug?: string) => {
+  const signInWithMagicLink = async (email: string, clientSlug?: string, next?: string) => {
     // Determine redirect URL based on client slug
     let emailRedirectTo: string;
     if (clientSlug) {
-      emailRedirectTo = `https://${clientSlug}.qially.com/auth/callback`;
+      const nextParam = next ? `?next=${encodeURIComponent(next)}` : '';
+      emailRedirectTo = `https://portal.qially.com/${clientSlug}/auth/callback${nextParam}`;
     } else {
       emailRedirectTo = "https://portal.qially.com/auth/callback";
     }
@@ -81,7 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       email,
       options: {
         emailRedirectTo,
-        shouldCreateUser: true,
+        shouldCreateUser: false,
       },
     });
     if (error) throw error;

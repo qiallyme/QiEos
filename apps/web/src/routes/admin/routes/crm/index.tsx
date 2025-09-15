@@ -6,8 +6,8 @@ import {
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import { Card } from "@qieos/ui";
-import { Button } from "@qieos/ui";
+import { Card } from "../../../../components/admin/ui/card";
+import { Button } from "../../../../components/admin/ui/button";
 import { FiPlus } from "react-icons/fi";
 
 const initialData = {

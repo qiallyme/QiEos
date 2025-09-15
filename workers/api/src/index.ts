@@ -37,7 +37,8 @@ export default {
 
       // Route: POST /auth/session
       if (path === "/auth/session" && request.method === "POST") {
-        const { token } = await request.json();
+        const body = await request.json() as { token: string };
+        const { token } = body;
 
         if (!token) {
           return new Response(
@@ -123,7 +124,7 @@ export default {
           const membership = profileData.memberships[0];
           if (
             membership.clients &&
-            membership.clients.slugs &&
+            Array.isArray(membership.clients.slugs) &&
             membership.clients.slugs.length > 0
           ) {
             clientSlug = membership.clients.slugs[0].slug;
