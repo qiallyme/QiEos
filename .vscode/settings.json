@@ -2,6 +2,7 @@
   "editor.formatOnSave": true,
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
+  "npm.packageManager": "npm",
   "files.exclude": {
     "**/node_modules": true,
     "**/dist": true,

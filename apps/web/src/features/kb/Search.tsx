@@ -102,6 +102,7 @@ export const Search: React.FC<SearchProps> = ({
         />
         {query && (
           <button
+            type="button"
             onClick={clearSearch}
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
           >
@@ -120,6 +121,7 @@ export const Search: React.FC<SearchProps> = ({
             <div className="py-2">
               {results.map((result, index) => (
                 <button
+                  type="button"
                   key={index}
                   onClick={() => handleResultClick(result)}
                   className="w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-b-0"

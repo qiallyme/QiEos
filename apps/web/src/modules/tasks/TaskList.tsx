@@ -149,6 +149,7 @@ export function TaskList() {
           {/* View Toggle */}
           <div className="flex bg-gray-100 rounded-lg p-1">
             <button
+              type="button"
               onClick={() => setView("list")}
               className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
                 view === "list"
@@ -159,6 +160,7 @@ export function TaskList() {
               List
             </button>
             <button
+              type="button"
               onClick={() => setView("board")}
               className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
                 view === "board"
@@ -173,12 +175,14 @@ export function TaskList() {
           {/* Quick Add Buttons */}
           <div className="flex items-center space-x-2">
             <button
+              type="button"
               onClick={() => setShowQuickAdd(true)}
               className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
             >
               Quick Add
             </button>
             <button
+              type="button"
               onClick={() => setShowAIQuickAdd(true)}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
             >
@@ -312,10 +316,12 @@ function ListView({
                     {task.project && (
                       <span
                         className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
-                        style={{
-                          backgroundColor: task.project.color + "20",
-                          color: task.project.color,
-                        }}
+                        style={
+                          {
+                            backgroundColor: `${task.project.color}20`,
+                            color: task.project.color,
+                          } as React.CSSProperties
+                        }
                       >
                         {task.project.name}
                       </span>
@@ -433,10 +439,12 @@ function BoardView({
                     {task.project && (
                       <span
                         className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium"
-                        style={{
-                          backgroundColor: task.project.color + "20",
-                          color: task.project.color,
-                        }}
+                        style={
+                          {
+                            backgroundColor: `${task.project.color}20`,
+                            color: task.project.color,
+                          } as React.CSSProperties
+                        }
                       >
                         {task.project.name}
                       </span>

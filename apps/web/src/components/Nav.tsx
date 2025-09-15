@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 export function Nav() {
   const location = useLocation();
@@ -22,7 +22,9 @@ export function Nav() {
               <Link
                 to="/"
                 className={`text-sm font-medium transition-colors ${
-                  isActive('/') ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'
+                  isActive("/")
+                    ? "text-blue-600"
+                    : "text-gray-600 hover:text-gray-900"
                 }`}
               >
                 Home
@@ -30,7 +32,9 @@ export function Nav() {
               <Link
                 to="/about"
                 className={`text-sm font-medium transition-colors ${
-                  isActive('/about') ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'
+                  isActive("/about")
+                    ? "text-blue-600"
+                    : "text-gray-600 hover:text-gray-900"
                 }`}
               >
                 About
@@ -38,7 +42,9 @@ export function Nav() {
               <Link
                 to="/services"
                 className={`text-sm font-medium transition-colors ${
-                  isActive('/services') ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'
+                  isActive("/services")
+                    ? "text-blue-600"
+                    : "text-gray-600 hover:text-gray-900"
                 }`}
               >
                 Services
@@ -46,7 +52,9 @@ export function Nav() {
               <Link
                 to="/contact"
                 className={`text-sm font-medium transition-colors ${
-                  isActive('/contact') ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'
+                  isActive("/contact")
+                    ? "text-blue-600"
+                    : "text-gray-600 hover:text-gray-900"
                 }`}
               >
                 Contact
@@ -60,6 +68,7 @@ export function Nav() {
                   Welcome, {user.email}
                 </span>
                 <button
+                  type="button"
                   onClick={signOut}
                   className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 >

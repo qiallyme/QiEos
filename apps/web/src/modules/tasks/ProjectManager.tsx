@@ -87,6 +87,7 @@ export function ProjectManager() {
         </div>
 
         <button
+          type="button"
           onClick={() => setShowCreateForm(true)}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
         >
@@ -150,6 +151,7 @@ export function ProjectManager() {
                     }))
                   }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  aria-label="Project type"
                 >
                   <option value="personal">Personal</option>
                   <option value="team">Team</option>
@@ -172,8 +174,7 @@ export function ProjectManager() {
                         newProject.color === color
                           ? "border-gray-400"
                           : "border-gray-200"
-                      }`}
-                      style={{ backgroundColor: color }}
+                      } bg-[${color}]`}
                     />
                   ))}
                 </div>
@@ -208,10 +209,7 @@ export function ProjectManager() {
           >
             <div className="p-6">
               <div className="flex items-center space-x-3 mb-4">
-                <div
-                  className="w-4 h-4 rounded-full"
-                  style={{ backgroundColor: project.color }}
-                />
+                <div className={`w-4 h-4 rounded-full bg-[${project.color}]`} />
                 <h3 className="text-lg font-medium text-gray-900">
                   {project.name}
                 </h3>
@@ -273,6 +271,7 @@ export function ProjectManager() {
             Create your first project to get started organizing your tasks.
           </p>
           <button
+            type="button"
             onClick={() => setShowCreateForm(true)}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
@@ -283,4 +282,3 @@ export function ProjectManager() {
     </div>
   );
 }
-

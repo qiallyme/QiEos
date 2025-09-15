@@ -263,6 +263,7 @@ export const AdminQuicklinks: React.FC = () => {
               className="border border-gray-200/50 rounded-lg bg-white/30 backdrop-blur-sm"
             >
               <button
+                type="button"
                 onClick={() => toggleCategory(category.name)}
                 className="w-full flex items-center justify-between p-4 hover:bg-white/20 transition-colors rounded-lg"
               >
@@ -289,6 +290,7 @@ export const AdminQuicklinks: React.FC = () => {
                       const ItemIcon = item.icon;
                       return (
                         <button
+                          type="button"
                           key={item.name}
                           onClick={() => handleLinkClick(item)}
                           className="flex items-start space-x-3 p-3 rounded-lg hover:bg-white/40 transition-all duration-200 group border border-transparent hover:border-blue-200/50"

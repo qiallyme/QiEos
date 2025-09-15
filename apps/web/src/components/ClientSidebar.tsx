@@ -29,6 +29,7 @@ export function ClientSidebar({ className, items }: ClientSidebarProps) {
   return (
     <>
       <button
+        type="button"
         onClick={toggleSidebar}
         className="lg:hidden fixed top-2 left-4 z-50 p-2.5 rounded-md bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200"
         aria-label="Toggle sidebar"

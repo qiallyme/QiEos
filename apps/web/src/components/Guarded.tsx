@@ -10,7 +10,11 @@ interface GuardedProps {
 }
 
 // Inner component that uses the org context
-function GuardedInner({ children, requiredRole, requiredFeature }: GuardedProps) {
+function GuardedInner({
+  children,
+  requiredRole,
+  requiredFeature,
+}: GuardedProps) {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { user, claims, loading: authLoading } = useAuth();
@@ -46,7 +50,18 @@ function GuardedInner({ children, requiredRole, requiredFeature }: GuardedProps)
     };
 
     checkAccess();
-  }, [slug, user, claims, authLoading, orgLoading, org, userRole, navigate, requiredRole, requiredFeature]);
+  }, [
+    slug,
+    user,
+    claims,
+    authLoading,
+    orgLoading,
+    org,
+    userRole,
+    navigate,
+    requiredRole,
+    requiredFeature,
+  ]);
 
   if (authLoading || orgLoading) {
     return (
@@ -76,27 +91,29 @@ function GuardedInner({ children, requiredRole, requiredFeature }: GuardedProps)
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="max-w-md w-full space-y-8 text-center">
           <div>
-            <h2 className="text-2xl font-bold text-red-600">
-              Access Denied
-            </h2>
+            <h2 className="text-2xl font-bold text-red-600">Access Denied</h2>
             <p className="mt-2 text-gray-600">
-              {orgError || 'You do not have permission to access this workspace.'}
+              {orgError ||
+                "You do not have permission to access this workspace."}
             </p>
-            {orgError?.includes('not found') && (
+            {orgError?.includes("not found") && (
               <p className="mt-2 text-sm text-gray-500">
-                The workspace "{slug}" does not exist or you may have the wrong URL.
+                The workspace "{slug}" does not exist or you may have the wrong
+                URL.
               </p>
             )}
           </div>
           <div className="space-y-2">
             <button
+              type="button"
               onClick={() => navigate(`/${slug}/login`)}
               className="block w-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md"
             >
               Back to Login
             </button>
             <button
-              onClick={() => navigate('/')}
+              type="button"
+              onClick={() => navigate("/")}
               className="block w-full bg-gray-200 text-gray-800 hover:bg-gray-300 px-4 py-2 rounded-md"
             >
               Go to Home
@@ -117,10 +134,12 @@ function GuardedInner({ children, requiredRole, requiredFeature }: GuardedProps)
               Insufficient Permissions
             </h2>
             <p className="mt-2 text-gray-600">
-              You need {requiredRole} role to access this page. Your current role is {userRole}.
+              You need {requiredRole} role to access this page. Your current
+              role is {userRole}.
             </p>
           </div>
           <button
+            type="button"
             onClick={() => navigate(`/${slug}/dashboard`)}
             className="block w-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md"
           >
@@ -141,10 +160,12 @@ function GuardedInner({ children, requiredRole, requiredFeature }: GuardedProps)
               Feature Not Available
             </h2>
             <p className="mt-2 text-gray-600">
-              The {requiredFeature} feature is not enabled for your organization.
+              The {requiredFeature} feature is not enabled for your
+              organization.
             </p>
           </div>
           <button
+            type="button"
             onClick={() => navigate(`/${slug}/dashboard`)}
             className="block w-full bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md"
           >

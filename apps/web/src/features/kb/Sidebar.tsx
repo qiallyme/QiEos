@@ -136,6 +136,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               return (
                 <div key={section.label}>
                   <button
+                    type="button"
                     onClick={() => toggleSection(section.label)}
                     className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
                   >
