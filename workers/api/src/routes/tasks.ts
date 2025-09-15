@@ -59,7 +59,7 @@ export default {
       // Get user's org_id from contacts table
       const { data: contact } = await supabase
         .from("contacts")
-        .select("org_id")
+        .select("org_id, id")
         .eq("supabase_user_id", user.id)
         .single();
 
@@ -71,6 +71,7 @@ export default {
       }
 
       const orgId = contact.org_id;
+      const contactId = contact.id;
 
       // Routes
       switch (true) {
@@ -80,7 +81,7 @@ export default {
 
         // POST /tasks - Create new task
         case path === "/tasks" && method === "POST":
-          return await createTask(supabase, orgId, user.id, request);
+          return await createTask(supabase, orgId, contactId, request);
 
         // GET /projects - List projects
         case path === "/projects" && method === "GET":
@@ -122,7 +123,7 @@ async function getTasks(
       `
       *,
       project:projects(name, color),
-      assignee:contacts!tasks_assignee_id_fkey(full_name, email)
+      assignee:contacts!tasks_assignee_id_fkey(first_name, last_name, email)
     `
     )
     .eq("org_id", orgId)
@@ -145,7 +146,7 @@ async function getTasks(
 async function createTask(
   supabase: any,
   orgId: string,
-  userId: string,
+  contactId: string,
   request: Request
 ) {
   const body = (await request.json()) as any;
@@ -178,7 +179,7 @@ async function createTask(
   await supabase.from("task_activity").insert({
     org_id: orgId,
     task_id: data.id,
-    user_id: userId,
+    user_id: contactId,
     action: "created",
     details: { title, project_id },
   });
