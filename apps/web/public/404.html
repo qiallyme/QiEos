@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Page Not Found — QiAlly</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="The page you're looking for doesn't exist. Return to QiAlly's homepage for professional scoping, voting, and strategic guidance services." />
+  <meta name="keywords" content="QiAlly, 404, page not found, professional services" />
+  <meta name="author" content="QiAlly" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:title" content="Page Not Found — QiAlly" />
+  <meta property="og:description" content="The page you're looking for doesn't exist. Return to QiAlly's homepage." />
+  <meta property="og:url" content="https://qially.me" />
+  <meta property="og:image" content="https://res.cloudinary.com/dp5b5fymz/image/upload/v1755927329/qibird.svg" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Page Not Found — QiAlly" />
+  <meta name="twitter:description" content="The page you're looking for doesn't exist. Return to QiAlly's homepage." />
+  <meta name="twitter:image" content="https://res.cloudinary.com/dp5b5fymz/image/upload/v1755927329/qibird.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* CSS Variables matching QIPortal theme */
+    :root {
+      --bg: 15 23 42;
+      --panel: 30 41 59;
+      --text: 248 250 252;
+      --subtext: 148 163 184;
+      --ring: 51 65 85;
+      --primary: 59 130 246;
+      --accent: 147 51 234;
+      --success: 34 197 94;
+      --warning: 245 158 11;
+    }
+
+    * { 
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body { 
+      height: 100%;
+      font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      background-color: rgb(var(--bg));
+      color: rgb(var(--text));
+      overflow-x: hidden;
+    }
+
+    /* Animated background with stars */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 160px 30px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 200px 120px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 240px 60px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 280px 100px, rgba(255,255,255,0.3), transparent);
+      background-repeat: repeat;
+      background-size: 300px 200px;
+      animation: twinkle 4s ease-in-out infinite;
+      z-index: -2;
+    }
+
+    /* Hero gradient overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgb(15 23 42) 0%, rgb(30 58 138) 50%, rgb(88 28 135) 100%);
+      opacity: 0.8;
+      z-index: -1;
+    }
+
+    /* Glow radial effect */
+    .glow-radial {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Floating blobs */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.3;
+      z-index: -1;
+    }
+
+    .blob-1 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%);
+      top: 20%;
+      left: 10%;
+      animation: blob 7s infinite;
+    }
+
+    .blob-2 {
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, transparent 70%);
+      top: 60%;
+      right: 15%;
+      animation: blob 7s infinite 2s;
+    }
+
+    .blob-3 {
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(34, 211, 238, 0.3) 0%, transparent 70%);
+      bottom: 20%;
+      left: 20%;
+      animation: blob 7s infinite 4s;
+    }
+
+    /* Main container */
+    .container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Glass card */
+    .card {
+      width: min(720px, 100%);
+      background: rgba(var(--panel), 0.8);
+      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(var(--ring), 0.5);
+      border-radius: 1rem;
+      padding: 2.5rem;
+      box-shadow: 
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -4px rgba(0, 0, 0, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.06) inset;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    }
+
+    /* Header section */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .brand {
+      width: 56px;
+      height: 56px;
+      border-radius: 1rem;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgb(var(--primary)), rgb(var(--accent)));
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+      animation: shimmer 3s infinite;
+    }
+
+    .brand img {
+      width: 32px;
+      height: 32px;
+      filter: brightness(0) invert(1);
+      z-index: 1;
+      position: relative;
+    }
+
+    .title-section h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(90deg, rgb(var(--text)), rgb(var(--subtext)));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .title-section p {
+      color: rgb(var(--subtext));
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    /* 404 specific styling */
+    .error-code {
+      font-size: 6rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, rgb(var(--primary)), rgb(var(--accent)));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    .error-message {
+      font-size: 1.25rem;
+      color: rgb(var(--text));
+      margin-bottom: 0.5rem;
+    }
+
+    .error-description {
+      color: rgb(var(--subtext));
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Navigation suggestions */
+    .nav-suggestions {
+      background: rgba(var(--ring), 0.2);
+      border: 1px solid rgba(var(--ring), 0.3);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .nav-suggestions h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: rgb(var(--text));
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      background: rgba(var(--panel), 0.8);
+      border: 1px solid rgba(var(--ring), 0.5);
+      border-radius: 0.5rem;
+      color: rgb(var(--text));
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover {
+      background: rgba(var(--primary), 0.1);
+      border-color: rgba(var(--primary), 0.3);
+      color: rgb(var(--primary));
+      transform: translateY(-1px);
+    }
+
+    /* Actions */
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, rgb(var(--primary)), rgb(var(--accent)));
+      color: white;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(var(--panel), 0.8);
+      color: rgb(var(--text));
+      border-color: rgba(var(--ring), 0.5);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(var(--panel), 1);
+      border-color: rgba(var(--ring), 0.8);
+      transform: translateY(-1px);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: rgb(var(--subtext));
+      opacity: 0.7;
+      margin-top: 2rem;
+    }
+
+    /* Animations */
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes blob {
+      0% { transform: translate(0) scale(1); }
+      33% { transform: translate(30px, -50px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+      100% { transform: translate(0) scale(1); }
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Loading animation for content */
+    .fade-in {
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive design */
+    @media (max-width: 640px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .card {
+        padding: 1.5rem;
+      }
+      
+      .error-code {
+        font-size: 4rem;
+      }
+      
+      .error-message {
+        font-size: 1.125rem;
+      }
+      
+      .nav-links {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .actions {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .btn {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background effects -->
+  <div class="glow-radial"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="container">
+    <main class="card fade-in">
+      <div class="header">
+        <div class="brand">
+          <img src="https://res.cloudinary.com/dp5b5fymz/image/upload/v1755927329/qibird.svg" alt="QiAlly">
+        </div>
+        <div class="title-section">
+          <h1>QiAlly</h1>
+          <p>Professional Solutions Tailored to You</p>
+        </div>
+      </div>
+
+      <div class="error-code">404</div>
+      <div class="error-message">Page Not Found</div>
+      <div class="error-description">
+        The page you're looking for doesn't exist. It might have been moved, deleted, or you entered the wrong URL.
+      </div>
+
+      <!-- Navigation suggestions -->
+      <div class="nav-suggestions">
+        <h3>Here are some helpful links:</h3>
+        <div class="nav-links">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/services.html" class="nav-link">Services</a>
+          <a href="/about.html" class="nav-link">About</a>
+          <a href="/contact.html" class="nav-link">Contact</a>
+          <a href="/knowledge-base.html" class="nav-link">Help Center</a>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a class="btn btn-primary" href="/">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9,22 9,12 15,12 15,22"/>
+          </svg>
+          Go Home
+        </a>
+        <a class="btn btn-secondary" href="/contact.html">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          Contact Me
+        </a>
+      </div>
+
+      <footer>© <span id="year"></span> QiAlly. All rights reserved.</footer>
+    </main>
+  </div>
+
+  <script>
+    // Set current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+    
+    // Add some interactive effects
+    document.addEventListener('DOMContentLoaded', function() {
+      const card = document.querySelector('.card');
+      
+      // Parallax effect on mouse move
+      document.addEventListener('mousemove', function(e) {
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+        
+        card.style.transform = `perspective(1000px) rotateX(${(y - 0.5) * 5}deg) rotateY(${(x - 0.5) * 5}deg)`;
+      });
+      
+      // Reset transform on mouse leave
+      document.addEventListener('mouseleave', function() {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+      });
+    });
+  </script>
+</body>
+</html>

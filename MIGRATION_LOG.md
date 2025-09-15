@@ -24,10 +24,12 @@
 - `SLUGGED_AUTH_README.md` → `docs/SLUGGED_AUTH_README.md`
 
 ## Status
-- [ ] Move migration files
-- [ ] Move worker config
-- [ ] Move documentation files
-- [ ] Verify file locations
+- [x] Move migration files
+- [x] Move worker config
+- [x] Move documentation files
+- [x] Verify file locations
+- [x] Generate complete SQL migration script
+- [ ] Apply database migrations to Supabase
 - [ ] Test database connection
 - [ ] Test worker configuration
 

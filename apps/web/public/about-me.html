@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>About QiAlly | Meet Cody Rice Velasquez</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Meet Cody Rice Velasquez, the systems whisperer and chaos-to-clarity alchemist behind QiAlly. Learn about his journey from Evansville roots to reviving broken empires." />
+  <meta name="keywords" content="Cody Rice Velasquez, QiAlly, about, systems optimization, process improvement, professional services" />
+  <meta name="author" content="QiAlly" />
+  <link rel="canonical" href="https://qially.me/about-me" />
+  <meta property="og:title" content="About QiAlly | Meet Cody Rice Velasquez" />
+  <meta property="og:description" content="Meet Cody Rice Velasquez, the systems whisperer and chaos-to-clarity alchemist behind QiAlly." />
+  <meta property="og:url" content="https://qially.me/about-me" />
+  <meta property="og:image" content="https://res.cloudinary.com/dp5b5fymz/image/upload/v1755927329/qibird.svg" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="About QiAlly | Meet Cody Rice Velasquez" />
+  <meta name="twitter:description" content="Meet Cody Rice Velasquez, the systems whisperer and chaos-to-clarity alchemist behind QiAlly." />
+  <meta name="twitter:image" content="https://res.cloudinary.com/dp5b5fymz/image/upload/v1755927329/qibird.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* CSS Variables matching QIPortal theme */
+    :root {
+      --bg: 15 23 42;
+      --panel: 30 41 59;
+      --text: 248 250 252;
+      --subtext: 148 163 184;
+      --ring: 51 65 85;
+      --primary: 59 130 246;
+      --accent: 147 51 234;
+      --success: 34 197 94;
+      --warning: 245 158 11;
+    }
+
+    * { 
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body { 
+      height: 100%;
+      font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      background-color: rgb(var(--bg));
+      color: rgb(var(--text));
+      overflow-x: hidden;
+    }
+
+    /* Animated background with stars */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 160px 30px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 200px 120px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 240px 60px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 280px 100px, rgba(255,255,255,0.3), transparent);
+      background-repeat: repeat;
+      background-size: 300px 200px;
+      animation: twinkle 4s ease-in-out infinite;
+      z-index: -2;
+    }
+
+    /* Hero gradient overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgb(15 23 42) 0%, rgb(30 58 138) 50%, rgb(88 28 135) 100%);
+      opacity: 0.8;
+      z-index: -1;
+    }
+
+    /* Glow radial effect */
+    .glow-radial {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Floating blobs */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.3;
+      z-index: -1;
+    }
+
+    .blob-1 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%);
+      top: 20%;
+      left: 10%;
+      animation: blob 7s infinite;
+    }
+
+    .blob-2 {
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, transparent 70%);
+      top: 60%;
+      right: 15%;
+      animation: blob 7s infinite 2s;
+    }
+
+    .blob-3 {
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(34, 211, 238, 0.3) 0%, transparent 70%);
+      bottom: 20%;
+      left: 20%;
+      animation: blob 7s infinite 4s;
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(var(--panel), 0.8);
+      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(var(--ring), 0.3);
+      padding: 1rem 2rem;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: rgb(var(--text));
+    }
+
+    .nav-brand img {
+      width: 32px;
+      height: 32px;
+      filter: brightness(0) invert(1);
+    }
+
+    .nav-brand span {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgb(var(--subtext));
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: rgb(var(--text));
+    }
+
+    .nav-links a.active {
+      color: rgb(var(--primary));
+    }
+
+    /* Main container */
+    .container {
+      min-height: 100vh;
+      padding-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Hero section */
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 80px);
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .hero-content {
+      max-width: 800px;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, rgb(var(--text)), rgb(var(--primary)));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+
+    .hero-subtitle {
+      font-size: 1.5rem;
+      color: rgb(var(--primary));
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .hero-description {
+      font-size: 1.125rem;
+      color: rgb(var(--subtext));
+      margin-bottom: 2rem;
+      line-height: 1.6;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Timeline styles */
+    .timeline-section {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 3rem;
+      background: linear-gradient(135deg, rgb(var(--text)), rgb(var(--subtext)));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .timeline-container {
+      display: flex;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding: 1rem;
+      background: rgba(var(--panel), 0.3);
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      perspective: 800px;
+    }
+
+    .timeline-item {
+      flex: 0 0 auto;
+      margin: 0 0.75rem;
+      padding: 1rem 2rem;
+      background: rgba(var(--panel), 0.8);
+      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(var(--ring), 0.5);
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      font-weight: 600;
+      color: var(--primary-color);
+      transform-style: preserve-3d;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .timeline-item:hover {
+      transform: rotateY(20deg) translateY(-5px) translateZ(10px);
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .timeline-item.active {
+      background: rgb(var(--primary));
+      color: #ffffff;
+    }
+
+    #timeline-content {
+      margin: 2rem 1rem;
+      padding: 1.5rem;
+      background: rgba(var(--panel), 0.8);
+      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(var(--ring), 0.5);
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      color: rgb(var(--text));
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    #timeline-content h3 {
+      margin-top: 0;
+      color: rgb(var(--accent));
+    }
+
+    /* Resume section */
+    .resume-section {
+      padding: 4rem 2rem;
+      background: rgba(var(--panel), 0.3);
+      margin: 2rem 0;
+    }
+
+    .resume-content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .resume-content h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: rgb(var(--text));
+    }
+
+    .resume-content p {
+      color: rgb(var(--subtext));
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, rgb(var(--primary)), rgb(var(--accent)));
+      color: white;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(var(--panel), 0.8);
+      color: rgb(var(--text));
+      border-color: rgba(var(--ring), 0.5);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(var(--panel), 1);
+      border-color: rgba(var(--ring), 0.8);
+      transform: translateY(-1px);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Footer */
+    footer {
+      background: rgba(var(--panel), 0.8);
+      border-top: 1px solid rgba(var(--ring), 0.3);
+      padding: 2rem;
+      color: rgb(var(--subtext));
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .footer-section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: rgb(var(--subtext));
+      text-decoration: none;
+      transition: color 0.2s ease;
+      font-size: 0.875rem;
+    }
+
+    .footer-links a:hover {
+      color: rgb(var(--primary));
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: rgba(var(--panel), 0.8);
+      border: 1px solid rgba(var(--ring), 0.5);
+      border-radius: 0.5rem;
+      color: rgb(var(--subtext));
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .social-link:hover {
+      background: rgba(var(--primary), 0.1);
+      border-color: rgba(var(--primary), 0.3);
+      color: rgb(var(--primary));
+      transform: translateY(-2px);
+    }
+
+    .contact-info p {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Animations */
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes blob {
+      0% { transform: translate(0) scale(1); }
+      33% { transform: translate(30px, -50px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+      100% { transform: translate(0) scale(1); }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Loading animation for content */
+    .fade-in {
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .nav {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.25rem;
+      }
+
+      .hero-description {
+        font-size: 1rem;
+      }
+
+      .timeline-section {
+        padding: 2rem 1rem;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+
+      .timeline-container {
+        flex-direction: column;
+        overflow-x: visible;
+      }
+
+      .timeline-item {
+        margin: 0.5rem 0;
+      }
+
+      .btn-group {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 1.5rem;
+      }
+
+      .footer-section {
+        align-items: center;
+      }
+
+      .social-links {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background effects -->
+  <div class="glow-radial"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-container">
+      <a href="/" class="nav-brand">
+        <img src="https://res.cloudinary.com/dp5b5fymz/image/upload/v1755927329/qibird.svg" alt="QiAlly">
+        <span>QiAlly</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/services.html">Services</a></li>
+        <li><a href="/about-me.html" class="active">About</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/knowledge-base.html">Help Center</a></li>
+        <li><a href="https://portal.qially.com/client" target="_blank" rel="noopener noreferrer">Client Portal</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Hero section -->
+    <section class="hero fade-in">
+      <div class="hero-content">
+        <h1>Meet Cody Rice Velasquez</h1>
+        <p class="hero-subtitle">Systems Whisperer & Chaos-to-Clarity Alchemist</p>
+        <p class="hero-description">
+          "I'm Cody Rice Velasquez—systems whisperer, chaos-to-clarity alchemist, and the brain behind QiAlly & EmpowerQNow. From Evansville roots to reviving broken empires, I bridge the gap between disarray and dynamite success."
+        </p>
+        <div class="btn-group">
+          <a href="https://crm.qially.com/bookings/qimoment" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+              <path d="M8 2v4"/>
+              <path d="M16 2v4"/>
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <path d="M3 10h18"/>
+            </svg>
+            Book a Meeting
+          </a>
+          <a href="cody_rice_velasquez_resume.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14,2 14,8 20,8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10,9 9,9 8,9"/>
+            </svg>
+            View Resume
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Career Timeline section -->
+    <section class="timeline-section">
+      <h2 class="section-title">Career Journey</h2>
+      <div class="timeline-container" id="timeline"></div>
+      <div id="timeline-content">
+        <em>Select a milestone to view details</em>
+      </div>
+    </section>
+
+    <!-- Resume section -->
+    <section class="resume-section">
+      <div class="resume-content">
+        <h2>Professional Resume</h2>
+        <p>Download Cody's comprehensive resume to learn more about his qualifications, experience, and achievements in systems optimization and process improvement.</p>
+        <div class="btn-group">
+          <a href="cody_rice_velasquez_resume.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7,10 12,15 17,10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download Resume
+          </a>
+          <a href="https://portal.qially.com/client" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+              <polyline points="10,17 15,12 10,7"/>
+              <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+            Client Portal
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <div class="footer-brand">
+          <img src="https://res.cloudinary.com/dp5b5fymz/image/upload/v1755927329/qibird.svg" alt="QiAlly" style="width: 32px; height: 32px; filter: brightness(0) invert(1); margin-right: 0.75rem;">
+          <span style="font-weight: 600; font-size: 1.25rem;">QiAlly</span>
+        </div>
+        <p style="margin-top: 1rem; color: rgb(var(--subtext));">Empower. Innovate. Grow.</p>
+        <p style="margin-top: 0.5rem; color: rgb(var(--subtext)); font-size: 0.875rem;">© <span id="year"></span> QiAlly. All rights reserved.</p>
+      </div>
+      
+      <div class="footer-section">
+        <h4 style="color: rgb(var(--text)); margin-bottom: 1rem; font-weight: 600;">Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="/services.html">Services</a></li>
+          <li><a href="/about-me.html">About</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li><a href="/knowledge-base.html">Help Center</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h4 style="color: rgb(var(--text)); margin-bottom: 1rem; font-weight: 600;">Connect With Us</h4>
+        <div class="social-links">
+          <a href="https://www.facebook.com/qially1/" target="_blank" rel="noopener noreferrer" class="social-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+          </a>
+          <a href="https://x.com/QiAlly" target="_blank" rel="noopener noreferrer" class="social-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+          <a href="https://www.youtube.com/@qiallyme" target="_blank" rel="noopener noreferrer" class="social-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+          </a>
+        </div>
+        <div class="contact-info" style="margin-top: 1rem;">
+          <p style="color: rgb(var(--subtext)); font-size: 0.875rem; margin-bottom: 0.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem; display: inline;">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            Info@qially.me
+          </p>
+          <p style="color: rgb(var(--subtext)); font-size: 0.875rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem; display: inline;">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            +1 (765) 443-4769
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom" style="border-top: 1px solid rgba(var(--ring), 0.3); margin-top: 2rem; padding-top: 1rem; text-align: center;">
+      <p style="color: rgb(var(--subtext)); font-size: 0.75rem;">
+        This site uses cookies to improve your experience. By using this site you agree to our 
+        <a href="/privacy-policy.html" style="color: rgb(var(--primary));">Privacy Policy</a> and 
+        <a href="/terms-of-use.html" style="color: rgb(var(--primary));">Terms of Use</a>.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // Set current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+    
+    // Interactive Career Timeline
+    (function() {
+      // Define your key milestones
+      const years = [
+        2008, // HS Grad
+        2009, // Angel Ayuda LLC
+        2010, // Spanish Fluency
+        2014, // Ivy Tech Grad
+        2016, // MSIL Rise
+        2018, // IUPUI Attendance
+        2019, // Servicios Rice-Velasquez Launch
+        2020, // WGU Graduation
+        2021, // ASL Proficiency
+        2022, // EmpowerQNow Development
+        2023, // SRVGroup Founded
+        2024, // SRV1NE & InnovaFlow
+        2025  // QiAlly & QiLife Launches
+      ];
+
+      const events = {
+        2008: "Graduated Henry Harrison High School; active in swim team, Spanish & chess clubs; held leadership roles in Tri-State Alliance; worked at McDonalds & delivered papers while fixing computers on the side.",
+        2009: "Founded Angel Ayuda LLC during the crisis, providing computer repair services while studying full time.",
+        2010: "Achieved fluency in Spanish and deep immersion in Hispanic culture.",
+        2014: "Graduated Ivy Tech Community College (Associate's in InfoSys, Networking Security cert, CompTIA certified) while leading teams at Enkei, IHOP, and Waffle House.",
+        2016: "Climbed from Jr. Account Manager to Acting Director of HR & Ops at MSIL—managing 300+ employees and refining SOPs.",
+        2018: "Attended IUPUI for advanced business-ops integration studies.",
+        2019: "Started Servicios Rice-Velasquez, scaling to $1.5M in revenue while still at MSIL.",
+        2020: "Graduated Western Governors University with a BBA in HR Management.",
+        2021: "Studied ASL Levels I–II; provided translation and support for deaf employees.",
+        2022: "Developed EmpowerQNow tarot & mind map system—melding strategy and spirituality.",
+        2023: "Founded SRVGroup with multiple LLCs under the umbrella, expanding service offerings.",
+        2024: "Launched SRV1NE solopreneur venture, later rebranded to InnovaFlow within QIP ecosystem.",
+        2025: "Co-founded IisiTax LLC (now QiAlly LLC); beta-launched QiLife & QiCall AI modules."
+      };
+
+      const container = document.getElementById('timeline');
+      const contentBox = document.getElementById('timeline-content');
+
+      years.forEach(year => {
+        const btn = document.createElement('button');
+        btn.className = 'timeline-item';
+        btn.textContent = year;
+        btn.dataset.year = year;
+        btn.addEventListener('click', () => {
+          // Reset previous active
+          document.querySelectorAll('.timeline-item.active')
+            .forEach(el => el.classList.remove('active'));
+          btn.classList.add('active');
+
+          // Fade-out then in
+          contentBox.style.opacity = 0;
+          setTimeout(() => {
+            contentBox.innerHTML = `<h3>${year}</h3><p>${events[year] || 'No event defined.'}</p>`;
+            contentBox.style.opacity = 1;
+          }, 300);
+
+          // Smooth scroll
+          btn.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+        });
+        container.appendChild(btn);
+      });
+    })();
+
+    // Add some interactive effects
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add scroll effect to navigation
+      window.addEventListener('scroll', function() {
+        const nav = document.querySelector('.nav');
+        if (window.scrollY > 50) {
+          nav.style.background = 'rgba(var(--panel), 0.95)';
+        } else {
+          nav.style.background = 'rgba(var(--panel), 0.8)';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

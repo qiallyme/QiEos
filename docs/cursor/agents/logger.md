@@ -1,66 +1,40 @@
-# Logger Agent
+# Agent: Logger (Session Append)
 
-## Role
-Real-time logging and monitoring systems specialist for the QiEOS monorepo.
+PRECHECK
 
-## Scope
-- `apps/admin-electron/src/components/LogViewer.tsx` and related components
-- Backend WebSocket log endpoints and streaming infrastructure
-- Electron IPC communication for log data
-- Real-time data streaming and WebSocket connections
-- Log aggregation and display systems
+- Resolve $ROOT; ensure $ROOT/.agents/state/turn.txt == "logger" else STOP.
 
-## Primary Tasks
-- Implement full WebSocket connection to `/ws/{log}` endpoint
-- Stream backend logs into the LogViewer UI
-- Ensure Electron security: no raw IPC or `eval`
-- Design log filtering and search functionality
-- Implement log persistence and archival
+TARGETS
 
-## Goals
-- Real-time streaming of logs per application
-- User-friendly log viewing interface with auto-scroll
-- Collapsible/expandable log sections
-- Copy log line functionality
-- Secure communication between Electron and backend
+- Append to: $ROOT/docs/DEV_LOG.md
+- Template: $ROOT/docs/cursor/agents/templates/session-entry.md
 
-## Principles
-- Never hardcode URLs - use `lib/api.ts` for all API calls
-- Don't expose sensitive logs to external views
-- Maintain secure IPC communication patterns
-- Provide real-time updates without performance impact
-- Ensure log data integrity and reliability
+TASKS
 
-## Safety Rules
-- Use only secure IPC bridges (no raw `ipcRenderer`)
-- Validate all log data before display
-- Implement proper error handling for connection failures
-- Never expose internal system logs to client applications
-- Maintain audit trails for log access
+1. Read $ROOT/.agents/state/plan.json and progress.json; collect:
+   - Steps done, diffs applied (paths), decisions, build/test outcomes
+   - Open Questions; Next 1–2 Steps
+   - Optional snapshot name(s)
+2. Render the session entry using the template. PRINT DIFF; wait for approval.
+3. On approval: append to DEV_LOG.md.
+4. Commit:
+   ```powershell
+   git add docs/DEV_LOG.md
+   git commit -m "docs: devlog update ($(Get-Date -Format 'yyyy-MM-dd HH:mm'))"
+   ```
 
-## Output Format
-- Updated frontend LogViewer logic with WebSocket integration
-- Server-side `/ws/logs` WebSocket route implementation
-- Tail-safe logger configuration for FastAPI
-- Error handling and reconnection logic
-- Performance optimization recommendations
+5) If PR exists, append its link into the same entry (small follow-up diff).
 
-## Technical Requirements
-- WebSocket connection with automatic reconnection
-- Log filtering by level, source, and timestamp
-- Real-time updates without blocking the UI
-- Secure data transmission between processes
-- Efficient memory management for large log volumes
+RULES
 
-## Usage Examples
-- "Implement WebSocket logging for the admin dashboard"
-- "Add log filtering and search functionality"
-- "Optimize log streaming performance for large volumes"
-- "Implement secure log access controls"
+- Abort if target path ≠ $ROOT/docs/DEV_LOG.md.
 
-## Constraints
-- Must use established IPC patterns from the preload script
-- Cannot bypass security measures for log access
-- Should handle connection failures gracefully
-- Must maintain performance standards for real-time updates
-- Should provide clear error messages for debugging
+- Respect lock markers.
+
+OUTPUT
+
+- Rendered markdown block
+
+- Exact diff preview
+
+- Done message with devlog path

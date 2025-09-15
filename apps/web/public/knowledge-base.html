@@ -1,0 +1,1033 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Knowledge Base — QiAlly | Public Resources & Documentation</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="QiAlly's public knowledge base. Access comprehensive documentation, guides, and resources for systems optimization, process improvement, and professional services." />
+  <meta name="keywords" content="QiAlly, knowledge base, documentation, guides, process improvement, systems optimization, professional services" />
+  <meta name="author" content="QiAlly" />
+  <link rel="canonical" href="https://qially.me/knowledge-base" />
+  <meta property="og:title" content="Knowledge Base — QiAlly | Public Resources & Documentation" />
+  <meta property="og:description" content="QiAlly's public knowledge base. Access comprehensive documentation, guides, and resources." />
+  <meta property="og:url" content="https://qially.me/knowledge-base" />
+  <meta property="og:image" content="https://res.cloudinary.com/dp5b5fymz/image/upload/v1755927329/qibird.svg" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Help Center — QiAlly" />
+  <meta name="twitter:description" content="Get help and support for QiAlly services." />
+  <meta name="twitter:image" content="https://res.cloudinary.com/dp5b5fymz/image/upload/v1755927329/qibird.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* CSS Variables matching QIPortal theme */
+    :root {
+      --bg: 15 23 42;
+      --panel: 30 41 59;
+      --text: 248 250 252;
+      --subtext: 148 163 184;
+      --ring: 51 65 85;
+      --primary: 59 130 246;
+      --accent: 147 51 234;
+      --success: 34 197 94;
+      --warning: 245 158 11;
+    }
+
+    * { 
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body { 
+      height: 100%;
+      font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      background-color: rgb(var(--bg));
+      color: rgb(var(--text));
+      overflow-x: hidden;
+    }
+
+    /* Animated background with stars */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 160px 30px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 200px 120px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 240px 60px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 280px 100px, rgba(255,255,255,0.3), transparent);
+      background-repeat: repeat;
+      background-size: 300px 200px;
+      animation: twinkle 4s ease-in-out infinite;
+      z-index: -2;
+    }
+
+    /* Hero gradient overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgb(15 23 42) 0%, rgb(30 58 138) 50%, rgb(88 28 135) 100%);
+      opacity: 0.8;
+      z-index: -1;
+    }
+
+    /* Glow radial effect */
+    .glow-radial {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Floating blobs */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.3;
+      z-index: -1;
+    }
+
+    .blob-1 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%);
+      top: 20%;
+      left: 10%;
+      animation: blob 7s infinite;
+    }
+
+    .blob-2 {
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, transparent 70%);
+      top: 60%;
+      right: 15%;
+      animation: blob 7s infinite 2s;
+    }
+
+    .blob-3 {
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(34, 211, 238, 0.3) 0%, transparent 70%);
+      bottom: 20%;
+      left: 20%;
+      animation: blob 7s infinite 4s;
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(var(--panel), 0.8);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(var(--ring), 0.3);
+      padding: 1rem 2rem;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: rgb(var(--text));
+    }
+
+    .nav-brand img {
+      width: 32px;
+      height: 32px;
+      filter: brightness(0) invert(1);
+    }
+
+    .nav-brand span {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgb(var(--subtext));
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: rgb(var(--text));
+    }
+
+    .nav-links a.active {
+      color: rgb(var(--primary));
+    }
+
+    /* Main container */
+    .container {
+      min-height: 100vh;
+      padding-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Hero section */
+    .hero {
+      text-align: center;
+      padding: 4rem 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, rgb(var(--text)), rgb(var(--primary)));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: rgb(var(--subtext));
+      line-height: 1.6;
+    }
+
+    /* Search section */
+    .search-section {
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto 4rem;
+    }
+
+    .search-container {
+      background: rgba(var(--panel), 0.8);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(var(--ring), 0.5);
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .search-container h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: rgb(var(--text));
+    }
+
+    .search-container p {
+      color: rgb(var(--subtext));
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 1rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      background: rgba(var(--panel), 0.8);
+      border: 1px solid rgba(var(--ring), 0.5);
+      border-radius: 0.5rem;
+      color: rgb(var(--text));
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: rgb(var(--primary));
+      box-shadow: 0 0 0 3px rgba(var(--primary), 0.1);
+    }
+
+    .search-input::placeholder {
+      color: rgb(var(--subtext));
+    }
+
+    /* Help categories */
+    .help-categories {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 3rem;
+      background: linear-gradient(135deg, rgb(var(--text)), rgb(var(--subtext)));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .category-card {
+      background: rgba(var(--panel), 0.8);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(var(--ring), 0.5);
+      border-radius: 1rem;
+      padding: 2rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .category-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(var(--primary), 0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .category-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, rgb(var(--primary)), rgb(var(--accent)));
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .category-icon svg {
+      width: 32px;
+      height: 32px;
+      color: white;
+    }
+
+    .category-card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: rgb(var(--text));
+    }
+
+    .category-card p {
+      color: rgb(var(--subtext));
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .category-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.875rem;
+      color: rgb(var(--subtext));
+    }
+
+    .article-count {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Zoho Desk Integration */
+    .zoho-integration {
+      background: rgba(var(--panel), 0.3);
+      border-radius: 1rem;
+      padding: 3rem;
+      margin: 3rem 0;
+      text-align: center;
+    }
+
+    .zoho-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .zoho-content h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: rgb(var(--text));
+    }
+
+    .zoho-content p {
+      color: rgb(var(--subtext));
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .zoho-embed {
+      background: rgba(var(--panel), 0.8);
+      border: 1px solid rgba(var(--ring), 0.5);
+      border-radius: 0.75rem;
+      padding: 2rem;
+      min-height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .zoho-placeholder {
+      text-align: center;
+      color: rgb(var(--subtext));
+    }
+
+    .zoho-placeholder svg {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 1rem;
+      color: rgb(var(--primary));
+    }
+
+    /* FAQ section */
+    .faq-section {
+      padding: 4rem 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      background: rgba(var(--panel), 0.8);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(var(--ring), 0.5);
+      border-radius: 1rem;
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      padding: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .faq-question:hover {
+      background: rgba(var(--ring), 0.1);
+    }
+
+    .faq-question h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: rgb(var(--text));
+    }
+
+    .faq-toggle {
+      width: 24px;
+      height: 24px;
+      background: rgba(var(--primary), 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgb(var(--primary));
+      transition: transform 0.2s ease;
+    }
+
+    .faq-item.active .faq-toggle {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      padding: 0 1.5rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .faq-item.active .faq-answer {
+      padding: 0 1.5rem 1.5rem;
+      max-height: 200px;
+    }
+
+    .faq-answer p {
+      color: rgb(var(--subtext));
+      line-height: 1.6;
+    }
+
+    /* Contact support */
+    .support-section {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: rgba(var(--panel), 0.3);
+      margin: 2rem 0;
+    }
+
+    .support-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .support-content h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: rgb(var(--text));
+    }
+
+    .support-content p {
+      color: rgb(var(--subtext));
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.75rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, rgb(var(--primary)), rgb(var(--accent)));
+      color: white;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(var(--panel), 0.8);
+      color: rgb(var(--text));
+      border-color: rgba(var(--ring), 0.5);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(var(--panel), 1);
+      border-color: rgba(var(--ring), 0.8);
+      transform: translateY(-1px);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Footer */
+    footer {
+      background: rgba(var(--panel), 0.8);
+      border-top: 1px solid rgba(var(--ring), 0.3);
+      padding: 2rem;
+      text-align: center;
+      color: rgb(var(--subtext));
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: rgb(var(--subtext));
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: rgb(var(--primary));
+    }
+
+    /* Animations */
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes blob {
+      0% { transform: translate(0) scale(1); }
+      33% { transform: translate(30px, -50px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+      100% { transform: translate(0) scale(1); }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .nav {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero p {
+        font-size: 1.125rem;
+      }
+
+      .search-box {
+        flex-direction: column;
+      }
+
+      .help-categories {
+        padding: 2rem 1rem;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+
+      .categories-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .zoho-integration {
+        padding: 2rem;
+      }
+
+      .zoho-content h2 {
+        font-size: 1.5rem;
+      }
+
+      .faq-section {
+        padding: 2rem 1rem;
+      }
+
+      .btn-group {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-links {
+        justify-content: center;
+      }
+    }
+
+    /* Loading animation for content */
+    .fade-in {
+      animation: fadeIn 0.8s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <!-- Background effects -->
+  <div class="glow-radial"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-container">
+      <a href="/" class="nav-brand">
+        <img src="https://res.cloudinary.com/dp5b5fymz/image/upload/v1755927329/qibird.svg" alt="QiAlly">
+        <span>QiAlly</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/services.html">Services</a></li>
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/knowledge-base.html" class="active">Help Center</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Hero section -->
+    <section class="hero fade-in">
+      <h1>Knowledge Base</h1>
+      <p>Find answers to your questions and get the support you need. Our knowledge base is here to help you succeed.</p>
+    </section>
+
+    <!-- Search section -->
+    <section class="search-section">
+      <div class="search-container">
+        <h3>Search for Help</h3>
+        <p>Looking for something specific? Search our knowledge base to find the information you need.</p>
+        <div class="search-box">
+          <input type="text" class="search-input" placeholder="Search for articles, guides, or FAQs..." id="searchInput">
+          <button class="btn btn-primary" onclick="searchKnowledgeBase()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            Search
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Help categories -->
+    <section class="help-categories">
+      <h2 class="section-title">Browse by Category</h2>
+      <div class="categories-grid">
+        <div class="category-card" onclick="openCategory('getting-started')">
+          <div class="category-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+          </div>
+          <h3>Getting Started</h3>
+          <p>Learn the basics and get up and running with QiAlly services quickly.</p>
+          <div class="category-stats">
+            <span class="article-count">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14,2 14,8 20,8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10,9 9,9 8,9"/>
+              </svg>
+              12 articles
+            </span>
+          </div>
+        </div>
+
+        <div class="category-card" onclick="openCategory('services')">
+          <div class="category-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 12l2 2 4-4"/>
+              <path d="M21 12c-1 0-2-1-2-2s1-2 2-2 2 1 2 2-1 2-2 2z"/>
+              <path d="M3 12c1 0 2-1 2-2s-1-2-2-2-2 1-2 2 1 2 2 2z"/>
+            </svg>
+          </div>
+          <h3>Services Guide</h3>
+          <p>Detailed guides for scoping, voting systems, and strategic guidance services.</p>
+          <div class="category-stats">
+            <span class="article-count">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14,2 14,8 20,8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10,9 9,9 8,9"/>
+              </svg>
+              18 articles
+            </span>
+          </div>
+        </div>
+
+        <div class="category-card" onclick="openCategory('client-portal')">
+          <div class="category-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+              <polyline points="10,17 15,12 10,7"/>
+              <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+          </div>
+          <h3>Client Portal</h3>
+          <p>Everything you need to know about using the client portal and managing your projects.</p>
+          <div class="category-stats">
+            <span class="article-count">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14,2 14,8 20,8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10,9 9,9 8,9"/>
+              </svg>
+              25 articles
+            </span>
+          </div>
+        </div>
+
+        <div class="category-card" onclick="openCategory('troubleshooting')">
+          <div class="category-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <h3>Troubleshooting</h3>
+          <p>Common issues and their solutions to help you resolve problems quickly.</p>
+          <div class="category-stats">
+            <span class="article-count">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14,2 14,8 20,8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10,9 9,9 8,9"/>
+              </svg>
+              15 articles
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Zoho Desk Integration -->
+    <section class="zoho-integration">
+      <div class="zoho-content">
+        <h2>Full Knowledge Base</h2>
+        <p>Access our complete knowledge base powered by Zoho Desk. Find detailed articles, step-by-step guides, and comprehensive resources.</p>
+        
+        <div class="zoho-embed">
+          <div class="zoho-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14,2 14,8 20,8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10,9 9,9 8,9"/>
+            </svg>
+            <h4>Zoho Desk Knowledge Base</h4>
+            <p>Embed your Zoho Desk knowledge base here</p>
+            <p style="font-size: 0.875rem; opacity: 0.7;">Replace this placeholder with your Zoho Desk embed code</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ section -->
+    <section class="faq-section">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>How do I get started with QiAlly services?</h3>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-answer">
+          <p>Getting started is easy! Simply contact me through the contact form or email me directly. I'll schedule a consultation to discuss your needs and create a tailored plan for your project.</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>What services do you offer?</h3>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-answer">
+          <p>I offer three main services: Strategic Scoping to define project boundaries and requirements, Voting Systems to implement effective decision-making processes, and Strategic Guidance to provide expert advice and direction.</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>How do I access the client portal?</h3>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-answer">
+          <p>Once you become a client, you'll receive access credentials for the client portal. You can access it at portal.qially.com/client. If you need help with access, please contact me directly.</p>
+        </div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFAQ(this)">
+          <h3>What is your response time for support?</h3>
+          <div class="faq-toggle">+</div>
+        </div>
+        <div class="faq-answer">
+          <p>I typically respond to all inquiries within 24 hours. For urgent matters, please use the contact form or email me directly at support@qially.com.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact support -->
+    <section class="support-section">
+      <div class="support-content">
+        <h2>Still Need Help?</h2>
+        <p>Can't find what you're looking for? I'm here to help. Reach out and I'll get back to you as soon as possible.</p>
+        <div class="btn-group">
+          <a href="https://crm.qially.com/bookings/qimoment" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+              <path d="M8 2v4"/>
+              <path d="M16 2v4"/>
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <path d="M3 10h18"/>
+            </svg>
+            Book a Meeting
+          </a>
+          <a href="https://portal.qially.com/client" class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem;">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+              <polyline points="10,17 15,12 10,7"/>
+              <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+            Client Portal
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <p>© <span id="year"></span> QiAlly. All rights reserved.</p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="/services.html">Services</a></li>
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/knowledge-base.html">Knowledge Base</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script>
+    // Set current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+    
+    // Search functionality
+    function searchKnowledgeBase() {
+      const query = document.getElementById('searchInput').value;
+      if (query.trim()) {
+        // Here you would integrate with Zoho Desk search
+        console.log('Searching for:', query);
+        alert('Search functionality will be integrated with Zoho Desk');
+      }
+    }
+
+    // Category navigation
+    function openCategory(category) {
+      // Here you would navigate to the specific category in Zoho Desk
+      console.log('Opening category:', category);
+      alert('Category navigation will be integrated with Zoho Desk');
+    }
+
+    // FAQ toggle functionality
+    function toggleFAQ(element) {
+      const faqItem = element.parentElement;
+      const isActive = faqItem.classList.contains('active');
+      
+      // Close all FAQ items
+      document.querySelectorAll('.faq-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      // Open clicked item if it wasn't active
+      if (!isActive) {
+        faqItem.classList.add('active');
+      }
+    }
+
+    // Enter key search
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        searchKnowledgeBase();
+      }
+    });
+    
+    // Add some interactive effects
+    document.addEventListener('DOMContentLoaded', function() {
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
+
+      // Add scroll effect to navigation
+      window.addEventListener('scroll', function() {
+        const nav = document.querySelector('.nav');
+        if (window.scrollY > 50) {
+          nav.style.background = 'rgba(var(--panel), 0.95)';
+        } else {
+          nav.style.background = 'rgba(var(--panel), 0.8)';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

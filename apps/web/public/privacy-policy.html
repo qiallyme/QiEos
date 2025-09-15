@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Privacy Policy — QiAlly</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="QiAlly's Privacy Policy. Learn how we collect, use, and protect your personal information when you use our services." />
+  <meta name="keywords" content="QiAlly, privacy policy, data protection, personal information" />
+  <meta name="author" content="QiAlly" />
+  <link rel="canonical" href="https://qially.me/privacy-policy" />
+  <meta property="og:title" content="Privacy Policy — QiAlly" />
+  <meta property="og:description" content="QiAlly's Privacy Policy. Learn how we collect, use, and protect your personal information." />
+  <meta property="og:url" content="https://qially.me/privacy-policy" />
+  <meta property="og:image" content="https://res.cloudinary.com/dp5b5fymz/image/upload/v1755927329/qibird.svg" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Privacy Policy — QiAlly" />
+  <meta name="twitter:description" content="QiAlly's Privacy Policy. Learn how we collect, use, and protect your personal information." />
+  <meta name="twitter:image" content="https://res.cloudinary.com/dp5b5fymz/image/upload/v1755927329/qibird.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* CSS Variables matching QIPortal theme */
+    :root {
+      --bg: 15 23 42;
+      --panel: 30 41 59;
+      --text: 248 250 252;
+      --subtext: 148 163 184;
+      --ring: 51 65 85;
+      --primary: 59 130 246;
+      --accent: 147 51 234;
+      --success: 34 197 94;
+      --warning: 245 158 11;
+    }
+
+    * { 
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body { 
+      height: 100%;
+      font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      background-color: rgb(var(--bg));
+      color: rgb(var(--text));
+      overflow-x: hidden;
+    }
+
+    /* Animated background with stars */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 160px 30px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 200px 120px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 240px 60px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(1px 1px at 280px 100px, rgba(255,255,255,0.3), transparent);
+      background-repeat: repeat;
+      background-size: 300px 200px;
+      animation: twinkle 4s ease-in-out infinite;
+      z-index: -2;
+    }
+
+    /* Hero gradient overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgb(15 23 42) 0%, rgb(30 58 138) 50%, rgb(88 28 135) 100%);
+      opacity: 0.8;
+      z-index: -1;
+    }
+
+    /* Glow radial effect */
+    .glow-radial {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Floating blobs */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.3;
+      z-index: -1;
+    }
+
+    .blob-1 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%);
+      top: 20%;
+      left: 10%;
+      animation: blob 7s infinite;
+    }
+
+    .blob-2 {
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, transparent 70%);
+      top: 60%;
+      right: 15%;
+      animation: blob 7s infinite 2s;
+    }
+
+    .blob-3 {
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(34, 211, 238, 0.3) 0%, transparent 70%);
+      bottom: 20%;
+      left: 20%;
+      animation: blob 7s infinite 4s;
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(var(--panel), 0.8);
+      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(var(--ring), 0.3);
+      padding: 1rem 2rem;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: rgb(var(--text));
+    }
+
+    .nav-brand img {
+      width: 32px;
+      height: 32px;
+      filter: brightness(0) invert(1);
+    }
+
+    .nav-brand span {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: rgb(var(--subtext));
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: rgb(var(--text));
+    }
+
+    .nav-links a.active {
+      color: rgb(var(--primary));
+    }
+
+    /* Main container */
+    .container {
+      min-height: 100vh;
+      padding-top: 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Content section */
+    .content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .content h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, rgb(var(--text)), rgb(var(--primary)));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .content h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 2rem 0 1rem 0;
+      color: rgb(var(--text));
+    }
+
+    .content h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.75rem 0;
+      color: rgb(var(--text));
+    }
+
+    .content p {
+      color: rgb(var(--subtext));
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .content ul {
+      color: rgb(var(--subtext));
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      padding-left: 1.5rem;
+    }
+
+    .content li {
+      margin-bottom: 0.5rem;
+    }
+
+    .content a {
+      color: rgb(var(--primary));
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .content a:hover {
+      color: rgb(var(--accent));
+    }
+
+    .last-updated {
+      background: rgba(var(--panel), 0.8);
+      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(var(--ring), 0.5);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      color: rgb(var(--subtext));
+      font-size: 0.875rem;
+    }
+
+    /* Footer */
+    footer {
+      background: rgba(var(--panel), 0.8);
+      border-top: 1px solid rgba(var(--ring), 0.3);
+      padding: 2rem;
+      color: rgb(var(--subtext));
+      margin-top: 4rem;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .footer-section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: rgb(var(--subtext));
+      text-decoration: none;
+      transition: color 0.2s ease;
+      font-size: 0.875rem;
+    }
+
+    .footer-links a:hover {
+      color: rgb(var(--primary));
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: rgba(var(--panel), 0.8);
+      border: 1px solid rgba(var(--ring), 0.5);
+      border-radius: 0.5rem;
+      color: rgb(var(--subtext));
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .social-link:hover {
+      background: rgba(var(--primary), 0.1);
+      border-color: rgba(var(--primary), 0.3);
+      color: rgb(var(--primary));
+      transform: translateY(-2px);
+    }
+
+    .contact-info p {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Animations */
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes blob {
+      0% { transform: translate(0) scale(1); }
+      33% { transform: translate(30px, -50px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+      100% { transform: translate(0) scale(1); }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Loading animation for content */
+    .fade-in {
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .nav {
+        padding: 1rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .content {
+        padding: 1rem;
+      }
+
+      .content h1 {
+        font-size: 2rem;
+      }
+
+      .content h2 {
+        font-size: 1.25rem;
+      }
+
+      .content h3 {
+        font-size: 1.125rem;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 1.5rem;
+      }
+
+      .footer-section {
+        align-items: center;
+      }
+
+      .social-links {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background effects -->
+  <div class="glow-radial"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-container">
+      <a href="/" class="nav-brand">
+        <img src="https://res.cloudinary.com/dp5b5fymz/image/upload/v1755927329/qibird.svg" alt="QiAlly">
+        <span>QiAlly</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/services.html">Services</a></li>
+        <li><a href="/about-me.html">About</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="/knowledge-base.html">Help Center</a></li>
+        <li><a href="https://portal.qially.com/client" target="_blank" rel="noopener noreferrer">Client Portal</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="content fade-in">
+      <div class="last-updated">
+        <strong>Last Updated:</strong> January 2025
+      </div>
+
+      <h1>Privacy Policy</h1>
+      
+      <p>At QiAlly, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or use our services.</p>
+
+      <h2>Information We Collect</h2>
+      
+      <h3>Personal Information</h3>
+      <p>We may collect personal information that you voluntarily provide to us when you:</p>
+      <ul>
+        <li>Contact us through our website</li>
+        <li>Sign up for our services</li>
+        <li>Request a consultation</li>
+        <li>Subscribe to our newsletter</li>
+        <li>Use our client portal</li>
+      </ul>
+      
+      <p>This information may include:</p>
+      <ul>
+        <li>Name and contact information (email, phone number)</li>
+        <li>Company information</li>
+        <li>Project details and requirements</li>
+        <li>Communication preferences</li>
+      </ul>
+
+      <h3>Automatically Collected Information</h3>
+      <p>When you visit our website, we automatically collect certain information about your device, including:</p>
+      <ul>
+        <li>IP address</li>
+        <li>Browser type and version</li>
+        <li>Operating system</li>
+        <li>Pages visited and time spent</li>
+        <li>Referring website</li>
+      </ul>
+
+      <h2>How We Use Your Information</h2>
+      <p>We use the information we collect to:</p>
+      <ul>
+        <li>Provide and improve our services</li>
+        <li>Communicate with you about your projects</li>
+        <li>Send you updates and newsletters (with your consent)</li>
+        <li>Analyze website usage and improve user experience</li>
+        <li>Comply with legal obligations</li>
+      </ul>
+
+      <h2>Information Sharing</h2>
+      <p>We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except in the following circumstances:</p>
+      <ul>
+        <li>With your explicit permission</li>
+        <li>To comply with legal requirements</li>
+        <li>To protect our rights and safety</li>
+        <li>With trusted service providers who assist us in operating our website and services</li>
+      </ul>
+
+      <h2>Data Security</h2>
+      <p>We implement appropriate security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. These measures include:</p>
+      <ul>
+        <li>Encryption of sensitive data</li>
+        <li>Regular security assessments</li>
+        <li>Access controls and authentication</li>
+        <li>Secure data transmission protocols</li>
+      </ul>
+
+      <h2>Cookies and Tracking</h2>
+      <p>Our website uses cookies and similar tracking technologies to enhance your browsing experience. You can control cookie settings through your browser preferences.</p>
+
+      <h2>Your Rights</h2>
+      <p>You have the right to:</p>
+      <ul>
+        <li>Access your personal information</li>
+        <li>Correct inaccurate information</li>
+        <li>Request deletion of your information</li>
+        <li>Opt-out of marketing communications</li>
+        <li>Lodge a complaint with relevant authorities</li>
+      </ul>
+
+      <h2>Third-Party Links</h2>
+      <p>Our website may contain links to third-party websites. We are not responsible for the privacy practices of these external sites. We encourage you to review their privacy policies.</p>
+
+      <h2>Children's Privacy</h2>
+      <p>Our services are not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13.</p>
+
+      <h2>Changes to This Policy</h2>
+      <p>We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "Last Updated" date.</p>
+
+      <h2>Contact Us</h2>
+      <p>If you have any questions about this Privacy Policy or our privacy practices, please contact us:</p>
+      <ul>
+        <li>Email: <a href="mailto:Info@qially.me">Info@qially.me</a></li>
+                    <li>Phone: <a href="tel:+17654434769">+1 (765) 443-4769</a></li>
+        <li>Address: Indianapolis, IN - Available Worldwide</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <div class="footer-brand">
+          <img src="https://res.cloudinary.com/dp5b5fymz/image/upload/v1755927329/qibird.svg" alt="QiAlly" style="width: 32px; height: 32px; filter: brightness(0) invert(1); margin-right: 0.75rem;">
+          <span style="font-weight: 600; font-size: 1.25rem;">QiAlly</span>
+        </div>
+        <p style="margin-top: 1rem; color: rgb(var(--subtext));">Empower. Innovate. Grow.</p>
+        <p style="margin-top: 0.5rem; color: rgb(var(--subtext)); font-size: 0.875rem;">© <span id="year"></span> QiAlly. All rights reserved.</p>
+      </div>
+      
+      <div class="footer-section">
+        <h4 style="color: rgb(var(--text)); margin-bottom: 1rem; font-weight: 600;">Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="/services.html">Services</a></li>
+          <li><a href="/about-me.html">About</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li><a href="/knowledge-base.html">Help Center</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h4 style="color: rgb(var(--text)); margin-bottom: 1rem; font-weight: 600;">Connect With Us</h4>
+        <div class="social-links">
+          <a href="https://www.facebook.com/qially1/" target="_blank" rel="noopener noreferrer" class="social-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+          </a>
+          <a href="https://x.com/QiAlly" target="_blank" rel="noopener noreferrer" class="social-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+          <a href="https://www.youtube.com/@qiallyme" target="_blank" rel="noopener noreferrer" class="social-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+          </a>
+        </div>
+        <div class="contact-info" style="margin-top: 1rem;">
+          <p style="color: rgb(var(--subtext)); font-size: 0.875rem; margin-bottom: 0.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem; display: inline;">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            Info@qially.me
+          </p>
+          <p style="color: rgb(var(--subtext)); font-size: 0.875rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 0.5rem; display: inline;">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            +1 (765) 443-4769
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom" style="border-top: 1px solid rgba(var(--ring), 0.3); margin-top: 2rem; padding-top: 1rem; text-align: center;">
+      <p style="color: rgb(var(--subtext)); font-size: 0.75rem;">
+        This site uses cookies to improve your experience. By using this site you agree to our 
+        <a href="/privacy-policy.html" style="color: rgb(var(--primary));">Privacy Policy</a> and 
+        <a href="/terms-of-use.html" style="color: rgb(var(--primary));">Terms of Use</a>.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // Set current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+    
+    // Add some interactive effects
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add scroll effect to navigation
+      window.addEventListener('scroll', function() {
+        const nav = document.querySelector('.nav');
+        if (window.scrollY > 50) {
+          nav.style.background = 'rgba(var(--panel), 0.95)';
+        } else {
+          nav.style.background = 'rgba(var(--panel), 0.8)';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

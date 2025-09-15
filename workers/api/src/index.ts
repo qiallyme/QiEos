@@ -1,6 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
 import tasksRouter from "./routes/tasks";
 import aiRouter from "./routes/ai-quick-add";
+import healthRouter from "./routes/health";
+import billingRouter from "./routes/billing";
+import crmRouter from "./routes/crm";
+import adminRouter from "./routes/admin";
+import clientRouter from "./routes/client";
 
 export interface Env {
   SUPABASE_URL: string;
@@ -44,6 +49,26 @@ export default {
 
       if (path.startsWith("/ai")) {
         return await aiRouter.fetch(request, env);
+      }
+
+      if (path.startsWith("/billing")) {
+        return await billingRouter.fetch(request, env);
+      }
+
+      if (path.startsWith("/crm")) {
+        return await crmRouter.fetch(request, env);
+      }
+
+      if (path.startsWith("/admin")) {
+        return await adminRouter.fetch(request, env);
+      }
+
+      if (path.startsWith("/client")) {
+        return await clientRouter.fetch(request, env);
+      }
+
+      if (path === "/health") {
+        return await healthRouter.fetch(request, env);
       }
 
       // Route: POST /auth/session
@@ -174,20 +199,6 @@ export default {
           JSON.stringify({
             success: true,
             claims,
-          }),
-          {
-            status: 200,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          }
-        );
-      }
-
-      // Route: GET /health
-      if (path === "/health" && request.method === "GET") {
-        return new Response(
-          JSON.stringify({
-            status: "ok",
-            timestamp: new Date().toISOString(),
           }),
           {
             status: 200,

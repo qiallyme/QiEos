@@ -1,0 +1,11 @@
+﻿sections:
+  - label: "Start Here"
+    paths:
+      - "/articles/welcome.md"
+  - label: "Policies"
+    paths:
+      - "/policies/tax-engagement-letter.md"
+  - label: "Templates"
+    paths: []
+  - label: "Playbooks"
+    paths: []

@@ -20,6 +20,7 @@ import { KnowledgeBase } from "./routes/client/KnowledgeBase";
 import { Profile } from "./routes/client/Profile";
 import { PublicKBPage } from "./routes/public/PublicKB";
 import { LetterWizard } from "./routes/public/LetterWizard";
+import { KB } from "./features/kb";
 
 // New pages
 import HomePage from "./pages/index";
@@ -64,7 +65,7 @@ function App() {
               <Route path="/privacy" element={<PrivacyPage />} />
 
               {/* App routes */}
-              <Route path="/kb" element={<PublicKBPage />} />
+              <Route path="/kb/*" element={<KB />} />
               <Route path="/auth/login" element={<Login />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/tasks" element={<TasksPage />} />

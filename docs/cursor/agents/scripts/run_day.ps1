@@ -34,17 +34,18 @@ Write-Host "`n== Agent loop =="
 while ($true) {
   $t = (Get-Content $turn -Raw).Trim().ToLower()
   switch ($t) {
-    "planner" { Write-Host "🧭 Planner’s turn. Open docs/cursor/agents/planner.md and run it."; }
-    "worker"  { Write-Host "🔧 Worker’s turn. Open docs/cursor/agents/worker.md and run it."; }
-    "auditor" { Write-Host "🔍 Auditor’s turn. Open docs/cursor/agents/auditor.md and run it."; }
-    "logger"  { Write-Host "📝 Logger’s turn. Open docs/cursor/agents/logger.md and run it."; }
-    "close"   { Write-Host "✅ Closing day. Running final snapshot and exiting loop."; break }
-    default   { Write-Host "Unknown turn token '$t'. Set to 'planner'."; "planner" | Set-Content $turn }
+    "planner" { Write-Host "🧭 Planner's turn. Open docs/cursor/agents/planner.md and run it."; }
+    "worker" { Write-Host "🔧 Worker's turn. Open docs/cursor/agents/worker.md and run it."; }
+    "auditor" { Write-Host "🔍 Auditor's turn. Open docs/cursor/agents/auditor.md and run it."; }
+    "logger" { Write-Host "📝 Logger's turn. Open docs/cursor/agents/logger.md and run it."; }
+    "close" { Write-Host "✅ Closing day. Running final snapshot and exiting loop."; break }
+    default { Write-Host "Unknown turn token '$t'. Set to 'planner'."; "planner" | Set-Content $turn }
   }
   $next = Read-Host "Set next turn (planner/worker/auditor/logger/close)"
-  if ($next -notin @("planner","worker","auditor","logger","close")) {
+  if ($next -notin @("planner", "worker", "auditor", "logger", "close")) {
     Write-Host "Invalid; keeping current." -ForegroundColor Yellow
-  } else {
+  }
+  else {
     $next | Set-Content -Encoding UTF8 $turn
   }
 }
